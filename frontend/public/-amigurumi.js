@@ -1,7 +1,59 @@
+import * as API from './--api.js';
+
+function addNewAmigurumi() {
+    if (document.getElementById("addNewAmigurumiBox")) {
+        return;
+    }
+
+    let overlay = document.createElement("div");
+    overlay.id = "modalOverlayAmigurumi";
+    document.body.appendChild(overlay);
+
+    let modal = document.createElement("div");
+    modal.id = "addNewAmigurumiBox";
+    modal.innerHTML = `
+        <h3>Adicionar Novo Amigurumi</h3>
+        <label>Nome: <input type="text" id="editName" required></label><br><br>
+        <label>Autor: <input type="text" id="editAuthor" required></label><br><br>
+        <label>Tamanho: <input type="number" id="editSize" required></label><br><br>
+        <label>Link: <input type="url" id="editLink" required></label><br><br>
+        <label>ID Amigurumi Vinculado: <input type="number" id="editLinkedId" required></label><br><br>
+        <label>Observação: <input type="text" id="editObs"></label><br><br>
+        <button id="saveEdit">Salvar</button>
+        <button id="cancelEdit">Cancelar</button>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById("saveEdit").addEventListener("click", function () {
+
+        const nameAmigurumi = document.getElementById("editName").value
+        const autorAmigurumi =  document.getElementById("editAuthor").value
+        const sizeAmigurumi = parseInt(document.getElementById("editSize").value)
+        const linkAmigurumi =  document.getElementById("editLink").value
+        const amigurumi_id_of_linked_amigurumiAmigurumi =  document.getElementById("editLinkedId").value
+        const obsAmigurumi =  document.getElementById("editObs").value
+        
+
+        API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumi_id_of_linked_amigurumiAmigurumi,obsAmigurumi)
+        .then(data => {
+            alert(data.message)
+            filterAmigurumis()
+        })
+        document.body.removeChild(modal);
+        document.body.removeChild(overlay);
+    });
+
+    document.getElementById("cancelEdit").addEventListener("click", function () {
+        document.body.removeChild(modal);
+        document.body.removeChild(overlay);
+    })
+}
+
+
 function filterAmigurumis() {
     const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-    fetch(`http://127.0.0.1:5000/foundation_list`)
-        .then(response => response.json())
+    API.APIGet_FoundationList()
         .then(data => {
             const cardAmigurumi = document.getElementById("cardAmigurumi");
             cardAmigurumi.innerHTML = "";
@@ -23,8 +75,7 @@ function filterAmigurumis() {
                 const card = document.createElement("div");
                 card.className = "cardAmigurumi";
 
-                fetch('http://127.0.0.1:5000/image')
-                    .then(image_result => image_result.json()) 
+                API.APIGet_Image()
                     .then(imageData => {
                         const imageSrcArray = imageData
                             .filter(row => row.amigurumi_id == amigurumi.amigurumi_id)
@@ -74,67 +125,10 @@ function filterAmigurumis() {
         })
 }
 
-document.addEventListener("DOMContentLoaded", filterAmigurumis);
 
 
 
-// ------------------ Adicionar Novo Amigurumi -------------------------- \\
 
-function addNewAmigurumi() {
-    if (document.getElementById("addNewAmigurumiBox")) {
-        return;
-    }
-
-    let overlay = document.createElement("div");
-    overlay.id = "modalOverlayAmigurumi";
-    document.body.appendChild(overlay);
-
-    let modal = document.createElement("div");
-    modal.id = "addNewAmigurumiBox";
-    modal.innerHTML = `
-        <h3>Adicionar Novo Amigurumi</h3>
-        <label>Nome: <input type="text" id="editName" required></label><br><br>
-        <label>Autor: <input type="text" id="editAuthor" required></label><br><br>
-        <label>Tamanho: <input type="number" id="editSize" required></label><br><br>
-        <label>Link: <input type="url" id="editLink" required></label><br><br>
-        <label>ID Amigurumi Vinculado: <input type="number" id="editLinkedId" required></label><br><br>
-        <label>Observação: <input type="text" id="editObs"></label><br><br>
-        <button id="saveEdit">Salvar</button>
-        <button id="cancelEdit">Cancelar</button>
-    `;
-
-    document.body.appendChild(modal);
-
-    document.getElementById("saveEdit").addEventListener("click", function () {
-        let newAmigurumiData = {
-            name: document.getElementById("editName").value,
-            autor: document.getElementById("editAuthor").value,
-            size: parseInt(document.getElementById("editSize").value),
-            link: document.getElementById("editLink").value,
-            amigurumi_id_of_linked_amigurumi: document.getElementById("editLinkedId").value,
-            obs: document.getElementById("editObs").value
-        };
-
-        fetch(`http://127.0.0.1:5000/foundation_list`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newAmigurumiData)
-        })
-        .then(response => response.json())
-        .then(data => alert(data.message))
-        .then(() => filterAmigurumis())
-
-        document.body.removeChild(modal);
-        document.body.removeChild(overlay);
-    });
-
-    document.getElementById("cancelEdit").addEventListener("click", function () {
-        document.body.removeChild(modal);
-        document.body.removeChild(overlay);
-    })
-}
+document.addEventListener("DOMContentLoaded", () => {filterAmigurumis()});
 
 document.getElementById("add_new_amigurumi").addEventListener("click", addNewAmigurumi);
-
-
-

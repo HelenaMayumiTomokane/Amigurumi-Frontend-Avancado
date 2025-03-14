@@ -1,11 +1,12 @@
+import * as API from './--api.js';
+
 var urlParams = new URLSearchParams(window.location.search);
 var amigurumiId = urlParams.get("id").split("?")[0];
 
-// ------------------ tabela de Stitchbook -------------------------- \\
+// ------------------ Construção dos Dados -------------------------- \\
 
 function loadStitchbookTable() {
-    fetch(`http://127.0.0.1:5000/stitchbook`)
-        .then(response => response.json())
+    API.APIGet_Stitchbook()
         .then(data => {
             const stitchbookList = document.getElementById("data_stitchbookList");
             stitchbookList.innerHTML = "";
@@ -36,16 +37,11 @@ function loadStitchbookTable() {
                 removeButton.addEventListener("click", function () {
                     const stitchbookIdDelete = this.getAttribute("data-id");
 
-                    fetch(`http://127.0.0.1:5000/stitchbook/line_id`, {
-                        method: "DELETE",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            "line_id": stitchbookIdDelete
-                        })
+                    API.APIDelete_Stitchbook(stitchbookIdDelete)
+                    .then(data => {
+                        alert(data.message)
+                        loadStitchbookTable()
                     })
-                    .then(response => response.json())
-                    .then(data => alert(data.message))
-                    .then(() => loadStitchbookTable())
                 });
 
                 editButton.addEventListener("click", function () {
@@ -57,22 +53,11 @@ function loadStitchbookTable() {
                     const stich_sequence = tr.querySelector('input[name="stich_sequence"]').value;
                     const observation = tr.querySelector('input[name="observation"]').value;
 
-                    fetch(`http://127.0.0.1:5000/stitchbook/line_id`, { 
-                        method: "PUT",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({
-                            "line_id": stitchbookIdPut,
-                            "amigurumi_id": amigurumiId,
-                            "observation": observation,
-                            "element": element,
-                            "number_row": number_row,
-                            "colour": colour,
-                            "stich_sequence": stich_sequence
-                        })
+                    API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element,number_row,colour,stich_sequence)
+                    .then(data => {
+                        alert(data.message)
+                        loadStitchbookTable()
                     })
-                    .then(response => response.json())
-                    .then(data => alert(data.message))
-                    .then(() => loadStitchbookTable())
                     
                 });
 
@@ -81,10 +66,10 @@ function loadStitchbookTable() {
         });
 }
 
-function addRowOldTable() {
+
+function addRowStitchbookTable() {
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = urlParams.get("id").split("?")[0];
-
     const table = document.getElementById("table_stitchbookList").getElementsByTagName('tbody')[0];
     const newRow = table.insertRow();
 
@@ -95,12 +80,13 @@ function addRowOldTable() {
         <td><input type="text" name="stich_sequence" required></td>
         <td><input type="text" name="observation" required></td>
         <td>
-            <button class="add-btn">Adicionar no BD</button>
-            <button onclick="removeRow(this)" class="delete-btn">Remover Linha</button>
+            <button class="addStitch-btn">Adicionar no BD</button>
+            <button class="deleteStitch-btn">Remover Ponto</button>
         </td>
     `;
 
-    const addButton = newRow.querySelector(".add-btn");
+    const addButton = newRow.querySelector(".addStitch-btn");
+    const deleteButton = newRow.querySelector(".deleteStitch-btn");
 
     addButton.addEventListener("click", function() {
         const element = newRow.querySelector('input[name="element"]').value;
@@ -110,38 +96,23 @@ function addRowOldTable() {
         const observation = newRow.querySelector('input[name="observation"]').value;
 
 
-        fetch("http://127.0.0.1:5000/stitchbook", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                "amigurumi_id": amigurumiId ,
-                "observation": observation,
-                "element": element,
-                "number_row": number_row,
-                "colour": colour,
-                "stich_sequence": stich_sequence
-            })
+        API.APIPost_Stitchbook(amigurumiId,element,number_row,colour,stich_sequence,observation)
+        .then(data => {
+            alert(data.message)
+            loadStitchbookTable()
         })
-        .then(response => response.json())
-        .then(data => alert(data.message))
-        .then(() => loadStitchbookTable())
+    });
+
+    deleteButton.addEventListener("click", function() {
+        removeRow(deleteButton);
     });
 }
-
-function removeRow(button) {
-    const row = button.parentNode.parentNode;
-    row.parentNode.removeChild(row);
-}
-
-document.addEventListener("DOMContentLoaded", loadStitchbookTable);
-
 
 
 
 // ------------------ tabela de Imagem -------------------------- \\
 function loadImagemTable(){
-    fetch(`http://127.0.0.1:5000/image`)
-        .then(image_result => image_result.json())
+    API.APIGet_Image()
         .then(imageData => {
             const container = document.getElementById("cardAmigurumiRecipeImage");
             container.innerHTML = "";
@@ -151,8 +122,6 @@ function loadImagemTable(){
 
             if (filteredImages.length === 0) return;
 
-            filteredImages.sort((a, b) => b.main_image - a.main_image);
-
             const imageSrcArray = filteredImages.map(row => row.image_route);
 
             let currentIndex = 0;
@@ -160,17 +129,17 @@ function loadImagemTable(){
             const imageElement = document.createElement('img');
             imageElement.src = imageSrcArray[currentIndex];
             imageElement.id = "amigurumiRecipeImageDisplay";
-
-            function showNextImage() {
-                currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                imageElement.src = imageSrcArray[currentIndex];
-            }
-
-            function showPreviousImage() {
+  
+            function showPreviousImage(imageSrcArray) {
                 currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
                 imageElement.src = imageSrcArray[currentIndex];
             }
-
+            
+            function showNextImage(imageSrcArray) {
+                currentIndex = (currentIndex + 1) % imageSrcArray.length;
+                imageElement.src = imageSrcArray[currentIndex];
+            }
+            
             const nextButton = document.createElement('button');
             nextButton.innerText = ">";
             nextButton.onclick = showNextImage;
@@ -195,8 +164,7 @@ function createImageEditBox() {
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = urlParams.get("id").split("?")[0];
 
-    fetch(`http://127.0.0.1:5000/image`)
-        .then(response => response.json())
+    API.APIGet_Image()
         .then(data => {
             let overlay = document.createElement("div");
             overlay.id = "modalOverlayImage";
@@ -232,21 +200,17 @@ function createImageEditBox() {
             document.body.appendChild(modal);
 
             document.getElementById("saveImageEdit").addEventListener("click", function () {
-                let newImageData = {
-                    main_image: document.getElementById("editImagePrincipal").value == "on"? true: false,
-                    image_route: document.getElementById("editImageUrl").value,
-                    observation: document.getElementById("editImageObs").value,
-                    amigurumi_id: amigurumiId,
-                };
 
-                fetch(`http://127.0.0.1:5000/image`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(newImageData)
+                const main_image = document.getElementById("editImagePrincipal").value == "on"? true: false
+                const image_route = document.getElementById("editImageUrl").value
+                const observation = document.getElementById("editImageObs").value
+                const amigurumi_id = amigurumiId
+
+                API.APIPost_Image(main_image,image_route,observation,amigurumi_id)
+                .then(data => {
+                    alert(data.message)
+                    loadImagemTable()
                 })
-                .then(response => response.json())
-                .then(data => alert(data.message))
-                .then(() => loadImagemTable())
 
                 document.body.removeChild(modal);
                 document.body.removeChild(overlay);
@@ -262,14 +226,7 @@ function createImageEditBox() {
                 btn.addEventListener("click", function() {
                     const imageId = btn.getAttribute("data-id");
 
-                    fetch(`http://127.0.0.1:5000/image/image_id`, {
-                        method: "DELETE",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            "image_id": imageId
-                        })
-                    })
-                    .then(response => response.json())
+                    API.APIDelete_Image(imageId)
                     .then(data => {
                         alert(data.message)
                         loadImagemTable()
@@ -280,16 +237,15 @@ function createImageEditBox() {
         })
 }
 
-document.getElementById("amigurumi_image_edit").addEventListener("click", createImageEditBox);
 
-document.addEventListener("DOMContentLoaded", loadImagemTable);
+
+
 
 
 
 // ------------------ tabela de Lista de Materiais -------------------------- \\
 function loadMaterialTable(){
-    fetch(`http://127.0.0.1:5000/material_list`)
-        .then(response => response.json())
+    API.APIGet_MaterialList()
         .then(data => {
             let listContainer = document.getElementById("data_amigurumi_material");
             listContainer.innerHTML = "";
@@ -322,35 +278,19 @@ function loadMaterialTable(){
                     let updatedQuantity = li.querySelector('input[name="quantity"]').value;
                     let updatedUnit = li.querySelector('input[name="unit"]').value;
 
-                    fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            "material_list_id":materialId,
-                            "material": updatedMaterial,
-                            "quantity": updatedQuantity,
-                            "unit": updatedUnit
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(result => alert("Material atualizado com sucesso!"))
-                    .catch(error => alert("Erro ao atualizar material."));
+                    API.APIPut_MaterialList(materialId, updatedMaterial, updatedQuantity, updatedUnit)
+                    .then(data => alert(data.message))
                 });
 
                 let removeButton = li.querySelector(".btn-remove");
                 removeButton.addEventListener("click", function () {
                     let materialId = this.getAttribute("data-id");
 
-                    fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
-                        method: "DELETE",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            "material_list_id":materialId
-                        })
+                    API.APIDelete_MaterialList(materialId)
+                    .then(data => {
+                        alert(data.message)
+                        li.remove()
                     })
-                    .then(response => response.json())
-                    .then(data => alert(data.message))
-                    .then(() => li.remove())
                 });
             });
 
@@ -371,41 +311,38 @@ function addRowMaterialTable() {
         <td><input type="text" name="unit" required></td>
         <td>
             <button class="addMaterial-btn">Adicionar no BD</button>
-            <button onclick="removeRow(this)" class="deleteMaterial-btn">Remover Linha</button>
+            <button class="deleteMaterial-btn">Remover Linha</button>
         </td>
     `;
 
     const addButton = newRow.querySelector(".addMaterial-btn");
+    const deleteButton = newRow.querySelector(".deleteMaterial-btn");
 
     addButton.addEventListener("click", function() {
         const material = newRow.querySelector('input[name="material"]').value;
         const quantity = newRow.querySelector('input[name="quantity"]').value;
         const unit = newRow.querySelector('input[name="unit"]').value;
 
-        fetch("http://127.0.0.1:5000/material_list", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                "amigurumi_id": amigurumiId,
-                "material": material,
-                "quantity": quantity,
-                "unit": unit
-            })
+        API.APIPost_MaterialList(amigurumiId,material,quantity,unit)
+        .then(data => {
+            alert(data.message)
+            loadMaterialTable()
         })
-        .then(response => response.json())
-        .then(data => alert(data.message))
-        .then(() => loadMaterialTable())
+    });
+
+    deleteButton.addEventListener("click", function() {
+        removeRow(deleteButton);
     });
 }
 
-document.addEventListener("DOMContentLoaded", loadMaterialTable);
+
+
 
 
 
 // ------------------ tabela de Dados Básicos -------------------------- \\
 function loadInformatianAmigurumi(){
-    fetch(`http://127.0.0.1:5000/foundation_list`)
-        .then(response => response.json())
+    API.APIGet_FoundationList()
         .then(data => {
             data
             .filter(row=> parseInt(row.amigurumi_id) == parseInt(amigurumiId))
@@ -424,9 +361,6 @@ function loadInformatianAmigurumi(){
 
 }
 
-document.addEventListener("DOMContentLoaded", loadInformatianAmigurumi);
-
-
 
 function createEditBox() {
     if (document.getElementById("editAmigurumiBox")) {
@@ -436,8 +370,7 @@ function createEditBox() {
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = urlParams.get("id").split("?")[0];
 
-    fetch(`http://127.0.0.1:5000/foundation_list`)
-        .then(response => response.json())
+    API.APIGet_FoundationList()
         .then(data => {
             const amigurumiData = data.find(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
 
@@ -468,26 +401,20 @@ function createEditBox() {
             document.body.appendChild(modal);
 
             document.getElementById("saveEdit").addEventListener("click", function () {
-                let updatedData = {
-                    amigurumi_id: amigurumiId,
-                    name: document.getElementById("editName").value,
-                    autor: document.getElementById("editAuthor").value,
-                    size: document.getElementById("editSize").value,
-                    link: document.getElementById("editLink").value,
-                    amigurumi_id_of_linked_amigurumi: document.getElementById("editLinkedId").value,
-                    obs: document.getElementById("editObs").value
-                };
 
-                fetch(`http://127.0.0.1:5000/foundation_list/amigurumi_id`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(updatedData)
-                })
-                .then(response => response.json())
-                .then(data => alert(data.message))
-                .then(() => {
-                    loadMaterialTable();
-                    loadInformatianAmigurumi();
+                const amigurumi_id = amigurumiId
+                const name = document.getElementById("editName").value
+                const autor = document.getElementById("editAuthor").value
+                const size = document.getElementById("editSize").value
+                const link = document.getElementById("editLink").value
+                const amigurumi_id_of_linked_amigurumi = document.getElementById("editLinkedId").value
+                const obs = document.getElementById("editObs").value
+ 
+                API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs)
+                .then(data =>{
+                    alert(data.message)
+                    loadMaterialTable()
+                    loadInformatianAmigurumi()
                 })
 
                 document.body.removeChild(modal);
@@ -501,98 +428,112 @@ function createEditBox() {
         })
 }
 
-document.getElementById("amigurumi_edit").addEventListener("click", createEditBox);
+
 
 function deleteAmigurumi(){
     var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = urlParams.get("id").split("?")[0]
+    var amigurumi_id = urlParams.get("id").split("?")[0]
 
-    fetch(`http://127.0.0.1:5000/foundation_list/amigurumi_id`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            "amigurumi_id": amigurumiId
-        })
-    })
-    .then(response => response.json())
-    .then(data => alert(data.message))
-    .then(() => {
-        window.location.href = "_amigurumi.html";
+    API.APIDelete_FoundationList(amigurumi_id)
+    .then(data => {
+        alert(data.message)
+        window.location.href = "_amigurumi.html"
     })
 }
-
-document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);
 
 
 
 // ------------------ Card de Novas Receitas -------------------------- \\
-fetch(`http://127.0.0.1:5000/foundation_list`)
-    .then(response => response.json())
-    .then(data => {
-        const cardAmigurumi = document.getElementById("cardAmigurumi");
-        cardAmigurumi.innerHTML = "";
+function loadNewCardsBellow(){
+    API.APIGet_FoundationList()
+        .then(data => {
+            const cardAmigurumi = document.getElementById("cardAmigurumi");
+            cardAmigurumi.innerHTML = "";
 
-        const filteredData = data.filter(row => parseInt(row.amigurumi_id_of_linked_amigurumi) === parseInt(amigurumiId));
+            const filteredData = data.filter(row => parseInt(row.amigurumi_id_of_linked_amigurumi) === parseInt(amigurumiId));
 
-        if (filteredData.length === 0) {
-            const noResultsMessage = document.createElement('p');
-            noResultsMessage.textContent = "Parece que não encontramos nada relacionado a esse item. Não desanime! Tente explorar outras opções incríveis!";
-            cardAmigurumi.appendChild(noResultsMessage);
-        } else {
-            filteredData.forEach(amigurumi => {
-                const card = document.createElement("div");
-                card.className = "cardAmigurumi";
+            if (filteredData.length === 0) {
+                const noResultsMessage = document.createElement('p');
+                noResultsMessage.textContent = "Parece que não encontramos nada relacionado a esse item. Não desanime! Tente explorar outras opções incríveis!";
+                cardAmigurumi.appendChild(noResultsMessage);
+            } else {
+                filteredData.forEach(amigurumi => {
+                    const card = document.createElement("div");
+                    card.className = "cardAmigurumi";
 
-                fetch('http://127.0.0.1:5000/image')
-                    .then(image_result => image_result.json()) 
-                    .then(imageData => {
-                        const imageSrcArray = imageData
-                            .filter(row => row.amigurumi_id == amigurumi.amigurumi_id)
-                            .map(row => row.image_route); 
+                    API.APIGet_Image()
+                        .then(imageData => {
+                            const imageSrcArray = imageData
+                                .filter(row => row.amigurumi_id == amigurumi.amigurumi_id)
+                                .map(row => row.image_route); 
 
-                        let currentIndex = 0;
+                            let currentIndex = 0;
 
-                        const imageElement = document.createElement('img');
-                        imageElement.src = imageSrcArray[currentIndex];
-                        imageElement.alt = amigurumi.name;
-                        imageElement.id = "cardAmigurumiImage";
-
-                        function showNextImage() {
-                            currentIndex = (currentIndex + 1) % imageSrcArray.length;
+                            const imageElement = document.createElement('img');
                             imageElement.src = imageSrcArray[currentIndex];
-                        }
+                            imageElement.alt = amigurumi.name;
+                            imageElement.id = "cardAmigurumiImage";
 
-                        function showPreviousImage() {
-                            currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                            imageElement.src = imageSrcArray[currentIndex];
-                        }
+                            function showPreviousImage() {
+                                currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
+                                imageElement.src = imageSrcArray[currentIndex];
+                            }
+                            
+                            function showNextImage() {
+                                currentIndex = (currentIndex + 1) % imageSrcArray.length;
+                                imageElement.src = imageSrcArray[currentIndex];
+                            }
 
-                        const nextButton = document.createElement('button_next_previous');
-                        nextButton.innerText = ">";
-                        nextButton.onclick = showNextImage;
+                            const nextButton = document.createElement('button_next_previous');
+                            nextButton.innerText = ">";
+                            nextButton.onclick = showNextImage;
 
-                        const prevButton = document.createElement('button_next_previous');
-                        prevButton.innerText = "<";
-                        prevButton.onclick = showPreviousImage;
+                            const prevButton = document.createElement('button_next_previous');
+                            prevButton.innerText = "<";
+                            prevButton.onclick = showPreviousImage;
 
-                        const titleElement = document.createElement('h3');
-                        titleElement.textContent = amigurumi.name;
+                            const titleElement = document.createElement('h3');
+                            titleElement.textContent = amigurumi.name;
 
-                        const link = document.createElement('a');
-                        link.href = `_receita.html?id=${amigurumi.amigurumi_id}?name=${amigurumi.name}`;
-                        link.textContent = 'Ver Mais';
+                            const link = document.createElement('a');
+                            link.href = `_receita.html?id=${amigurumi.amigurumi_id}?name=${amigurumi.name}`;
+                            link.textContent = 'Ver Mais';
 
-                        card.appendChild(titleElement);
-                        card.appendChild(imageElement);
-                        card.appendChild(prevButton);
-                        card.appendChild(nextButton);
-                        card.appendChild(link);
+                            card.appendChild(titleElement);
+                            card.appendChild(imageElement);
+                            card.appendChild(prevButton);
+                            card.appendChild(nextButton);
+                            card.appendChild(link);
 
-                        cardAmigurumi.appendChild(card);
-                    })
-            });
-        }
-    })
+                            cardAmigurumi.appendChild(card);
+                        })
+                });
+            }
+        })
+}
 
 
-document.addEventListener("DOMContentLoaded", loadInformatianAmigurumi);
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadNewCardsBellow();
+    loadInformatianAmigurumi();
+    loadStitchbookTable();
+    loadImagemTable();
+    loadMaterialTable();
+});
+
+document.getElementById("amigurumi_image_edit").addEventListener("click", createImageEditBox);
+document.getElementById("amigurumi_edit").addEventListener("click", createEditBox);
+document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);
+document.getElementById('add_material').addEventListener('click', addRowMaterialTable)
+document.getElementById('add_stitchbook').addEventListener('click', addRowStitchbookTable)
+
+
+
+
+// ------------------ Complementares -------------------------- \\
+function removeRow(button) {
+    const row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
