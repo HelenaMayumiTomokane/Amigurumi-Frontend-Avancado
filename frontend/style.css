@@ -1,0 +1,363 @@
+/* ------------ Geral -------------- */
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    background-color: white;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 0px;
+    text-align: center;
+}
+
+#master_head {
+    display: flex;
+    background-color: #D1B89A;
+    position: relative;
+    width: 100%;
+    flex-grow: 1;
+    padding: 2px 0px;
+    border-block: solid #A56E55;
+    writing-mode: horizontal-tb;
+}
+
+header h1 {
+    gap: 10px;
+    padding: 10px 0px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: center;
+    border-block: thick double #8c522d;
+}
+
+#logo_company {
+    margin: 15px;
+    height: 80px;
+    display: flex;
+    align-items: center; 
+    justify-content: flex-end; 
+    border: solid ; 
+}
+
+.button_title {
+    background-color: #8c522d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
+button_next_previous {
+    background-color: #A56E55;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 10px;
+    cursor: pointer;
+    width: 10px;
+    border-radius: 5px;
+    align-items: center; 
+    justify-content: center;
+}
+
+
+#footer {
+    background-color: #D1B89A;
+    color: white;
+    text-align: center;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 9999;
+    border-block: solid #A56E55;
+    writing-mode: horizontal-tb;
+}
+
+#github_logo, #openAPI_logo, #postman_logo {
+    width: 100px;
+    height: auto;
+}
+
+/* ------------ HTML _index -------------- */
+#master_index > div {
+    margin-bottom: 80px;
+}
+
+.about_index{
+    border: 1px solid #000000;
+    height: 400px;
+    font-size: 20px;
+}
+
+#about_me {
+    background-color: #494ce6;    
+}
+
+#about_site {
+    background-color: #494ce6;
+}
+
+#welcome_site {
+    background-color: #494ce6;
+}
+
+
+/* ------------ HTML _Amigurumi -------------- */
+#searchInput {
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1.1em;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+#cardAmigurumi{
+    display: flex;            
+    flex-wrap: wrap;          
+    gap: 20px;                
+    justify-content: center;  
+    padding: 10px;   
+    flex: 1;  
+}
+
+#cardAmigurumiImage {
+    width: 100%;
+    height: 60%;;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.cardAmigurumi {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 170px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: transform 0.3s;
+}
+
+.cardAmigurumi:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cardAmigurumi h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #A56E55;
+    height: 12%;;
+}
+
+.cardAmigurumi a {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    background-color: #A56E55;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+
+
+/* ------------ HTML _Receita -------------- */
+#amigurmi_name_recipe {
+    color: #8c522d;
+    font-size: 48px;
+    text-align: center; 
+    font-weight: bold;
+    text-transform: capitalize; 
+    text-decoration: underline dotted  ;
+    background-color: #a56e5528;
+    display: inline-block;
+    padding: 5px
+}
+
+#amigurmi_name_autor, #amigurmi_name_size {
+    color: rgb(92, 89, 89);
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: capitalize; 
+    text-align: center; 
+    display: flex;
+    padding: 7px
+}
+
+#amigurumi_information {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 40px;
+    padding: 10px;
+}
+
+#amigurumi_imagem_autor {
+    width: 300px;
+}
+
+#cardAmigurumiRecipeImage {
+    display: flex;            
+    flex-wrap: wrap;          
+    gap: 10px;                
+    justify-content: center;  
+    padding: 10px;   
+}
+
+#cardAmigurumiRecipeImage:hover {
+    background-color: #e0c3a3; 
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+#amigurumiRecipeImageDisplay {
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#data_amigurumi_material{
+    color: #8c522d;
+    font-size: 16px;
+    column-gap: 20px;
+    display: inline-block;
+}
+
+#data_amigurumi_material li {
+    padding: 5px 0;
+    font-size: 16px;
+    border-bottom: 1px solid #ccc;
+}
+
+.table_about_amigurumi th, .table_about_amigurumi td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table_about_amigurumi th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+#table_stitchbookList{
+    width: 100%; 
+    border-collapse: collapse;
+    margin-top: 10px;
+    overflow-x: auto;
+    border: 1px solid #070202
+}
+
+#data_stitchbookList th, #data_stitchbookList td {
+    border: 1px solid #b6b4b4;
+}
+
+#modalOverlayAmigurumi, #modalOverlayImage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+#editAmigurumiBox, #editImageBox, #addNewAmigurumiBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    width: 300px;
+}
+
+#editAmigurumiBox input, #editImageBox input, #addNewAmigurumiBox imput {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+
+#saveEdit {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#cancelEdit {
+    background-color: #f44336;
+    color: white;
+}
+
+
+/*
+#linkedCardAmigurumi{
+    display: flex;            
+    flex-wrap: wrap;          
+    gap: 20px;                
+    justify-content: center;  
+    padding: 10px;   
+    flex: 1;  
+}
+
+#linkedCardAmigurumiImage {
+    width: 100%;
+    height: 60%;;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.linkedCardAmigurumi {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 170px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: transform 0.3s;
+}
+
+.linkedCardAmigurumi:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.linkedCardAmigurumi h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #A56E55;
+}
+
+.linkedCardAmigurumi a {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    background-color: #A56E55;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+*/
+
+/* ------------ HTML _Nova_Receita -------------- */
+#responseMessageImputRecipe {
+    margin-top: 15px;
+    font-weight: bold;
+}

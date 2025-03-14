@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <script src="--header.js" defer></script>
+    <div id="header_container"></div>
+    <div id="body_header_container"></div>
+</head>
+
+<body>
+
+    <h1 id="amigurmi_name_recipe"> </h1>
+    <br>
+    <button id="amigurumi_edit"> Editar Amigurumi</button>
+    <button id="amigurumi_image_edit"> Editar Imagem</button>
+    <button id="delete_amigurumi"> Excluir Amigurumi</button>
+    <button id="pdf_button_recipe" onclick="window.print()">Salvar como PDF</button>
+    <br>
+    <br>
+    
+    <div id="amigurumi_information">
+        <div id = "amigurumi_imagem_autor">
+            <div id="cardAmigurumiRecipeImage"></div>
+            <span id="amigurmi_name_autor"></span>
+            <span id="amigurmi_name_size"></span>
+        </div>
+        
+        <table id="table_amigurumi_material">
+            <tbody id="data_amigurumi_material">
+                <!-- Linhas adicionadas pelo JavaScript -->
+            </tbody>
+        </table>
+        <button onclick="addRowMaterialTable()">Adicionar Linha</button>
+        <br>
+        <br>
+        
+
+    </div>
+
+    <br>
+
+    
+   
+    <div>
+        <table id="table_stitchbookList">
+            <thead>
+                <h3>Receita:</h3>
+                <tr>
+                    <th>Parte</th>
+                    <th>Carreira</th>
+                    <th>Cor</th>
+                    <th>Sequência de Pontos</th>
+                    <th>Observação</th>
+                    <th>Ajuste?</th>
+                </tr>
+            </thead>
+            <tbody id="data_stitchbookList">
+                <!-- Linhas adicionadas pelo JavaScript -->
+            </tbody>
+        </table>
+        <br><br>
+        <button onclick="addRowOldTable()">Adicionar Linha</button>
+    </div>
+    
+
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <h1>Receitas Relacionadas</h1>
+    <br>
+    <div id="cardAmigurumi"></div>
+
+
+    <script src="-receita.js"></script>
+
+    <br>
+    <br>
+    <br>
+    
+</body>
+    <div id="footer"></div>
+</html>
