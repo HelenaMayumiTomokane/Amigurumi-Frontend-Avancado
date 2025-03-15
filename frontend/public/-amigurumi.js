@@ -80,31 +80,31 @@ function filterAmigurumis() {
                         const imageSrcArray = imageData
                             .filter(row => row.amigurumi_id == amigurumi.amigurumi_id)
                             .map(row => row.image_route); 
-
+                        
                         let currentIndex = 0;
 
                         const imageElement = document.createElement('img');
-                        imageElement.src = imageSrcArray[currentIndex];
+                        imageElement.src = `http://localhost:8000/${imageSrcArray[currentIndex]}`
                         imageElement.alt = amigurumi.name;
                         imageElement.id = "cardAmigurumiImage";
 
                         function showNextImage() {
                             currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                            imageElement.src = imageSrcArray[currentIndex];
+                            imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`
                         }
 
                         function showPreviousImage() {
                             currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                            imageElement.src = imageSrcArray[currentIndex];
+                            imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`
                         }
 
                         const nextButton = document.createElement('button_next_previous');
                         nextButton.innerText = ">";
-                        nextButton.onclick = showNextImage;
-
+                        nextButton.addEventListener('click', showNextImage);
+                        
                         const prevButton = document.createElement('button_next_previous');
                         prevButton.innerText = "<";
-                        prevButton.onclick = showPreviousImage;
+                        prevButton.addEventListener('click', showPreviousImage);
 
                         const titleElement = document.createElement('h3');
                         titleElement.textContent = amigurumi.name;

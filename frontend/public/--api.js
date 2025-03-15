@@ -1,3 +1,4 @@
+/*------------------- Stitchbook ---------------------------*/
 export function APIGet_Stitchbook(){
     return fetch(`http://127.0.0.1:5000/stitchbook`)
         .then(response => response.json())
@@ -22,7 +23,6 @@ export function APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, ele
         .then(data => data)
 }
 
-
 export function APIDelete_Stitchbook(stitchbookIdDelete){
     return fetch(`http://127.0.0.1:5000/stitchbook/line_id`, { 
             method: "DELETE",
@@ -34,7 +34,6 @@ export function APIDelete_Stitchbook(stitchbookIdDelete){
         .then(response => response.json())
         .then(data => data)
 }
-
 
 export function APIPost_Stitchbook(amigurumi_id,element,number_row,colour,stich_sequence,observation){
     return fetch("http://127.0.0.1:5000/stitchbook", {
@@ -53,6 +52,9 @@ export function APIPost_Stitchbook(amigurumi_id,element,number_row,colour,stich_
     .then(data => data)
 }
 
+
+
+/*------------------- Image ---------------------------*/
 export function APIDelete_Image(imageId){
     return fetch(`http://127.0.0.1:5000/image`, {
         method: "DELETE",
@@ -63,43 +65,6 @@ export function APIDelete_Image(imageId){
     })
     .then(response => response.json())
 }
-
-export function APIGet_MaterialList(){
-    return fetch(`http://127.0.0.1:5000/material_list`)
-    .then(response => response.json())
-    .then(data => data)
-}
-
-
-export function APIPut_MaterialList(materialId, updatedMaterial, updatedQuantity, updatedUnit){
-    return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            "material_list_id":materialId,
-            "material": updatedMaterial,
-            "quantity": updatedQuantity,
-            "unit": updatedUnit
-        })
-    })
-    .then(response => response.json())
-    .then(data => data)
-}
-
-
-
-export function APIDelete_MaterialList(materialId){
-    return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            "material_list_id":materialId
-        })
-    })
-    .then(response => response.json())
-    .then(data => data)
-}
-
 
 export function APIPost_Image(main_image,image_route,observation,amigurumi_id){
     return etch(`http://127.0.0.1:5000/image`, {
@@ -116,7 +81,47 @@ export function APIPost_Image(main_image,image_route,observation,amigurumi_id){
     .then(data => data)
 }
 
+export function APIGet_Image(){
+    return fetch(`http://127.0.0.1:5000/image`)
+        .then(response => response.json())
+        .then(data => data)
+}
 
+
+
+/*------------------- Material ---------------------------*/
+export function APIGet_MaterialList(){
+    return fetch(`http://127.0.0.1:5000/material_list`)
+    .then(response => response.json())
+    .then(data => data)
+}
+
+export function APIPut_MaterialList(materialId, updatedMaterial, updatedQuantity, updatedUnit){
+    return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            "material_list_id":materialId,
+            "material": updatedMaterial,
+            "quantity": updatedQuantity,
+            "unit": updatedUnit
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+
+export function APIDelete_MaterialList(materialId){
+    return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            "material_list_id":materialId
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
 
 export function APIPost_MaterialList(amigurumiId,material,quantity,unit){
     return fetch("http://127.0.0.1:5000/material_list", {
@@ -135,6 +140,7 @@ export function APIPost_MaterialList(amigurumiId,material,quantity,unit){
 
 
 
+/*------------------- Foundation ---------------------------*/
 export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs){
     return fetch(`http://127.0.0.1:5000/foundation_list/amigurumi_id`, {
         method: "PUT",
@@ -153,8 +159,6 @@ export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurum
     .then(data => data)
 }
 
-
-
 export function APIDelete_FoundationList(amigurumi_id){
     return fetch(`http://127.0.0.1:5000/foundation_list/amigurumi_id`, {
         method: "DELETE",
@@ -167,23 +171,11 @@ export function APIDelete_FoundationList(amigurumi_id){
     .then(data => data)
 }
 
-
-
 export function APIGet_FoundationList(){
     return fetch(`http://127.0.0.1:5000/foundation_list`)
         .then(response => response.json())
         .then(data => data)
 }
-
-
-
-export function APIGet_Image(){
-    return fetch(`http://127.0.0.1:5000/image`)
-        .then(response => response.json())
-        .then(data => data)
-}
-
-
 
 export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumi_id_of_linked_amigurumiAmigurumi,obsAmigurumi){
     return fetch(`http://127.0.0.1:5000/foundation_list`, {

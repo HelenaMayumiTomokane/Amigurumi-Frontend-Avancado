@@ -127,26 +127,26 @@ function loadImagemTable(){
             let currentIndex = 0;
 
             const imageElement = document.createElement('img');
-            imageElement.src = imageSrcArray[currentIndex];
+            imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
             imageElement.id = "amigurumiRecipeImageDisplay";
   
-            function showPreviousImage(imageSrcArray) {
+            function showPreviousImage() {
                 currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                imageElement.src = imageSrcArray[currentIndex];
+                imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
             }
             
-            function showNextImage(imageSrcArray) {
+            function showNextImage() {
                 currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                imageElement.src = imageSrcArray[currentIndex];
+                imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
             }
             
-            const nextButton = document.createElement('button');
+            const nextButton = document.createElement('button_next_previous');
             nextButton.innerText = ">";
-            nextButton.onclick = showNextImage;
+            nextButton.addEventListener('click', showNextImage); 
 
-            const prevButton = document.createElement('button');
+            const prevButton = document.createElement('button_next_previous');
             prevButton.innerText = "<";
-            prevButton.onclick = showPreviousImage;
+            prevButton.addEventListener('click', showPreviousImage);
 
             container.appendChild(imageElement);
             container.appendChild(prevButton);
@@ -188,7 +188,7 @@ function createImageEditBox() {
                         .filter(row=> parseInt(row.amigurumi_id) === parseInt(amigurumiId))
                         .map(image => `
                         <li>
-                            <img src="${image.image_route}" alt="Imagem" style="max-width: 100px; height: auto; margin-right: 10px;">
+                            <img src= http://localhost:8000/"${image.image_route}" alt="Imagem">
                             <span>${image.observation}</span>
                             <span>${image.main_image}</span>
                             <button class="deleteImageBtn" data-id="${image.image_id}">Excluir</button>
@@ -470,27 +470,27 @@ function loadNewCardsBellow(){
                             let currentIndex = 0;
 
                             const imageElement = document.createElement('img');
-                            imageElement.src = imageSrcArray[currentIndex];
+                            imageElement.src = `http://localhost:8000/${imageSrcArray[currentIndex]}`;
                             imageElement.alt = amigurumi.name;
                             imageElement.id = "cardAmigurumiImage";
 
                             function showPreviousImage() {
                                 currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                                imageElement.src = imageSrcArray[currentIndex];
+                                imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
                             }
                             
                             function showNextImage() {
                                 currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                                imageElement.src = imageSrcArray[currentIndex];
+                                imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
                             }
 
                             const nextButton = document.createElement('button_next_previous');
                             nextButton.innerText = ">";
-                            nextButton.onclick = showNextImage;
+                            nextButton.addEventListener('click', showNextImage); 
 
                             const prevButton = document.createElement('button_next_previous');
                             prevButton.innerText = "<";
-                            prevButton.onclick = showPreviousImage;
+                            prevButton.addEventListener('click', showPreviousImage);
 
                             const titleElement = document.createElement('h3');
                             titleElement.textContent = amigurumi.name;
