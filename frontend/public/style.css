@@ -230,12 +230,12 @@ button_next_previous {
     font-size: 16px;
     column-gap: 20px;
     display: inline-block;
+    flex-wrap: wrap;
 }
 
 #data_amigurumi_material li {
     padding: 5px 0;
     font-size: 16px;
-    border-bottom: 1px solid #ccc;
 }
 
 .table_about_amigurumi th, .table_about_amigurumi td {
@@ -305,56 +305,6 @@ button_next_previous {
 }
 
 
-/*
-#linkedCardAmigurumi{
-    display: flex;            
-    flex-wrap: wrap;          
-    gap: 20px;                
-    justify-content: center;  
-    padding: 10px;   
-    flex: 1;  
-}
-
-#linkedCardAmigurumiImage {
-    width: 100%;
-    height: 60%;;
-    border-radius: 8px;
-    object-fit: contain;
-}
-
-.linkedCardAmigurumi {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    width: 170px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    transition: transform 0.3s;
-}
-
-.linkedCardAmigurumi:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.linkedCardAmigurumi h3 {
-    margin-top: 0;
-    font-size: 1.5em;
-    color: #A56E55;
-}
-
-.linkedCardAmigurumi a {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-    background-color: #A56E55;
-    color: white;
-    padding: 8px;
-    border-radius: 5px;
-    text-decoration: none;
-}
-
-*/
 
 /* ------------ HTML _Nova_Receita -------------- */
 #responseMessageImputRecipe {
