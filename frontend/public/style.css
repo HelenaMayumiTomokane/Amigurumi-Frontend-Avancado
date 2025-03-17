@@ -82,10 +82,6 @@ button_next_previous {
 }
 
 /* ------------ HTML _index -------------- */
-#master_index > div {
-    margin-bottom: 80px;
-}
-
 .about_index{
     border: 1px solid #000000;
     height: 400px;
@@ -96,14 +92,17 @@ button_next_previous {
     background-color: #494ce6;    
 }
 
+#about_me img{
+    max-width: 300px;    
+}
+
 #about_site {
     background-color: #494ce6;
 }
 
-#welcome_site {
-    background-color: #494ce6;
+#about_site img{
+    max-width: 300px;    
 }
-
 
 /* ------------ HTML _Amigurumi -------------- */
 #searchInput {
