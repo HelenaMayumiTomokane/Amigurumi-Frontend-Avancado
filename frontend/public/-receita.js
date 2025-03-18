@@ -20,14 +20,14 @@ function loadStitchbookTable() {
                 const tr = document.createElement("tr");
 
                 tr.innerHTML = `
-                    <td><input type="text" name="element" value="${row.element || ""}"></td>
-                    <td><input type="text" name="colour" value="${row.colour || ""}"></td>
-                    <td><input type="number" name="number_row" value="${row.number_row || ""}"></td>
-                    <td><input type="text" name="stich_sequence" value="${row.stich_sequence || ""}"></td>
-                    <td><input type="text" name="observation" value="${row.observation || ""}"></td>
-                    <td>
-                        <button class="btn-edit" data-id="${row.line_id}">Alterar no BD</button>
-                        <button class="btn-remove" data-id="${row.line_id}">Deletar no BD</button>
+                    <td name="element">${row.element || ""}</td>
+                    <td name="number_row">${row.number_row || ""}</td>
+                    <td name="colour">${row.colour || ""}</td>
+                    <td name="stich_sequence">${row.stich_sequence || ""}</td>
+                    <td name="observation">${row.observation || ""}</td>
+                    <td id="manual_fit_stitchbook">
+                        <button class="btn-edit" data-id="${row.line_id}">Alterar</button>
+                        <button class="btn-remove" data-id="${row.line_id}">Deletar</button>
                     </td>
                 `;
 
@@ -47,18 +47,57 @@ function loadStitchbookTable() {
                 editButton.addEventListener("click", function () {
                     const stitchbookIdPut = this.getAttribute("data-id");
 
-                    const element = tr.querySelector('input[name="element"]').value;
-                    const number_row = tr.querySelector('input[name="number_row"]').value;
-                    const colour = tr.querySelector('input[name="colour"]').value;
-                    const stich_sequence = tr.querySelector('input[name="stich_sequence"]').value;
-                    const observation = tr.querySelector('input[name="observation"]').value;
+                    if (editButton.classList.contains("editing")) return;
 
-                    API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element,number_row,colour,stich_sequence)
-                    .then(data => {
-                        alert(data.message)
-                        loadStitchbookTable()
+                    removeButton.style.display = 'none'; 
+
+                    editButton.classList.add("editing");
+
+                    const originalValues = {};
+
+                    ["element", "number_row", "colour", "stich_sequence", "observation"].forEach(name => {
+                        let cell = tr.querySelector(`[name="${name}"]`);
+                        originalValues[name] = cell.textContent.trim(); // Salva o valor original
+                        cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
+                    });
+
+                    editButton.textContent = "Salvar";
+                    editButton.classList.add("btn-save");
+
+                    let cancelButton = document.createElement("button");
+                    cancelButton.textContent = "Cancelar";
+                    cancelButton.classList.add("btn-cancel");
+
+                    editButton.after(cancelButton);
+
+                    cancelButton.addEventListener("click", function () {
+                        ["element", "number_row", "colour", "stich_sequence", "observation"].forEach(name => {
+                            let cell = tr.querySelector(`[name="${name}"]`);
+                            cell.innerHTML = originalValues[name];
+                        });
+
+                        editButton.textContent = "Alterar";
+                        editButton.classList.remove("btn-save", "editing");
+                        cancelButton.remove();
+                        removeButton.style.display = 'inline'; 
+                    });
+
+
+                    editButton.addEventListener("click", function () {
+                        if (!editButton.classList.contains("editing")) return;
+
+                        const element = tr.querySelector('input[name="element"]').value;
+                        const number_row = tr.querySelector('input[name="number_row"]').value;
+                        const colour = tr.querySelector('input[name="colour"]').value;
+                        const stich_sequence = tr.querySelector('input[name="stich_sequence"]').value;
+                        const observation = tr.querySelector('input[name="observation"]').value;
+
+                        API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element, number_row, colour, stich_sequence)
+                        .then(data => {
+                            alert(data.message);
+                            loadStitchbookTable();
+                        });
                     })
-                    
                 });
 
                 stitchbookList.appendChild(tr);
@@ -79,9 +118,9 @@ function addRowStitchbookTable() {
         <td><input type="text" name="colour" required></td>
         <td><input type="text" name="stich_sequence" required></td>
         <td><input type="text" name="observation" required></td>
-        <td>
-            <button class="addStitch-btn">Adicionar no BD</button>
-            <button class="deleteStitch-btn">Remover Ponto</button>
+        <td id="manual_fit_stitchbook">
+            <button class="addStitch-btn">Adicionar</button>
+            <button class="deleteStitch-btn">Remover</button>
         </td>
     `;
 
@@ -178,9 +217,13 @@ function createImageEditBox() {
                 <label>URL da Imagem: <input type="url" id="editImageUrl" placeholder="Cole a URL da imagem"></label><br><br>
                 <label>Observação: <input type="text" id="editImageObs" placeholder="Adicione uma observação"></label><br><br>
                 <label>Imagem Principal: <input type="checkbox" id="editImagePrincipal"></label><br><br>
-
-                <button id="saveImageEdit">Salvar</button>
+                <br>
+                <br>
+                <button id="saveImageEdit">Adicionar</button>
                 <button id="cancelImageEdit" class="cancel-btn">Cancelar</button>
+                <br>
+                <br>
+                <br>
                 <hr>
                 <h4>Imagens Existentes</h4>
                 <ul id="imageList">
@@ -189,10 +232,21 @@ function createImageEditBox() {
                         .map(image => `
                         <li>
                             <img src= http://localhost:8000/"${image.image_route}" alt="Imagem">
-                            <span>${image.observation}</span>
-                            <span>${image.main_image}</span>
+                            <br>
+                            <br>
+                            <span> Imagem Principal: ${image.main_image}</span>
+                            <br>
+                            <span> Observação: ${image.observation}</span>
+                            <br>
+                            <br>
                             <button class="deleteImageBtn" data-id="${image.image_id}">Excluir</button>
+                            <br>
+                            <br>
+                            <br>
                         </li>
+                        <br>
+                        <br>
+                        <br>
                     `).join('')}
                 </ul>
             `;
@@ -244,14 +298,13 @@ function createImageEditBox() {
 
 
 // ------------------ tabela de Lista de Materiais -------------------------- \\
-function loadMaterialTable(){
+function loadMaterialTable() {
     API.APIGet_MaterialList()
         .then(data => {
             let listContainer = document.getElementById("data_amigurumi_material");
             listContainer.innerHTML = "";
 
             let title = document.createElement("h2");
-            title.innerHTML = "Lista de Materiais";
             listContainer.appendChild(title);
 
             let ul = document.createElement("ul");
@@ -262,41 +315,87 @@ function loadMaterialTable(){
                 let li = document.createElement("li");
 
                 li.innerHTML = `
-                    <input type="text" name="material" value="${material.material}">
-                    <input type="number" name="quantity" value="${material.quantity}" min="0">
-                    <input type="text" name="unit" value="${material.unit}">
-                    <button class="btn-save" data-id="${material.material_list_id}">Alterar</button>
+                    <span name="material">${material.material}</span>
+                    <span name="quantity">${material.quantity}</span>
+                    <span name="unit">${material.unit}</span>
+                    <button class="btn-edit" data-id="${material.material_list_id}">Alterar</button>
                     <button class="btn-remove" data-id="${material.material_list_id}">Remover</button>
                 `;
 
                 ul.appendChild(li);
 
-                let saveButton = li.querySelector(".btn-save");
-                saveButton.addEventListener("click", function () {
-                    let materialId = this.getAttribute("data-id");
-                    let updatedMaterial = li.querySelector('input[name="material"]').value;
-                    let updatedQuantity = li.querySelector('input[name="quantity"]').value;
-                    let updatedUnit = li.querySelector('input[name="unit"]').value;
-
-                    API.APIPut_MaterialList(materialId, updatedMaterial, updatedQuantity, updatedUnit)
-                    .then(data => alert(data.message))
-                });
-
+                let editButton = li.querySelector(".btn-edit");
                 let removeButton = li.querySelector(".btn-remove");
+
                 removeButton.addEventListener("click", function () {
                     let materialId = this.getAttribute("data-id");
 
                     API.APIDelete_MaterialList(materialId)
                     .then(data => {
-                        alert(data.message)
-                        li.remove()
-                    })
+                        alert(data.message);
+                        li.remove();
+                    });
+                });
+
+                editButton.addEventListener("click", function () {
+                    let materialId = this.getAttribute("data-id");
+                    
+                    if (editButton.classList.contains("editing")) return;
+                    editButton.classList.add("editing");
+
+                    // Remove o botão de deletar
+                    removeButton.style.display = 'none'; 
+
+                    let originalValues = {};
+                    ["material", "quantity", "unit"].forEach(name => {
+                        let span = li.querySelector(`[name="${name}"]`);
+                        originalValues[name] = span.textContent.trim();
+                        span.innerHTML = `<input type="${name === 'quantity' ? 'number' : 'text'}" name="${name}" value="${originalValues[name]}" min="0">`;
+                    });
+
+                    editButton.textContent = "Salvar";
+                    editButton.classList.add("btn-save");
+
+                    let cancelButton = document.createElement("button");
+                    cancelButton.textContent = "Cancelar";
+                    cancelButton.classList.add("btn-cancel");
+                    editButton.after(cancelButton);
+
+                    cancelButton.addEventListener("click", function () {
+                        ["material", "quantity", "unit"].forEach(name => {
+                            let span = li.querySelector(`[name="${name}"]`);
+                            span.innerHTML = originalValues[name];
+                        });
+
+                        editButton.textContent = "Alterar";
+                        editButton.classList.remove("btn-save", "editing");
+                        cancelButton.remove();
+
+                        // Restaura o botão de deletar
+                        removeButton.style.display = 'inline'; 
+                    });
+
+                    editButton.addEventListener("click", function () {
+                        if (!editButton.classList.contains("editing")) return;
+
+                        let updatedMaterial = li.querySelector('input[name="material"]').value;
+                        let updatedQuantity = li.querySelector('input[name="quantity"]').value;
+                        let updatedUnit = li.querySelector('input[name="unit"]').value;
+
+                        API.APIPut_MaterialList(materialId, updatedMaterial, updatedQuantity, updatedUnit)
+                        .then(data => {
+                            alert(data.message);
+                            loadMaterialTable();
+                        });
+                    });
                 });
             });
 
             listContainer.appendChild(ul);
-    });
+        });
 }
+
+
 
 function addRowMaterialTable() {
     var urlParams = new URLSearchParams(window.location.search);
@@ -310,7 +409,7 @@ function addRowMaterialTable() {
         <td><input type="number" name="quantity" required min="0"></td>
         <td><input type="text" name="unit" required></td>
         <td>
-            <button class="addMaterial-btn">Adicionar no BD</button>
+            <button class="addMaterial-btn">Adicionar</button>
             <button class="deleteMaterial-btn">Remover Linha</button>
         </td>
     `;

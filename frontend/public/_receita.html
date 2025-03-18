@@ -8,78 +8,104 @@
 </head>
 
 <body>
+    <div id= "full_amigurumi_data">
 
-    <h1 id="amigurmi_name_recipe"> </h1>
-    <br>
-    <button id="amigurumi_edit"> Editar Amigurumi</button>
-    <button id="amigurumi_image_edit"> Editar Imagem</button>
-    <button id="delete_amigurumi"> Excluir Amigurumi</button>
-    <button id="pdf_button_recipe" onclick="window.print()">Salvar como PDF</button>
-    <br>
-    <br>
-    
-    <div id="amigurumi_information">
-        <div id = "amigurumi_imagem_autor">
-            <div id="cardAmigurumiRecipeImage"></div>
-            <span id="amigurmi_name_autor"></span>
-            <span id="amigurmi_name_size"></span>
+        <div>
+
+            <h2>Receita</h2>
+
+            <table id="table_stitchbookList">
+                <thead>
+                    <tr>
+                        <th>Parte</th>
+                        <th>Carreira</th>
+                        <th>Cor</th>
+                        <th>Sequência de Pontos</th>
+                        <th>Observação</th>
+                        <th>Ajuste?</th>
+                    </tr>
+                </thead>
+                <tbody id="data_stitchbookList">
+                    <!-- Linhas adicionadas pelo JavaScript -->
+                </tbody>
+            </table>
+            <br><br>
+            <button id="add_stitchbook"> Adicionar Pontos</button>
+
         </div>
-        
-        <table id="table_amigurumi_material">
-            <tbody id="data_amigurumi_material">
-                <!-- Linhas adicionadas pelo JavaScript -->
-            </tbody>
-        </table>
-        <button id="add_material"> Adicionar Material</button>
+
+
+    
+        <div id="amigurumi_information">
+            <h1 id="amigurmi_name_recipe"> </h1>
+
+            <div id = "amigurumi_imagem_autor">
+                <div id="cardAmigurumiRecipeImage"></div>
+                <br>
+                <span id="amigurmi_name_autor"></span>
+                <span id="amigurmi_name_size"></span>
+            </div>
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <hr>
+            <h2>Editar Amigurumi</h2>
+            <button id="amigurumi_edit"> Editar Amigurumi</button>
+            <button id="amigurumi_image_edit"> Editar Imagem</button>
+            <button id="delete_amigurumi"> Excluir Amigurumi</button>
+            <button id="pdf_button_recipe" onclick="window.print()">Salvar como PDF</button>
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            
+            <hr>
+            <h2>Lista de Material</h2>
+            <p>(ex: Enchimento 80g)</p>
+            <table id="table_amigurumi_material">
+                <tbody id="data_amigurumi_material">
+                    <!-- Linhas adicionadas pelo JavaScript -->
+                </tbody>
+            </table>
+
+            <br>
+            <br>
+
+            <button id="add_material"> Adicionar Material</button>
+            
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
+        </div>
+
+    </div>
+    
+
+
+    
+    <div id = "amigurumi_relationship">
+        <h2 id = "amigurumi_relationship_header">Receitas Relacionadas</h2>
+
+        <div id="cardAmigurumi"></div>
+
         <br>
-        <br>
-        
+        <hr>
 
     </div>
 
     <br>
-
     
-   
-    <div>
-        <table id="table_stitchbookList">
-            <thead>
-                <h3>Receita:</h3>
-                <tr>
-                    <th>Parte</th>
-                    <th>Carreira</th>
-                    <th>Cor</th>
-                    <th>Sequência de Pontos</th>
-                    <th>Observação</th>
-                    <th>Ajuste?</th>
-                </tr>
-            </thead>
-            <tbody id="data_stitchbookList">
-                <!-- Linhas adicionadas pelo JavaScript -->
-            </tbody>
-        </table>
-        <br><br>
-        <button id="add_stitchbook"> Adicionar Pontos</button>
-    </div>
-    
-
-
-    <br>
-    <br>
-    <br>
-    <br>
-
-    <h1>Receitas Relacionadas</h1>
-    <br>
-    <div id="cardAmigurumi"></div>
-
-
-    <script type="module" src="-receita.js"></script>
-
-    <br>
-    <br>
-    <br>
     
 </body>
+    <script type="module" src="-receita.js"></script>
     <div id="footer"></div>
 </html>
