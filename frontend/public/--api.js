@@ -66,16 +66,10 @@ export function APIDelete_Image(imageId){
     .then(response => response.json())
 }
 
-export function APIPost_Image(main_image,image_route,observation,amigurumi_id){
-    return etch(`http://127.0.0.1:5000/image`, {
+export function APIPost_Image(formData){
+    return fetch(`http://127.0.0.1:5000/image`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            "main_image": main_image,
-            "image_route": image_route,
-            "observation": observation,
-            "amigurumi_id": amigurumi_id,
-        })
+        body: formData
     })
     .then(response => response.json())
     .then(data => data)

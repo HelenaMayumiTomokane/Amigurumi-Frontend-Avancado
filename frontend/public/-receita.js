@@ -214,7 +214,7 @@ function createImageEditBox() {
 
             modal.innerHTML = `
                 <h3>Adicionar ou Excluir Imagem do Amigurumi</h3>
-                <label>URL da Imagem: <input type="url" id="editImageUrl" placeholder="Cole a URL da imagem"></label><br><br>
+                <label>Selecione um arquivo: <input type="file" id="editImageFile" accept="image/*"></label><br><br>
                 <label>Observação: <input type="text" id="editImageObs" placeholder="Adicione uma observação"></label><br><br>
                 <label>Imagem Principal: <input type="checkbox" id="editImagePrincipal"></label><br><br>
                 <br>
@@ -255,12 +255,23 @@ function createImageEditBox() {
 
             document.getElementById("saveImageEdit").addEventListener("click", function () {
 
-                const main_image = document.getElementById("editImagePrincipal").value == "on"? true: false
-                const image_route = document.getElementById("editImageUrl").value
+                const main_image = document.getElementById("editImagePrincipal").checked
+                const image_route = document.getElementById("editImageFile").files[0]
                 const observation = document.getElementById("editImageObs").value
-                const amigurumi_id = amigurumiId
+                
+                if (!image_route) {
+                    alert("Por favor, selecione uma imagem.");
+                    return;
+                }
 
-                API.APIPost_Image(main_image,image_route,observation,amigurumi_id)
+                const formData = new FormData();
+                formData.append("main_image", main_image);
+                formData.append("image_route", image_route);
+                formData.append("observation", observation);
+                formData.append("amigurumi_id", parseInt(amigurumiId));
+
+                console.log(formData)
+                API.APIPost_Image(formData)
                 .then(data => {
                     alert(data.message)
                     loadImagemTable()
