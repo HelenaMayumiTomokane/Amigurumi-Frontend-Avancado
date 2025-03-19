@@ -292,6 +292,17 @@ button_next_previous {
     z-index: 1;
 }
 
+#data_stitchbookList h1 {
+    gap: 30px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: center;
+    border-bottom: thick double #8c522d;
+    color: #8c522d;
+}
+
 #data_stitchbookList td {
     border: 1px solid #b6b4b4;
 }
@@ -317,7 +328,7 @@ button_next_previous {
 }
 
 #data_stitchbookList [name="stich_sequence"]{
-    width: 570px; 
+    width: 610px; 
 }
 
 #data_stitchbookList [name="observation"]{
