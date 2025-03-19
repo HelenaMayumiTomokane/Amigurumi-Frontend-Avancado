@@ -31,6 +31,7 @@ function loadStitchbookTable() {
                 const tableTitle = document.createElement("h1");
                 tableTitle.classList.add("table-title");
                 tableTitle.textContent = element;
+                tableContainer.appendChild(tableTitle);
 
                 const table = document.createElement("table");
                 table.classList.add("stitchbook-table");
@@ -40,7 +41,7 @@ function loadStitchbookTable() {
                 table.innerHTML = `
                     <thead>
                         <tr>
-                            <th>Número da Linha</th>
+                            <th>Carreira</th>
                             <th>Cor</th>
                             <th>Sequência de Ponto</th>
                             <th>Observação</th>
@@ -185,6 +186,44 @@ function loadStitchbookTable() {
 }
 
 
+function addNewElement(){
+    const table = document.getElementById("table_stitchbookList");
+    const newRow = table.insertRow();
+
+    newRow.innerHTML = `
+        <td><input type="text" name="element" required></td>
+        <td><input type="number" name="number_row" required></td>
+        <td><input type="number" name="colour" required></td>
+        <td><input type="text" name="stich_sequence" required></td>
+        <td><input type="text" name="observation" required></td>
+        <td id="manual_fit_stitchbook">
+            <button class="addStitch-btn">Adicionar</button>
+            <button class="deleteStitch-btn">Remover</button>
+        </td>
+    `;
+
+    const addButton = newRow.querySelector(".addStitch-btn");
+    const deleteButton = newRow.querySelector(".deleteStitch-btn");
+
+    addButton.addEventListener("click", function () {
+        const element = newRow.querySelector('input[name="element"]').value;
+        const number_row = newRow.querySelector('input[name="number_row"]').value;
+        const colour = newRow.querySelector('input[name="colour"]').value;
+        const stich_sequence = newRow.querySelector('input[name="stich_sequence"]').value;
+        const observation = newRow.querySelector('input[name="observation"]').value;
+
+        API.APIPost_Stitchbook(amigurumiId, element, number_row, colour, stich_sequence, observation)
+            .then(data => {
+                alert(data.message);
+                loadStitchbookTable();
+            });
+    });
+
+    deleteButton.addEventListener("click", function () {
+        newRow.remove();
+    });
+}
+
 
 
 // ------------------ tabela de Imagem -------------------------- \\
@@ -269,7 +308,7 @@ function createImageEditBox() {
                         .filter(row=> parseInt(row.amigurumi_id) === parseInt(amigurumiId))
                         .map(image => `
                         <li>
-                            <img src= http://localhost:8000/"${image.image_route}" alt="Imagem">
+                            <img src= http://localhost:8000/${image.image_route} alt="Imagem"  width="200" height="auto">
                             <br>
                             <br>
                             <span> Imagem Principal: ${image.main_image}</span>
@@ -278,9 +317,7 @@ function createImageEditBox() {
                             <br>
                             <br>
                             <button class="deleteImageBtn" data-id="${image.image_id}">Excluir</button>
-                            <br>
-                            <br>
-                            <br>
+                            <hr>
                         </li>
                         <br>
                         <br>
@@ -579,14 +616,21 @@ function createEditBox() {
 
 
 function deleteAmigurumi(){
-    var urlParams = new URLSearchParams(window.location.search);
-    var amigurumi_id = urlParams.get("id").split("?")[0]
+    let confirmDelete = confirm("Tem certeza que deseja excluir este Amigurumi?");
+    
+    if (confirmDelete) {
+        var urlParams = new URLSearchParams(window.location.search);
+        var amigurumi_id = urlParams.get("id").split("?")[0]
 
-    API.APIDelete_FoundationList(amigurumi_id)
-    .then(data => {
-        alert(data.message)
-        window.location.href = "_amigurumi.html"
-    })
+        API.APIDelete_FoundationList(amigurumi_id)
+        .then(data => {
+            alert(data.message)
+            window.location.href = "_amigurumi.html"
+        })
+
+    } else {
+        alert("Ação cancelada.");
+    } 
 }
 
 
@@ -675,7 +719,7 @@ document.getElementById("amigurumi_image_edit").addEventListener("click", create
 document.getElementById("amigurumi_edit").addEventListener("click", createEditBox);
 document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);
 document.getElementById('add_material').addEventListener('click', addRowMaterialTable)
-document.getElementById('add_stitchbook').addEventListener('click', addRowStitchbookTable)
+document.getElementById('add_new_element_stitchbook').addEventListener('click', addNewElement)
 
 
 

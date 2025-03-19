@@ -206,7 +206,7 @@ button_next_previous {
 }
 
 #div_stitchbookList{
-    width: 80%;
+    width: 80%;   
 }
 
 #amigurumi_relationship_header{
@@ -290,6 +290,7 @@ button_next_previous {
     position: sticky;
     top: 0; 
     z-index: 1;
+    height: 40px;
 }
 
 #data_stitchbookList h1 {
