@@ -284,6 +284,19 @@ button_next_previous {
     max-width: 100%; 
 }
 
+#table_stitchbook_sequence{
+    width: 100%; 
+    border-collapse: collapse;
+}
+
+#table_stitchbook_sequence [name="element_name"]{
+    width: 100px;
+}
+
+#table_stitchbook_sequence [name="element_order"]{
+    width: 50px;
+}
+
 #table_stitchbookList th{
     background-color: #996544;
     color: white;

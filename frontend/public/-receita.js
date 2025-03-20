@@ -6,222 +6,343 @@ var amigurumiId = urlParams.get("id").split("?")[0];
 // ------------------ Construção dos Dados -------------------------- \\
 
 function loadStitchbookTable() {
-    API.APIGet_Stitchbook()
+    var urlParams = new URLSearchParams(window.location.search);
+    var amigurumiId = urlParams.get("id").split("?")[0];
+
+    API.APIGet_Stitchbook_Sequence()
+        .then(dataSequence => {
+            const filteredSequence = dataSequence.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
+
+            API.APIGet_Stitchbook()
+                .then(data => {
+                    const stitchbookList = document.getElementById("data_stitchbookList");
+                    stitchbookList.innerHTML = "";
+
+                    const filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
+
+                    const groupedData = filteredData.reduce((acc, row) => {
+                        if (!acc[row.element_id]) {
+                            acc[row.element_id] = [];
+                        }
+                        acc[row.element_id].push(row);
+                        return acc;
+                    }, {});
+
+                    const combinedData = [];
+
+                    filteredData.forEach(stitchRow => {
+                        const sequenceRow = filteredSequence.filter(seqRow => seqRow.element_id === stitchRow.element_id);
+                        sequenceRow.forEach(seq => {
+                            combinedData.push({
+                                ...stitchRow,
+                                ...seq
+                            });
+                        });
+                    });
+
+                    combinedData.sort((a, b) => a.element_order - b.element_order);
+
+                    // Loop para criar a estrutura da tabela
+                    combinedData.forEach(stitchData => {
+                        const tableContainer = document.createElement("div");
+                        tableContainer.classList.add("table-container");
+
+                        const tableTitle = document.createElement("h1");
+                        tableTitle.classList.add("table-title");
+                        tableTitle.textContent = stitchData.element_name;
+                        tableContainer.appendChild(tableTitle);
+
+                        const table = document.createElement("table");
+                        table.classList.add("stitchbook-table");
+
+                        table.innerHTML = `
+                            <thead>
+                                <tr>
+                                    <th>Carreira</th>
+                                    <th>Cor</th>
+                                    <th>Sequência de Ponto</th>
+                                    <th>Observação</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${groupedData[stitchData.element_id].map(row => `
+                                    <tr data-id="${row.line_id}">
+                                        <td name="number_row">${row.number_row || ""}</td>
+                                        <td name="colour">${row.colour || ""}</td>
+                                        <td name="stich_sequence">${row.stich_sequence || ""}</td>
+                                        <td name="observation">${row.observation || ""}</td>
+                                        <td>
+                                            <button class="btn-edit" alteration_botton_id="${row.line_id}">Alterar</button>
+                                            <button class="btn-remove" delete_botton_id="${row.line_id}">Deletar</button>
+                                        </td>
+                                    </tr>
+                                `).join("")}
+                            </tbody>
+                            <br>
+                            <button class="add_stitchbook">Adicionar Pontos</button>
+                            <br>
+                            <br>
+                        `;
+
+                        tableContainer.appendChild(table);
+                        stitchbookList.appendChild(tableContainer);
+
+                        // Eventos para os botões de alteração e remoção
+                        const removeButton = table.querySelectorAll(".btn-remove");
+                        const alterButton = table.querySelectorAll(".btn-edit");
+
+                        removeButton.forEach(row => {
+                            row.addEventListener("click", function () {
+                                const stitchbookIdDelete = this.getAttribute("delete_botton_id");
+                                API.APIDelete_Stitchbook(stitchbookIdDelete)
+                                    .then(data => {
+                                        alert(data.message);
+                                        loadStitchbookTable();
+                                    });
+                            });
+                        });
+
+                        alterButton.forEach(editButton => {
+                            editButton.addEventListener("click", function () {
+                                const stitchbookIdPut = this.getAttribute("alteration_botton_id");
+                                const tr = this.closest("tr");
+                                const originalValues = {};
+
+                                ["number_row", "colour", "stich_sequence", "observation"].forEach(name => {
+                                    let cell = tr.querySelector(`[name="${name}"]`);
+                                    originalValues[name] = cell.textContent.trim();
+                                    cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
+                                });
+
+                                let saveButton = document.createElement("button");
+                                saveButton.textContent = "Salvar";
+                                saveButton.classList.add("btn-save");
+                                tr.querySelector("td:last-child").appendChild(saveButton);
+
+                                let cancelButton = document.createElement("button");
+                                cancelButton.textContent = "Cancelar";
+                                cancelButton.classList.add("btn-cancel");
+                                tr.querySelector("td:last-child").appendChild(cancelButton);
+
+                                cancelButton.addEventListener("click", function () {
+                                    cancelButton.remove();
+                                    saveButton.remove();
+
+                                    ["number_row", "colour", "stich_sequence", "observation"].forEach(name => {
+                                        let cell = tr.querySelector(`[name="${name}"]`);
+                                        cell.innerHTML = originalValues[name];
+                                    });
+                                });
+
+                                saveButton.addEventListener("click", function () {
+                                    const number_row = tr.querySelector('input[name="number_row"]').value;
+                                    const colour = tr.querySelector('input[name="colour"]').value;
+                                    const stich_sequence = tr.querySelector('input[name="stich_sequence"]').value;
+                                    const observation = tr.querySelector('input[name="observation"]').value;
+
+                                    API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, stitchData.element_id, number_row, colour, stich_sequence)
+                                        .then(data => {
+                                            alert(data.message);
+                                            loadStitchbookTable();
+                                        });
+                                });
+                            });
+                        });
+
+                        // Evento para adicionar nova linha
+                        const addRowButton = table.querySelector(".add_stitchbook");
+
+                        addRowButton.addEventListener("click", function () {
+                            const newRow = table.insertRow();
+                            const lastRow = table.rows[table.rows.length - 2];
+                            let lastRowData = {
+                                number_row: lastRow.querySelector('td[name="number_row"]')?.textContent || '',
+                                colour: lastRow.querySelector('td[name="colour"]')?.textContent || '',
+                                stich_sequence: lastRow.querySelector('td[name="stich_sequence"]')?.textContent || '',
+                            };
+
+                            newRow.innerHTML = `
+                                <td><input type="number" name="number_row" value="${parseInt(lastRowData.number_row) + 1}" required></td>
+                                <td><input type="text" name="colour" value="${lastRowData.colour}" required></td>
+                                <td><input type="text" name="stich_sequence" value="${lastRowData.stich_sequence}" required></td>
+                                <td><input type="text" name="observation" required></td>
+                                <td>
+                                    <button class="addStitch-btn">Adicionar</button>
+                                    <button class="deleteStitch-btn">Remover</button>
+                                </td>
+                            `;
+
+                            const addButton = newRow.querySelector(".addStitch-btn");
+                            const deleteButton = newRow.querySelector(".deleteStitch-btn");
+
+                            addButton.addEventListener("click", function () {
+                                const number_row = newRow.querySelector('input[name="number_row"]').value;
+                                const colour = newRow.querySelector('input[name="colour"]').value;
+                                const stich_sequence = newRow.querySelector('input[name="stich_sequence"]').value;
+                                const observation = newRow.querySelector('input[name="observation"]').value;
+
+                                API.APIPost_Stitchbook(amigurumiId, stitchData.element_id, number_row, colour, stich_sequence, observation)
+                                    .then(data => {
+                                        alert(data.message);
+                                        loadStitchbookTable();
+                                    });
+                            });
+
+                            deleteButton.addEventListener("click", function () {
+                                newRow.remove();
+                            });
+                        });
+                    });
+                });
+        });
+}
+
+// ------------------ Stitchbook Element -------------------------- \\
+
+function loadStitchbookSequenceTable() {
+    API.APIGet_Stitchbook_Sequence()
         .then(data => {
-            const stitchbookList = document.getElementById("data_stitchbookList");
-            stitchbookList.innerHTML = "";
+            const sequenceList = document.getElementById("table_stitchbook_sequence");
+            sequenceList.innerHTML = "";
 
             var urlParams = new URLSearchParams(window.location.search);
             var amigurumiId = urlParams.get("id").split("?")[0];
 
             const filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
 
-            const groupedData = filteredData.reduce((acc, row) => {
-                if (!acc[row.element]) {
-                    acc[row.element] = [];
-                }
-                acc[row.element].push(row);
-                return acc;
-            }, {});
+            const table = document.createElement("table");
+            table.classList.add("stitchbook-sequence-table");
 
-            Object.keys(groupedData).forEach(element => {
-                const tableContainer = document.createElement("div");
-                tableContainer.classList.add("table-container");
-
-                const tableTitle = document.createElement("h1");
-                tableTitle.classList.add("table-title");
-                tableTitle.textContent = element;
-                tableContainer.appendChild(tableTitle);
-
-                const table = document.createElement("table");
-                table.classList.add("stitchbook-table");
-
-                tableContainer.appendChild(table);
-
-                table.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th>Carreira</th>
-                            <th>Cor</th>
-                            <th>Sequência de Ponto</th>
-                            <th>Observação</th>
-                            <th>Ações</th>
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Nome do Elemento</th>
+                        <th>Ordem</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filteredData.map(row => `
+                        <tr data-id="${row.element_id}">
+                            <td name="element_name">${row.element_name || ""}</td>
+                            <td name="element_order">${row.element_order || ""}</td>
+                            <td>
+                                <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
+                                <button class="btn-remove" delete_botton_id="${row.element_id}">Deletar</button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        ${groupedData[element].map(row => `
-                            <tr data-id="${row.line_id}">
-                                <td name="number_row">${row.number_row || ""}</td>
-                                <td name="colour">${row.colour || ""}</td>
-                                <td name="stich_sequence">${row.stich_sequence || ""}</td>
-                                <td name="observation">${row.observation || ""}</td>
-                                <td>
-                                    <button class="btn-edit" alteration_botton_id="${row.line_id}">Alterar</button>
-                                    <button class="btn-remove" delete_botton_id="${row.line_id}">Deletar</button>
-                                </td>
-                            </tr>
-                        `).join("")}
-                    </tbody>
-                    <br>
-                    <button class="add_stitchbook">Adicionar Pontos</button>
-                    <br>
-                    <br>
+                    `).join("")}
+                </tbody>
+                <br>
+                <button class="add_stitchbook_sequence">Adicionar Elemento</button>
+                <br>
+                <br>
+            `;
+
+            sequenceList.appendChild(table);
+
+            // Remover elemento
+            table.querySelectorAll(".btn-remove").forEach(button => {
+                button.addEventListener("click", function () {
+                    const elementId = this.getAttribute("delete_botton_id");
+
+                    API.APIDelete_Stitchbook_Sequence(elementId)
+                        .then(data => {
+                            alert(data.message);
+                            loadStitchbookSequenceTable();
+                            loadStitchbookTable();
+                        });
+                });
+            });
+
+            // Editar elemento
+            table.querySelectorAll(".btn-edit").forEach(button => {
+                button.addEventListener("click", function () {
+                    const elementId = this.getAttribute("alteration_botton_id");
+                    const tr = this.closest("tr");
+                    const originalValues = {};
+
+                    const removeButton = tr.querySelector(".btn-remove");
+                    const alterButton = tr.querySelector(".btn-edit");
+                    removeButton.style.display = "none";
+                    alterButton.style.display = "none";
+
+                    ["element_name", "element_order"].forEach(name => {
+                        let cell = tr.querySelector(`[name="${name}"]`);
+                        originalValues[name] = cell.textContent.trim();
+                        cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
+                    });
+
+                    let saveButton = document.createElement("button");
+                    saveButton.textContent = "Salvar";
+                    saveButton.classList.add("btn-save");
+                    tr.querySelector("td:last-child").appendChild(saveButton);
+
+                    let cancelButton = document.createElement("button");
+                    cancelButton.textContent = "Cancelar";
+                    cancelButton.classList.add("btn-cancel");
+                    tr.querySelector("td:last-child").appendChild(cancelButton);
+
+                    cancelButton.addEventListener("click", function () {
+                        cancelButton.remove();
+                        saveButton.remove();
+
+                        ["element_name", "element_order"].forEach(name => {
+                            let cell = tr.querySelector(`[name="${name}"]`);
+                            cell.innerHTML = originalValues[name];
+                        });
+
+                        removeButton.style.display = "inline-block";
+                        alterButton.style.display = "inline-block";
+                    });
+
+                    saveButton.addEventListener("click", function () {
+                        const element_name = tr.querySelector('input[name="element_name"]').value;
+                        const element_order = tr.querySelector('input[name="element_order"]').value;
+
+                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order)
+                            .then(data => {
+                                alert(data.message);
+                                loadStitchbookSequenceTable();
+                                loadStitchbookTable();
+                            });
+                    });
+                });
+            });
+
+            // Adicionar novo elemento
+            table.querySelector(".add_stitchbook_sequence").addEventListener("click", function () {
+                const newRow = table.insertRow();
+                newRow.innerHTML = `
+                    <td><input type="text" name="element_name" required></td>
+                    <td><input type="number" name="element_order" required></td>
+                    <td id="manual_fit_stitchbook">
+                        <button class="addStitchSequence-btn">Adicionar</button>
+                        <button class="deleteStitchSequence-btn">Remover</button>
+                    </td>
                 `;
 
-                stitchbookList.appendChild(tableContainer);
+                const addButton = newRow.querySelector(".addStitchSequence-btn");
+                const deleteButton = newRow.querySelector(".deleteStitchSequence-btn");
 
-                const removeButton = table.querySelectorAll(".btn-remove");
-                const addRowButton = table.querySelector(".add_stitchbook");
-                const alterButton = table.querySelectorAll(".btn-edit");
+                addButton.addEventListener("click", function () {
+                    const element_name = newRow.querySelector('input[name="element_name"]').value;
+                    const element_order = newRow.querySelector('input[name="element_order"]').value;
 
-                removeButton.forEach(row => {
-                    row.addEventListener("click", function () {
-                        const stitchbookIdDelete = this.getAttribute("delete_botton_id");
-                        API.APIDelete_Stitchbook(stitchbookIdDelete)
-                            .then(data => {
-                                alert(data.message);
-                                loadStitchbookTable();
-                            });
-                    });
+                    API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order)
+                        .then(data => {
+                            alert(data.message);
+                            loadStitchbookSequenceTable();
+                            loadStitchbookTable();
+                        });
                 });
 
-                alterButton.forEach(editButton => {
-                    editButton.addEventListener("click", function () {
-                        const stitchbookIdPut = this.getAttribute("alteration_botton_id");
-                        const tr = this.closest("tr");
-                        const originalValues = {};
-
-                        const removeButton = tr.querySelector(".btn-remove");
-                        const alterButton = tr.querySelector(".btn-edit");
-                        removeButton.style.display = "none";
-                        alterButton.style.display = "none";
-
-                        ["number_row", "colour", "stich_sequence", "observation"].forEach(name => {
-                            let cell = tr.querySelector(`[name="${name}"]`);
-                            originalValues[name] = cell.textContent.trim();
-                            cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
-                        });
-
-                        let saveButton = document.createElement("button");
-                        saveButton.textContent = "Salvar";
-                        saveButton.classList.add("btn-save");
-                        tr.querySelector("td:last-child").appendChild(saveButton);
-                
-                
-                        let cancelButton = document.createElement("button");
-                        cancelButton.textContent = "Cancelar";
-                        cancelButton.classList.add("btn-cancel");
-                        tr.querySelector("td:last-child").appendChild(cancelButton);
-
-                        cancelButton.addEventListener("click", function () {
-                            cancelButton.remove();
-                            saveButton.remove();
-
-                            ["number_row", "colour", "stich_sequence", "observation"].forEach(name => {
-                                let cell = tr.querySelector(`[name="${name}"]`);
-                                cell.innerHTML = originalValues[name];
-                            });
-                
-                            removeButton.style.display = "inline-block";
-                            alterButton.style.display = "inline-block";
-                        });
-                
-                        saveButton.addEventListener("click", function () {
-                            const number_row = tr.querySelector('input[name="number_row"]').value;
-                            const colour = tr.querySelector('input[name="colour"]').value;
-                            const stich_sequence = tr.querySelector('input[name="stich_sequence"]').value;
-                            const observation = tr.querySelector('input[name="observation"]').value;
-
-                            API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element, number_row, colour, stich_sequence)
-                                .then(data => {
-                                    alert(data.message);
-                                    loadStitchbookTable();
-                                })
-                        });
-                    });
-                });
-
-                addRowButton.addEventListener("click", function () {
-                    const newRow = table.insertRow();
-                    const lastRow = table.rows[table.rows.length - 2];
-                    let lastRowData = {
-                        number_row: lastRow.querySelector('td[name="number_row"]')?.textContent || '',
-                        colour: lastRow.querySelector('td[name="colour"]')?.textContent || '',
-                        stich_sequence: lastRow.querySelector('td[name="stich_sequence"]')?.textContent || '',
-                    };
-
-                    newRow.innerHTML = `
-                        <td><input type="number" name="number_row" value="${parseInt(lastRowData.number_row) + 1}" required></td>
-                        <td><input type="number" name="colour" value="${lastRowData.colour}" required></td>
-                        <td><input type="text" name="stich_sequence" value="${lastRowData.stich_sequence}" required></td>
-                        <td><input type="text" name="observation" required></td>
-                        <td id="manual_fit_stitchbook">
-                            <button class="addStitch-btn">Adicionar</button>
-                            <button class="deleteStitch-btn">Remover</button>
-                        </td>
-                    `;
-
-                    const addButton = newRow.querySelector(".addStitch-btn");
-                    const deleteButton = newRow.querySelector(".deleteStitch-btn");
-
-                    addButton.addEventListener("click", function () {
-                        const number_row = newRow.querySelector('input[name="number_row"]').value;
-                        const colour = newRow.querySelector('input[name="colour"]').value;
-                        const stich_sequence = newRow.querySelector('input[name="stich_sequence"]').value;
-                        const observation = newRow.querySelector('input[name="observation"]').value;
-
-                        API.APIPost_Stitchbook(amigurumiId, element, number_row, colour, stich_sequence, observation)
-                            .then(data => {
-                                alert(data.message);
-                                loadStitchbookTable();
-                            });
-                    });
-
-                    deleteButton.addEventListener("click", function () {
-                        newRow.remove();
-                    });
+                deleteButton.addEventListener("click", function () {
+                    newRow.remove();
                 });
             });
-        });
-}
-
-
-function addNewElement(){
-    const table = document.getElementById("table_stitchbookList");
-    const newRow = table.insertRow();
-
-    newRow.innerHTML = `
-        <td><input type="text" name="element" required></td>
-        <td><input type="number" name="number_row" required></td>
-        <td><input type="number" name="colour" required></td>
-        <td><input type="text" name="stich_sequence" required></td>
-        <td><input type="text" name="observation" required></td>
-        <td id="manual_fit_stitchbook">
-            <button class="addStitch-btn">Adicionar</button>
-            <button class="deleteStitch-btn">Remover</button>
-        </td>
-    `;
-
-    const addButton = newRow.querySelector(".addStitch-btn");
-    const deleteButton = newRow.querySelector(".deleteStitch-btn");
-
-    addButton.addEventListener("click", function () {
-        const element = newRow.querySelector('input[name="element"]').value;
-        const number_row = newRow.querySelector('input[name="number_row"]').value;
-        const colour = newRow.querySelector('input[name="colour"]').value;
-        const stich_sequence = newRow.querySelector('input[name="stich_sequence"]').value;
-        const observation = newRow.querySelector('input[name="observation"]').value;
-
-        API.APIPost_Stitchbook(amigurumiId, element, number_row, colour, stich_sequence, observation)
-            .then(data => {
-                alert(data.message);
-                loadStitchbookTable();
-            });
-    });
-
-    deleteButton.addEventListener("click", function () {
-        newRow.remove();
-    });
+        })
 }
 
 
@@ -273,9 +394,9 @@ function loadImagemTable(){
 
 
 function createImageEditBox() {
-    if (document.getElementById("editImageBox")) {
+    /*if (document.getElementById("editImageBox")) {
         return; 
-    }
+    }*/
 
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = urlParams.get("id").split("?")[0];
@@ -713,7 +834,10 @@ document.addEventListener("DOMContentLoaded", () => {
     loadStitchbookTable();
     loadImagemTable();
     loadMaterialTable();
+    loadStitchbookSequenceTable()
 });
+
+
 
 document.getElementById("amigurumi_image_edit").addEventListener("click", createImageEditBox);
 document.getElementById("amigurumi_edit").addEventListener("click", createEditBox);

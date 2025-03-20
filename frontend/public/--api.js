@@ -5,7 +5,7 @@ export function APIGet_Stitchbook(){
         .then(data => data)
 }
 
-export function APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element,number_row,colour,stich_sequence){
+export function APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id,number_row,colour,stich_sequence){
     return fetch(`http://127.0.0.1:5000/stitchbook/line_id`, { 
             method: "PUT",
             headers: {"Content-Type": "application/json"},
@@ -13,7 +13,7 @@ export function APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, ele
                 "line_id": stitchbookIdPut,
                 "amigurumi_id": amigurumiId,
                 "observation": observation,
-                "element": element,
+                "element_id": element_id,
                 "number_row": number_row,
                 "colour": colour,
                 "stich_sequence": stich_sequence
@@ -35,17 +35,70 @@ export function APIDelete_Stitchbook(stitchbookIdDelete){
         .then(data => data)
 }
 
-export function APIPost_Stitchbook(amigurumi_id,element,number_row,colour,stich_sequence,observation){
+export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour,stich_sequence,observation){
     return fetch("http://127.0.0.1:5000/stitchbook", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             "amigurumi_id": amigurumi_id ,
             "observation": observation,
-            "element": element,
+            "element_id": element_id,
             "number_row": number_row,
             "colour": colour,
             "stich_sequence": stich_sequence
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+
+
+
+/*------------------- Stitchbook Sequence ---------------------------*/
+export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_order){
+    return fetch("http://127.0.0.1:5000/stitchbook_sequence", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            "amigurumi_id": amigurumi_id ,
+            "element_name": element_name,
+            "element_order": element_order,
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+
+
+export function APIGet_Stitchbook_Sequence(){
+    return fetch("http://127.0.0.1:5000/stitchbook_sequence")
+    .then(response => response.json())
+    .then(data => data)
+}
+
+
+
+export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name, element_order){
+    return fetch(`http://127.0.0.1:5000/stitchbook_sequence/element_id`, { 
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            "element_id": element_id,
+            "amigurumi_id":amigurumiId,
+            "element_order": element_order,
+            "element_name": element_name,
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+
+export function APIDelete_Stitchbook_Sequence(element_id){
+    return fetch(`http://127.0.0.1:5000/stitchbook_sequence/element_id`, { 
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            "element_id": element_id,
         })
     })
     .then(response => response.json())
