@@ -24,11 +24,19 @@ function loadStitchbookTable() {
                 return acc;
             }, {});
 
-            Object.keys(groupedData).forEach(element_id => {
+            const sortedElementIds = Object.keys(groupedData).sort((a, b) => {
+                const elementOrderA = groupedData[a][0].element_order;
+                const elementOrderB = groupedData[b][0].element_order;
+                return elementOrderA - elementOrderB; // Ordem crescente, para decrescente troque para `b - a`
+            });
+
+            sortedElementIds.forEach(element_id => {
+
                 const tableContainer = document.createElement("div");
                 tableContainer.classList.add("table-container");
 
                 const elementName = groupedData[element_id][0].element_name;
+                const order = groupedData[element_id][0].element_order;
 
                 const tableTitle = document.createElement("h1");
                 tableTitle.classList.add("table-title");
