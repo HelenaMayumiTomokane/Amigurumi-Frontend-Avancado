@@ -850,6 +850,59 @@ function loadNewCardsBellow(){
 
 
 
+
+// ------------------ Criando Novas Receitas -------------------------- \\
+
+function addNewAmigurumi() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var amigurumiId = urlParams.get("id").split("?")[0];
+
+
+    let overlay = document.createElement("div");
+    overlay.id = "modalOverlayAmigurumiRelationship";
+    document.body.appendChild(overlay);
+
+    let modal = document.createElement("div");
+    modal.id = "addNewAmigurumiBoxiRelationship";
+    modal.innerHTML = `
+        <h3>Adicionar Novo Amigurumi</h3>
+        <label>Nome: <input type="text" id="editName" required></label><br><br>
+        <label>Autor: <input type="text" id="editAuthor" required></label><br><br>
+        <label>Tamanho: <input type="number" id="editSize" required></label><br><br>
+        <label>Link: <input type="url" id="editLink" required></label><br><br>
+        <label>Observação: <input type="text" id="editObs"></label><br><br>
+        <button id="saveEdit">Salvar</button>
+        <button id="cancelEdit">Cancelar</button>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById("saveEdit").addEventListener("click", function () {
+
+        const nameAmigurumi = document.getElementById("editName").value
+        const autorAmigurumi =  document.getElementById("editAuthor").value
+        const sizeAmigurumi = parseInt(document.getElementById("editSize").value)
+        const linkAmigurumi =  document.getElementById("editLink").value
+        const obsAmigurumi =  document.getElementById("editObs").value
+        
+
+        API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumiId,obsAmigurumi)
+        .then(data => {
+            alert(data.message)
+            loadNewCardsBellow()
+        })
+        document.body.removeChild(modal);
+        document.body.removeChild(overlay);
+    });
+
+    document.getElementById("cancelEdit").addEventListener("click", function () {
+        document.body.removeChild(modal);
+        document.body.removeChild(overlay);
+    })
+}
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     loadNewCardsBellow();
     loadInformatianAmigurumi();
@@ -861,6 +914,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+document.getElementById("add_new_amigurumi_relationship").addEventListener("click", addNewAmigurumi);
 document.getElementById("amigurumi_image_edit").addEventListener("click", createImageEditBox);
 document.getElementById("amigurumi_edit").addEventListener("click", createEditBox);
 document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);

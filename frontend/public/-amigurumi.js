@@ -17,7 +17,6 @@ function addNewAmigurumi() {
         <label>Autor: <input type="text" id="editAuthor" required></label><br><br>
         <label>Tamanho: <input type="number" id="editSize" required></label><br><br>
         <label>Link: <input type="url" id="editLink" required></label><br><br>
-        <label>ID Amigurumi Vinculado: <input type="number" id="editLinkedId" required></label><br><br>
         <label>Observação: <input type="text" id="editObs"></label><br><br>
         <button id="saveEdit">Salvar</button>
         <button id="cancelEdit">Cancelar</button>
@@ -31,7 +30,7 @@ function addNewAmigurumi() {
         const autorAmigurumi =  document.getElementById("editAuthor").value
         const sizeAmigurumi = parseInt(document.getElementById("editSize").value)
         const linkAmigurumi =  document.getElementById("editLink").value
-        const amigurumi_id_of_linked_amigurumiAmigurumi =  document.getElementById("editLinkedId").value
+        const amigurumi_id_of_linked_amigurumiAmigurumi =  ""
         const obsAmigurumi =  document.getElementById("editObs").value
         
 

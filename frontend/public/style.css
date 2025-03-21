@@ -115,6 +115,7 @@ button_next_previous {
 }
 
 #cardAmigurumi{
+    gap:20px;
     display: flex;            
     flex-wrap: wrap;                        
     justify-content: center;  
@@ -277,12 +278,7 @@ button_next_previous {
     font-size: 16px;
 }
 
-#table_stitchbookList{
-    width: 100%; 
-    border-collapse: collapse;
-    overflow-x: scroll;
-    max-width: 100%; 
-}
+
 
 #table_stitchbook_sequence{
     width: 100%; 
@@ -301,6 +297,15 @@ button_next_previous {
 #table_stitchbook_sequence [name="quantity"]{
     width: 30px;
 }
+
+
+#table_stitchbookList{
+    width: 100%; 
+    border-collapse: collapse;
+    overflow-x: scroll;
+    max-width: 100%; 
+}
+
 
 #table_stitchbookList th{
     background-color: #996544;
@@ -358,7 +363,7 @@ td#manual_fit_stitchbook, th#manual_fit_stitchbook {
     width: 170px;
 }
 
-#modalOverlayAmigurumi, #modalOverlayImage {
+#modalOverlayAmigurumi, #modalOverlayImage, #modalOverlayAmigurumiRelationship{
     position: fixed;
     top: 0;
     left: 0;
@@ -369,7 +374,7 @@ td#manual_fit_stitchbook, th#manual_fit_stitchbook {
     display: none;
 }
 
-#editAmigurumiBox, #editImageBox, #addNewAmigurumiBox, #responseMessageImputRecipe{
+#editAmigurumiBox, #editImageBox, #addNewAmigurumiBox, #responseMessageImputRecipe, #addNewAmigurumiBoxiRelationship {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -384,12 +389,12 @@ td#manual_fit_stitchbook, th#manual_fit_stitchbook {
     width: 50%;
 }
 
-#editAmigurumiBox ul, #editImageBox ul, #addNewAmigurumiBox ul, #responseMessageImputRecipe ul {
+#editAmigurumiBox ul, #editImageBox ul, #addNewAmigurumiBox ul, #responseMessageImputRecipe ul, #addNewAmigurumiBoxiRelationship ul {
     list-style-type: none; /* Remove o bullet point da lista */
     padding-left: 0; /* Remove o recuo da lista */
 }
 
-#editAmigurumiBox input, #editImageBox input, #addNewAmigurumiBox input, #responseMessageImputRecipe input {
+#editAmigurumiBox input, #editImageBox input, #addNewAmigurumiBox input, #responseMessageImputRecipe input, #addNewAmigurumiBoxiRelationship input{
     width: 350px;
     padding: 8px;
     border-radius: 4px;
