@@ -111,11 +111,11 @@ export function APIDelete_Stitchbook_Sequence(element_id){
 
 /*------------------- Image ---------------------------*/
 export function APIDelete_Image(imageId){
-    return fetch(`http://127.0.0.1:5000/image`, {
+    return fetch(`http://127.0.0.1:5000/image/image_id`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "imageId": imageId
+            "image_id": imageId
         })
     })
     .then(response => response.json())
@@ -134,6 +134,21 @@ export function APIGet_Image(){
     return fetch(`http://127.0.0.1:5000/image`)
         .then(response => response.json())
         .then(data => data)
+}
+
+export function APIPut_Image(image_id,observation,main_image,amigurumi_id){
+    return fetch(`http://127.0.0.1:5000/image/image_id`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            "image_id": image_id,
+            "observation": observation,
+            "main_image": main_image,
+            "amigurumi_id": amigurumi_id,
+            
+        })
+    })
+    .then(response => response.json())
 }
 
 

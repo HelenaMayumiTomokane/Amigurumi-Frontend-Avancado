@@ -435,12 +435,14 @@ function createImageEditBox() {
                             <img src= http://localhost:8000/${image.image_route} alt="Imagem"  width="200" height="auto">
                             <br>
                             <br>
-                            <span> Imagem Principal: ${image.main_image}</span>
+                            <span>Imagem Principal: <input type="checkbox" name="main_image" ${image.main_image ? "checked" : ""}></span>
                             <br>
-                            <span> Observação: ${image.observation}</span>
+                            <span>Observação: <input type="text" name="observation" value="${image.observation}"></span>
+
                             <br>
                             <br>
-                            <button class="deleteImageBtn" data-id="${image.image_id}">Excluir</button>
+                            <button class="btn-edit" data-id="${image.image_id}">Alterar</button>
+                            <button class="deleteImageBtn" data-id="${image.image_id}">Deletar</button>
                             <hr>
                         </li>
                         <br>
@@ -474,10 +476,9 @@ function createImageEditBox() {
                 .then(data => {
                     alert(data.message)
                     loadImagemTable()
+                    document.body.removeChild(modal);
+                    document.body.removeChild(overlay);
                 })
-
-                document.body.removeChild(modal);
-                document.body.removeChild(overlay);
             });
 
             document.getElementById("cancelImageEdit").addEventListener("click", function () {
@@ -494,8 +495,34 @@ function createImageEditBox() {
                     .then(data => {
                         alert(data.message)
                         loadImagemTable()
-                        btn.parentElement.remove();
+                        //btn.parentElement.remove();
+                        document.body.removeChild(modal);
+                        document.body.removeChild(overlay);
                     })
+
+                    
+                });
+            });
+
+            const edit_button = document.querySelectorAll('.btn-edit');
+            edit_button.forEach(btn => {
+                btn.addEventListener("click", function() {
+                    const listItem = btn.closest("li");
+
+                    const imageId = btn.getAttribute("data-id");
+                    const observation = listItem.querySelector('input[name="observation"]').value;
+                    const main_image = listItem.querySelector('input[name="main_image"]').checked;
+
+                    API.APIPut_Image(imageId,observation,main_image,amigurumiId)
+                    .then(data => {
+                        alert(data.message)
+                        loadImagemTable()
+                        document.body.removeChild(modal);
+                        document.body.removeChild(overlay);
+                    })
+
+                    
+                    
                 });
             });
         })
