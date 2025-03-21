@@ -36,11 +36,11 @@ function loadStitchbookTable() {
                 tableContainer.classList.add("table-container");
 
                 const elementName = groupedData[element_id][0].element_name;
-                const order = groupedData[element_id][0].element_order;
+                const quantity = groupedData[element_id][0].quantity;
 
                 const tableTitle = document.createElement("h1");
                 tableTitle.classList.add("table-title");
-                tableTitle.textContent = elementName;
+                tableTitle.textContent = `${elementName} x${quantity}`;
                 tableContainer.appendChild(tableTitle);
 
                 const table = document.createElement("table");
@@ -215,8 +215,9 @@ function loadStitchbookSequenceTable() {
             table.innerHTML = `
                 <thead>
                     <tr>
-                        <th>Nome do Elemento</th>
+                        <th>Elemento</th>
                         <th>Ordem</th>
+                        <th>Qtde</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -225,6 +226,7 @@ function loadStitchbookSequenceTable() {
                         <tr data-id="${row.element_id}">
                             <td name="element_name">${row.element_name || ""}</td>
                             <td name="element_order">${row.element_order || ""}</td>
+                            <td name="quantity">${row.quantity || ""}</td>
                             <td>
                                 <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
                                 <button class="btn-remove" delete_botton_id="${row.element_id}">Deletar</button>
@@ -266,7 +268,7 @@ function loadStitchbookSequenceTable() {
                     removeButton.style.display = "none";
                     alterButton.style.display = "none";
 
-                    ["element_name", "element_order"].forEach(name => {
+                    ["element_name", "element_order","quantity"].forEach(name => {
                         let cell = tr.querySelector(`[name="${name}"]`);
                         originalValues[name] = cell.textContent.trim();
                         cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
@@ -286,7 +288,7 @@ function loadStitchbookSequenceTable() {
                         cancelButton.remove();
                         saveButton.remove();
 
-                        ["element_name", "element_order"].forEach(name => {
+                        ["element_name", "element_order","quantity"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             cell.innerHTML = originalValues[name];
                         });
@@ -298,8 +300,9 @@ function loadStitchbookSequenceTable() {
                     saveButton.addEventListener("click", function () {
                         const element_name = tr.querySelector('input[name="element_name"]').value;
                         const element_order = tr.querySelector('input[name="element_order"]').value;
+                        const quantity = tr.querySelector('input[name="quantity"]').value;
 
-                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order)
+                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order,quantity)
                             .then(data => {
                                 alert(data.message);
                                 loadStitchbookSequenceTable();
@@ -315,6 +318,7 @@ function loadStitchbookSequenceTable() {
                 newRow.innerHTML = `
                     <td><input type="text" name="element_name" required></td>
                     <td><input type="number" name="element_order" required></td>
+                    <td><input type="number" name="quantity" required></td>
                     <td id="manual_fit_stitchbook">
                         <button class="addStitchSequence-btn">Adicionar</button>
                         <button class="deleteStitchSequence-btn">Remover</button>
@@ -327,8 +331,9 @@ function loadStitchbookSequenceTable() {
                 addButton.addEventListener("click", function () {
                     const element_name = newRow.querySelector('input[name="element_name"]').value;
                     const element_order = newRow.querySelector('input[name="element_order"]').value;
+                    const quantity = newRow.querySelector('input[name="quantity"]').value;
 
-                    API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order)
+                    API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,quantity)
                         .then(data => {
                             alert(data.message);
                             loadStitchbookSequenceTable();
@@ -510,27 +515,45 @@ function loadMaterialTable() {
             listContainer.innerHTML = "";
 
             let title = document.createElement("h2");
+            title.textContent = "Lista de Materiais";
             listContainer.appendChild(title);
 
-            let ul = document.createElement("ul");
+            let table = document.createElement("table");
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Qtde</th>
+                        <th>Unid</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            `;
+
+            listContainer.appendChild(table);
+            let tbody = table.querySelector("tbody");
 
             data
             .filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId))
             .forEach(material => {
-                let li = document.createElement("li");
+                let tr = document.createElement("tr");
 
-                li.innerHTML = `
-                    <span name="material">${material.material}</span>
-                    <span name="quantity">${material.quantity}</span>
-                    <span name="unit">${material.unit}</span>
-                    <button class="btn-edit" data-id="${material.material_list_id}">Alterar</button>
-                    <button class="btn-remove" data-id="${material.material_list_id}">Remover</button>
+                tr.innerHTML = `
+                    <td name="material">${material.material}</td>
+                    <td name="quantity">${material.quantity}</td>
+                    <td name="unit">${material.unit}</td>
+                    <td>
+                        <button class="btn-edit" data-id="${material.material_list_id}">Alterar</button>
+                        <button class="btn-remove" data-id="${material.material_list_id}">Remover</button>
+                    </td>
                 `;
 
-                ul.appendChild(li);
+                tbody.appendChild(tr); 
 
-                let editButton = li.querySelector(".btn-edit");
-                let removeButton = li.querySelector(".btn-remove");
+                let removeButton = tr.querySelector(".btn-remove");
+                let editButton = table.querySelectorAll(".btn-edit")
 
                 removeButton.addEventListener("click", function () {
                     let materialId = this.getAttribute("data-id");
@@ -538,65 +561,66 @@ function loadMaterialTable() {
                     API.APIDelete_MaterialList(materialId)
                     .then(data => {
                         alert(data.message);
-                        li.remove();
+                        loadMaterialTable()
                     });
                 });
 
-                editButton.addEventListener("click", function () {
-                    let materialId = this.getAttribute("data-id");
-                    
-                    if (editButton.classList.contains("editing")) return;
-                    editButton.classList.add("editing");
-
-                    // Remove o botão de deletar
-                    removeButton.style.display = 'none'; 
-
-                    let originalValues = {};
-                    ["material", "quantity", "unit"].forEach(name => {
-                        let span = li.querySelector(`[name="${name}"]`);
-                        originalValues[name] = span.textContent.trim();
-                        span.innerHTML = `<input type="${name === 'quantity' ? 'number' : 'text'}" name="${name}" value="${originalValues[name]}" min="0">`;
-                    });
-
-                    editButton.textContent = "Salvar";
-                    editButton.classList.add("btn-save");
-
-                    let cancelButton = document.createElement("button");
-                    cancelButton.textContent = "Cancelar";
-                    cancelButton.classList.add("btn-cancel");
-                    editButton.after(cancelButton);
-
-                    cancelButton.addEventListener("click", function () {
-                        ["material", "quantity", "unit"].forEach(name => {
-                            let span = li.querySelector(`[name="${name}"]`);
-                            span.innerHTML = originalValues[name];
+                editButton.forEach(button => {
+                    button.addEventListener("click", function () {
+                        const materialId = this.getAttribute("data-id");
+                        const tr = this.closest("tr");
+                        const originalValues = {};
+    
+                        const removeButton = tr.querySelector(".btn-remove");
+                        const alterButton = tr.querySelector(".btn-edit");
+                        removeButton.style.display = "none";
+                        alterButton.style.display = "none";
+    
+                        ["material", "quantity","unit"].forEach(name => {
+                            let cell = tr.querySelector(`[name="${name}"]`);
+                            originalValues[name] = cell.textContent.trim();
+                            cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
                         });
-
-                        editButton.textContent = "Alterar";
-                        editButton.classList.remove("btn-save", "editing");
-                        cancelButton.remove();
-
-                        // Restaura o botão de deletar
-                        removeButton.style.display = 'inline'; 
-                    });
-
-                    editButton.addEventListener("click", function () {
-                        if (!editButton.classList.contains("editing")) return;
-
-                        let updatedMaterial = li.querySelector('input[name="material"]').value;
-                        let updatedQuantity = li.querySelector('input[name="quantity"]').value;
-                        let updatedUnit = li.querySelector('input[name="unit"]').value;
-
-                        API.APIPut_MaterialList(materialId, updatedMaterial, updatedQuantity, updatedUnit)
-                        .then(data => {
-                            alert(data.message);
-                            loadMaterialTable();
+    
+                        let saveButton = document.createElement("button");
+                        saveButton.textContent = "Salvar";
+                        saveButton.classList.add("btn-save");
+                        tr.querySelector("td:last-child").appendChild(saveButton);
+    
+                        let cancelButton = document.createElement("button");
+                        cancelButton.textContent = "Cancelar";
+                        cancelButton.classList.add("btn-cancel");
+                        tr.querySelector("td:last-child").appendChild(cancelButton);
+    
+                        cancelButton.addEventListener("click", function () {
+                            cancelButton.remove();
+                            saveButton.remove();
+    
+                            ["material", "quantity","unit"].forEach(name => {
+                                let cell = tr.querySelector(`[name="${name}"]`);
+                                cell.innerHTML = originalValues[name];
+                            });
+    
+                            removeButton.style.display = "inline-block";
+                            alterButton.style.display = "inline-block";
+                        });
+    
+                        saveButton.addEventListener("click", function () {
+                            const material = tr.querySelector('input[name="material"]').value;
+                            const quantity = tr.querySelector('input[name="quantity"]').value;
+                            const unit = tr.querySelector('input[name="unit"]').value;
+    
+                            API.APIPut_MaterialList(materialId, material, quantity, unit)
+                                .then(data => {
+                                    alert(data.message);
+                                    loadMaterialTable() 
+                                });
                         });
                     });
                 });
             });
 
-            listContainer.appendChild(ul);
+            listContainer.appendChild(listContainer);
         });
 }
 
@@ -615,7 +639,7 @@ function addRowMaterialTable() {
         <td><input type="text" name="unit" required></td>
         <td>
             <button class="addMaterial-btn">Adicionar</button>
-            <button class="deleteMaterial-btn">Remover Linha</button>
+            <button class="deleteMaterial-btn">Remover</button>
         </td>
     `;
 

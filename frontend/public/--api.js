@@ -55,7 +55,7 @@ export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour,sti
 
 
 /*------------------- Stitchbook Sequence ---------------------------*/
-export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_order){
+export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_order,quantity){
     return fetch("http://127.0.0.1:5000/stitchbook_sequence", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -63,6 +63,7 @@ export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_or
             "amigurumi_id": amigurumi_id ,
             "element_name": element_name,
             "element_order": element_order,
+            "quantity": quantity,
         })
     })
     .then(response => response.json())
@@ -78,7 +79,7 @@ export function APIGet_Stitchbook_Sequence(){
 
 
 
-export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name, element_order){
+export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name, element_order,quantity){
     return fetch(`http://127.0.0.1:5000/stitchbook_sequence/element_id`, { 
         method: "PUT",
         headers: {"Content-Type": "application/json"},
@@ -87,6 +88,7 @@ export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name,
             "amigurumi_id":amigurumiId,
             "element_order": element_order,
             "element_name": element_name,
+            "quantity": quantity,
         })
     })
     .then(response => response.json())

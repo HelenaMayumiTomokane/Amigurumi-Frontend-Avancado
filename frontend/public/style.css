@@ -261,11 +261,11 @@ button_next_previous {
 }
 
 #data_amigurumi_material [name="material"] {
-    width: 150px;
+    width: 80px;
 }
 
 #data_amigurumi_material [name="quantity"] {
-    width: 50px;
+    width: 30px;
 }
 
 #data_amigurumi_material [name="unit"] {
@@ -287,14 +287,19 @@ button_next_previous {
 #table_stitchbook_sequence{
     width: 100%; 
     border-collapse: collapse;
+    justify-content: center; 
 }
 
 #table_stitchbook_sequence [name="element_name"]{
-    width: 100px;
+    width: 80px;
 }
 
 #table_stitchbook_sequence [name="element_order"]{
-    width: 50px;
+    width: 30px;
+}
+
+#table_stitchbook_sequence [name="quantity"]{
+    width: 30px;
 }
 
 #table_stitchbookList th{
