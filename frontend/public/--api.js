@@ -5,7 +5,7 @@ export function APIGet_Stitchbook(){
         .then(data => data)
 }
 
-export function APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id,number_row,colour,stich_sequence){
+export function APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id,number_row,colour_id,stich_sequence){
     return fetch(`http://127.0.0.1:5000/stitchbook/line_id`, { 
             method: "PUT",
             headers: {"Content-Type": "application/json"},
@@ -15,7 +15,7 @@ export function APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, ele
                 "observation": observation,
                 "element_id": element_id,
                 "number_row": number_row,
-                "colour": colour,
+                "colour_id": colour_id,
                 "stich_sequence": stich_sequence
             })
         })
@@ -35,7 +35,7 @@ export function APIDelete_Stitchbook(stitchbookIdDelete){
         .then(data => data)
 }
 
-export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour,stich_sequence,observation){
+export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour_id,stich_sequence,observation){
     return fetch("http://127.0.0.1:5000/stitchbook", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -44,7 +44,7 @@ export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour,sti
             "observation": observation,
             "element_id": element_id,
             "number_row": number_row,
-            "colour": colour,
+            "colour_id": colour_id,
             "stich_sequence": stich_sequence
         })
     })
@@ -55,7 +55,7 @@ export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour,sti
 
 
 /*------------------- Stitchbook Sequence ---------------------------*/
-export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_order,quantity){
+export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_order,repetition){
     return fetch("http://127.0.0.1:5000/stitchbook_sequence", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -63,7 +63,7 @@ export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_or
             "amigurumi_id": amigurumi_id ,
             "element_name": element_name,
             "element_order": element_order,
-            "quantity": quantity,
+            "repetition": repetition,
         })
     })
     .then(response => response.json())
@@ -79,7 +79,7 @@ export function APIGet_Stitchbook_Sequence(){
 
 
 
-export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name, element_order,quantity){
+export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name, element_order,repetition){
     return fetch(`http://127.0.0.1:5000/stitchbook_sequence/element_id`, { 
         method: "PUT",
         headers: {"Content-Type": "application/json"},
@@ -88,7 +88,7 @@ export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name,
             "amigurumi_id":amigurumiId,
             "element_order": element_order,
             "element_name": element_name,
-            "quantity": quantity,
+            "repetition": repetition,
         })
     })
     .then(response => response.json())
@@ -160,15 +160,14 @@ export function APIGet_MaterialList(){
     .then(data => data)
 }
 
-export function APIPut_MaterialList(materialId, updatedMaterial, updatedQuantity, updatedUnit){
+export function APIPut_MaterialList(material_list_id, material, quantity){
     return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "material_list_id":materialId,
-            "material": updatedMaterial,
-            "quantity": updatedQuantity,
-            "unit": updatedUnit
+            "material_list_id":material_list_id,
+            "material": material,
+            "quantity": quantity,
         })
     })
     .then(response => response.json())
@@ -187,15 +186,14 @@ export function APIDelete_MaterialList(materialId){
     .then(data => data)
 }
 
-export function APIPost_MaterialList(amigurumiId,material,quantity,unit){
+export function APIPost_MaterialList(amigurumi_id,material,quantity){
     return fetch("http://127.0.0.1:5000/material_list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "amigurumi_id": amigurumiId,
+            "amigurumi_id": amigurumi_id,
             "material": material,
             "quantity": quantity,
-            "unit": unit
         })
     })
     .then(response => response.json())

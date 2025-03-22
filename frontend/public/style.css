@@ -269,10 +269,6 @@ button_next_previous {
     width: 30px;
 }
 
-#data_amigurumi_material [name="unit"] {
-    width: 40px;
-}
-
 #data_amigurumi_material li {
     padding: 0px 0;
     font-size: 16px;
@@ -294,7 +290,7 @@ button_next_previous {
     width: 30px;
 }
 
-#table_stitchbook_sequence [name="quantity"]{
+#table_stitchbook_sequence [name="repetition"]{
     width: 30px;
 }
 
@@ -347,7 +343,7 @@ button_next_previous {
     width: 70px;
 }
 
-#data_stitchbookList [name="colour"]{
+#data_stitchbookList [name="colour_id"]{
     width: 70px;
 }
 

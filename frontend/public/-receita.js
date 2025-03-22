@@ -27,7 +27,7 @@ function loadStitchbookTable() {
             const sortedElementIds = Object.keys(groupedData).sort((a, b) => {
                 const elementOrderA = groupedData[a][0].element_order;
                 const elementOrderB = groupedData[b][0].element_order;
-                return elementOrderA - elementOrderB; // Ordem crescente, para decrescente troque para `b - a`
+                return elementOrderA - elementOrderB;
             });
 
             sortedElementIds.forEach(element_id => {
@@ -36,11 +36,11 @@ function loadStitchbookTable() {
                 tableContainer.classList.add("table-container");
 
                 const elementName = groupedData[element_id][0].element_name;
-                const quantity = groupedData[element_id][0].quantity;
+                const repetition = groupedData[element_id][0].repetition;
 
                 const tableTitle = document.createElement("h1");
                 tableTitle.classList.add("table-title");
-                tableTitle.textContent = `${elementName} x${quantity}`;
+                tableTitle.textContent = `${elementName} x${repetition}`;
                 tableContainer.appendChild(tableTitle);
 
                 const table = document.createElement("table");
@@ -62,7 +62,7 @@ function loadStitchbookTable() {
                         ${groupedData[element_id].map(row => `
                             <tr data-id="${row.line_id}">
                                 <td name="number_row">${row.number_row || ""}</td>
-                                <td name="colour">${row.colour || ""}</td>
+                                <td name="colour_id">${row.colour_id || ""}</td>
                                 <td name="stich_sequence">${row.stich_sequence || ""}</td>
                                 <td name="observation">${row.observation || ""}</td>
                                 <td>
@@ -106,7 +106,7 @@ function loadStitchbookTable() {
                         removeButton.style.display = "none";
                         alterButton.style.display = "none";
 
-                        ["number_row", "colour", "stich_sequence", "observation"].forEach(name => {
+                        ["number_row", "colour_id", "stich_sequence", "observation"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             originalValues[name] = cell.textContent.trim();
                             cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
@@ -127,7 +127,7 @@ function loadStitchbookTable() {
                             cancelButton.remove();
                             saveButton.remove();
 
-                            ["number_row", "colour", "stich_sequence", "observation"].forEach(name => {
+                            ["number_row", "colour_id", "stich_sequence", "observation"].forEach(name => {
                                 let cell = tr.querySelector(`[name="${name}"]`);
                                 cell.innerHTML = originalValues[name];
                             });
@@ -138,11 +138,11 @@ function loadStitchbookTable() {
 
                         saveButton.addEventListener("click", function () {
                             const number_row = tr.querySelector('input[name="number_row"]').value;
-                            const colour = tr.querySelector('input[name="colour"]').value;
+                            const colour_id = tr.querySelector('input[name="colour_id"]').value;
                             const stich_sequence = tr.querySelector('input[name="stich_sequence"]').value;
                             const observation = tr.querySelector('input[name="observation"]').value;
 
-                            API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id, number_row, colour, stich_sequence)
+                            API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id, number_row, colour_id, stich_sequence)
                                 .then(data => {
                                     alert(data.message);
                                     loadStitchbookTable();
@@ -156,13 +156,13 @@ function loadStitchbookTable() {
                     const lastRow = table.rows[table.rows.length - 2];
                     let lastRowData = {
                         number_row: lastRow.querySelector('td[name="number_row"]')?.textContent || '',
-                        colour: lastRow.querySelector('td[name="colour"]')?.textContent || '',
+                        colour_id: lastRow.querySelector('td[name="colour_id"]')?.textContent || '',
                         stich_sequence: lastRow.querySelector('td[name="stich_sequence"]')?.textContent || '',
                     };
 
                     newRow.innerHTML = `
                         <td><input type="number" name="number_row" value="${parseInt(lastRowData.number_row) + 1}" required></td>
-                        <td><input type="number" name="colour" value="${lastRowData.colour}" required></td>
+                        <td><input type="number" name="colour_id" value="${lastRowData.colour_id}" required></td>
                         <td><input type="text" name="stich_sequence" value="${lastRowData.stich_sequence}" required></td>
                         <td><input type="text" name="observation" required></td>
                         <td id="manual_fit_stitchbook">
@@ -176,11 +176,11 @@ function loadStitchbookTable() {
 
                     addButton.addEventListener("click", function () {
                         const number_row = newRow.querySelector('input[name="number_row"]').value;
-                        const colour = newRow.querySelector('input[name="colour"]').value;
+                        const colour_id = newRow.querySelector('input[name="colour_id"]').value;
                         const stich_sequence = newRow.querySelector('input[name="stich_sequence"]').value;
                         const observation = newRow.querySelector('input[name="observation"]').value;
 
-                        API.APIPost_Stitchbook(amigurumiId, element_id, number_row, colour, stich_sequence, observation)
+                        API.APIPost_Stitchbook(amigurumiId, element_id, number_row, colour_id, stich_sequence, observation)
                             .then(data => {
                                 alert(data.message);
                                 loadStitchbookTable();
@@ -226,7 +226,7 @@ function loadStitchbookSequenceTable() {
                         <tr data-id="${row.element_id}">
                             <td name="element_name">${row.element_name || ""}</td>
                             <td name="element_order">${row.element_order || ""}</td>
-                            <td name="quantity">${row.quantity || ""}</td>
+                            <td name="repetition">${row.repetition || ""}</td>
                             <td>
                                 <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
                                 <button class="btn-remove" delete_botton_id="${row.element_id}">Deletar</button>
@@ -268,7 +268,7 @@ function loadStitchbookSequenceTable() {
                     removeButton.style.display = "none";
                     alterButton.style.display = "none";
 
-                    ["element_name", "element_order","quantity"].forEach(name => {
+                    ["element_name", "element_order","repetition"].forEach(name => {
                         let cell = tr.querySelector(`[name="${name}"]`);
                         originalValues[name] = cell.textContent.trim();
                         cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
@@ -288,7 +288,7 @@ function loadStitchbookSequenceTable() {
                         cancelButton.remove();
                         saveButton.remove();
 
-                        ["element_name", "element_order","quantity"].forEach(name => {
+                        ["element_name", "element_order","repetition"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             cell.innerHTML = originalValues[name];
                         });
@@ -300,9 +300,9 @@ function loadStitchbookSequenceTable() {
                     saveButton.addEventListener("click", function () {
                         const element_name = tr.querySelector('input[name="element_name"]').value;
                         const element_order = tr.querySelector('input[name="element_order"]').value;
-                        const quantity = tr.querySelector('input[name="quantity"]').value;
+                        const repetition = tr.querySelector('input[name="repetition"]').value;
 
-                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order,quantity)
+                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order,repetition)
                             .then(data => {
                                 alert(data.message);
                                 loadStitchbookSequenceTable();
@@ -318,7 +318,7 @@ function loadStitchbookSequenceTable() {
                 newRow.innerHTML = `
                     <td><input type="text" name="element_name" required></td>
                     <td><input type="number" name="element_order" required></td>
-                    <td><input type="number" name="quantity" required></td>
+                    <td><input type="number" name="repetition" required></td>
                     <td id="manual_fit_stitchbook">
                         <button class="addStitchSequence-btn">Adicionar</button>
                         <button class="deleteStitchSequence-btn">Remover</button>
@@ -331,9 +331,9 @@ function loadStitchbookSequenceTable() {
                 addButton.addEventListener("click", function () {
                     const element_name = newRow.querySelector('input[name="element_name"]').value;
                     const element_order = newRow.querySelector('input[name="element_order"]').value;
-                    const quantity = newRow.querySelector('input[name="quantity"]').value;
+                    const repetition = newRow.querySelector('input[name="repetition"]').value;
 
-                    API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,quantity)
+                    API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,repetition)
                         .then(data => {
                             alert(data.message);
                             loadStitchbookSequenceTable();
@@ -551,7 +551,6 @@ function loadMaterialTable() {
                     <tr>
                         <th>Material</th>
                         <th>Qtde</th>
-                        <th>Unid</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -570,7 +569,6 @@ function loadMaterialTable() {
                 tr.innerHTML = `
                     <td name="material">${material.material}</td>
                     <td name="quantity">${material.quantity}</td>
-                    <td name="unit">${material.unit}</td>
                     <td>
                         <button class="btn-edit" data-id="${material.material_list_id}">Alterar</button>
                         <button class="btn-remove" data-id="${material.material_list_id}">Remover</button>
@@ -602,7 +600,7 @@ function loadMaterialTable() {
                         const alterButton = tr.querySelector(".btn-edit");
                     
     
-                        ["material", "quantity","unit"].forEach(name => {
+                        ["material", "quantity"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             originalValues[name] = cell.textContent.trim();
                             cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
@@ -625,7 +623,7 @@ function loadMaterialTable() {
                             cancelButton.remove();
                             saveButton.remove();
     
-                            ["material", "quantity","unit"].forEach(name => {
+                            ["material", "quantity"].forEach(name => {
                                 let cell = tr.querySelector(`[name="${name}"]`);
                                 cell.innerHTML = originalValues[name];
                             });
@@ -636,9 +634,8 @@ function loadMaterialTable() {
                         saveButton.addEventListener("click", function () {
                             const material = tr.querySelector('input[name="material"]').value;
                             const quantity = tr.querySelector('input[name="quantity"]').value;
-                            const unit = tr.querySelector('input[name="unit"]').value;
     
-                            API.APIPut_MaterialList(materialId, material, quantity, unit)
+                            API.APIPut_MaterialList(materialId, material, quantity)
                                 .then(data => {
                                     alert(data.message);
                                     loadMaterialTable() 
@@ -664,7 +661,6 @@ function addRowMaterialTable() {
     newRow.innerHTML = `
         <td><input type="text" name="material" required></td>
         <td><input type="number" name="quantity" required min="0"></td>
-        <td><input type="text" name="unit" required></td>
         <td>
             <button class="addMaterial-btn">Adicionar</button>
             <button class="deleteMaterial-btn">Remover</button>
@@ -677,9 +673,8 @@ function addRowMaterialTable() {
     addButton.addEventListener("click", function() {
         const material = newRow.querySelector('input[name="material"]').value;
         const quantity = newRow.querySelector('input[name="quantity"]').value;
-        const unit = newRow.querySelector('input[name="unit"]').value;
 
-        API.APIPost_MaterialList(amigurumiId,material,quantity,unit)
+        API.APIPost_MaterialList(amigurumiId,material,quantity)
         .then(data => {
             alert(data.message)
             loadMaterialTable()
@@ -687,7 +682,8 @@ function addRowMaterialTable() {
     });
 
     deleteButton.addEventListener("click", function() {
-        removeRow(deleteButton);
+        const row = deleteButton.parentNode.parentNode;
+        row.parentNode.removeChild(row);
     });
 }
 
@@ -719,10 +715,6 @@ function loadInformatianAmigurumi(){
 
 
 function createEditBox() {
-    if (document.getElementById("editAmigurumiBox")) {
-        return;
-    }
-
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = urlParams.get("id").split("?")[0];
 
@@ -947,12 +939,3 @@ document.getElementById("amigurumi_edit").addEventListener("click", createEditBo
 document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);
 document.getElementById('add_material').addEventListener('click', addRowMaterialTable)
 document.getElementById('add_new_element_stitchbook').addEventListener('click', addNewElement)
-
-
-
-
-// ------------------ Complementares -------------------------- \\
-function removeRow(button) {
-    const row = button.parentNode.parentNode;
-    row.parentNode.removeChild(row);
-}
