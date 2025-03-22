@@ -600,14 +600,16 @@ function loadMaterialTable() {
     
                         const removeButton = tr.querySelector(".btn-remove");
                         const alterButton = tr.querySelector(".btn-edit");
-                        removeButton.style.display = "none";
-                        alterButton.style.display = "none";
+                    
     
                         ["material", "quantity","unit"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             originalValues[name] = cell.textContent.trim();
                             cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
                         });
+
+                        removeButton.remove()
+                        alterButton.remove()
     
                         let saveButton = document.createElement("button");
                         saveButton.textContent = "Salvar";
@@ -628,8 +630,7 @@ function loadMaterialTable() {
                                 cell.innerHTML = originalValues[name];
                             });
     
-                            removeButton.style.display = "inline-block";
-                            alterButton.style.display = "inline-block";
+                            loadMaterialTable() 
                         });
     
                         saveButton.addEventListener("click", function () {
@@ -747,7 +748,6 @@ function createEditBox() {
                 <label>Autor: <input type="text" id="editAuthor" value="${amigurumiData.autor}"></label><br><br>
                 <label>Tamanho: <input type="number" id="editSize" value="${amigurumiData.size}"></label><br><br>
                 <label>Link: <input type="url" id="editLink" value="${amigurumiData.link}"></label><br><br>
-                <label>ID Amigurumi Vinculado: <input type="number" id="editLinkedId" value="${amigurumiData.amigurumi_id_of_linked_amigurumi}"></label><br><br>
                 <label>Observação: <input type="text" id="editObs" value="${amigurumiData.obs}"></label><br><br>
                 <button id="saveEdit">Salvar</button>
                 <button id="cancelEdit">Cancelar</button>
@@ -762,7 +762,7 @@ function createEditBox() {
                 const autor = document.getElementById("editAuthor").value
                 const size = document.getElementById("editSize").value
                 const link = document.getElementById("editLink").value
-                const amigurumi_id_of_linked_amigurumi = document.getElementById("editLinkedId").value
+                const amigurumi_id_of_linked_amigurumi = amigurumiData.amigurumi_id_of_linked_amigurumi
                 const obs = document.getElementById("editObs").value
  
                 API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs)
