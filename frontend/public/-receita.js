@@ -73,7 +73,7 @@ function loadStitchbookTable() {
                         `).join("")}
                     </tbody>
                     <br>
-                    <button class="add_stitchbook">Adicionar Pontos</button>
+                    <button class="add_stitchbook">Adicionar</button>
                     <br>
                     <br>
                 `;
@@ -89,7 +89,7 @@ function loadStitchbookTable() {
                         const stitchbookIdDelete = this.getAttribute("delete_botton_id");
                         API.APIDelete_Stitchbook(stitchbookIdDelete)
                             .then(data => {
-                                alert(data.message);
+                                //alert(data.message);
                                 loadStitchbookTable();
                             });
                     });
@@ -144,7 +144,7 @@ function loadStitchbookTable() {
 
                             API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id, number_row, colour_id, stich_sequence)
                                 .then(data => {
-                                    alert(data.message);
+                                    //alert(data.message);
                                     loadStitchbookTable();
                                 })
                         });
@@ -182,9 +182,9 @@ function loadStitchbookTable() {
 
                         API.APIPost_Stitchbook(amigurumiId, element_id, number_row, colour_id, stich_sequence, observation)
                             .then(data => {
-                                alert(data.message);
+                                //alert(data.message);
                                 loadStitchbookTable();
-                            });
+                            })
                     });
 
                     deleteButton.addEventListener("click", function () {
@@ -215,8 +215,8 @@ function loadStitchbookSequenceTable() {
             table.innerHTML = `
                 <thead>
                     <tr>
-                        <th>Elemento</th>
                         <th>Ordem</th>
+                        <th>Elemento</th>
                         <th>Qtde</th>
                         <th>Ações</th>
                     </tr>
@@ -224,8 +224,8 @@ function loadStitchbookSequenceTable() {
                 <tbody>
                     ${filteredData.map(row => `
                         <tr data-id="${row.element_id}">
-                            <td name="element_name">${row.element_name || ""}</td>
                             <td name="element_order">${row.element_order || ""}</td>
+                            <td name="element_name">${row.element_name || ""}</td>
                             <td name="repetition">${row.repetition || ""}</td>
                             <td>
                                 <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
@@ -235,28 +235,26 @@ function loadStitchbookSequenceTable() {
                     `).join("")}
                 </tbody>
                 <br>
-                <button class="add_stitchbook_sequence">Adicionar Elemento</button>
+                <button class="add_stitchbook_sequence">Adicionar</button>
                 <br>
                 <br>
             `;
 
             sequenceList.appendChild(table);
 
-            // Remover elemento
             table.querySelectorAll(".btn-remove").forEach(button => {
                 button.addEventListener("click", function () {
                     const elementId = this.getAttribute("delete_botton_id");
 
                     API.APIDelete_Stitchbook_Sequence(elementId)
                         .then(data => {
-                            alert(data.message);
+                            //alert(data.message);
                             loadStitchbookSequenceTable();
                             loadStitchbookTable();
                         });
                 });
             });
 
-            // Editar elemento
             table.querySelectorAll(".btn-edit").forEach(button => {
                 button.addEventListener("click", function () {
                     const elementId = this.getAttribute("alteration_botton_id");
@@ -268,7 +266,7 @@ function loadStitchbookSequenceTable() {
                     removeButton.style.display = "none";
                     alterButton.style.display = "none";
 
-                    ["element_name", "element_order","repetition"].forEach(name => {
+                    ["element_order", "element_name", "repetition"].forEach(name => {
                         let cell = tr.querySelector(`[name="${name}"]`);
                         originalValues[name] = cell.textContent.trim();
                         cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
@@ -288,7 +286,7 @@ function loadStitchbookSequenceTable() {
                         cancelButton.remove();
                         saveButton.remove();
 
-                        ["element_name", "element_order","repetition"].forEach(name => {
+                        ["element_order", "element_name","repetition"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             cell.innerHTML = originalValues[name];
                         });
@@ -304,7 +302,7 @@ function loadStitchbookSequenceTable() {
 
                         API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order,repetition)
                             .then(data => {
-                                alert(data.message);
+                                //alert(data.message);
                                 loadStitchbookSequenceTable();
                                 loadStitchbookTable();
                             });
@@ -312,12 +310,11 @@ function loadStitchbookSequenceTable() {
                 });
             });
 
-            // Adicionar novo elemento
             table.querySelector(".add_stitchbook_sequence").addEventListener("click", function () {
                 const newRow = table.insertRow();
                 newRow.innerHTML = `
-                    <td><input type="text" name="element_name" required></td>
                     <td><input type="number" name="element_order" required></td>
+                    <td><input type="text" name="element_name" required></td>
                     <td><input type="number" name="repetition" required></td>
                     <td id="manual_fit_stitchbook">
                         <button class="addStitchSequence-btn">Adicionar</button>
@@ -335,7 +332,7 @@ function loadStitchbookSequenceTable() {
 
                     API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,repetition)
                         .then(data => {
-                            alert(data.message);
+                            //alert(data.message);
                             loadStitchbookSequenceTable();
                             loadStitchbookTable();
                         });
@@ -474,7 +471,7 @@ function createImageEditBox() {
                 console.log(formData)
                 API.APIPost_Image(formData)
                 .then(data => {
-                    alert(data.message)
+                    //alert(data.message)
                     loadImagemTable()
                     document.body.removeChild(modal);
                     document.body.removeChild(overlay);
@@ -493,7 +490,7 @@ function createImageEditBox() {
 
                     API.APIDelete_Image(imageId)
                     .then(data => {
-                        alert(data.message)
+                        //alert(data.message)
                         loadImagemTable()
                         //btn.parentElement.remove();
                         document.body.removeChild(modal);
@@ -515,7 +512,7 @@ function createImageEditBox() {
 
                     API.APIPut_Image(imageId,observation,main_image,amigurumiId)
                     .then(data => {
-                        alert(data.message)
+                        //alert(data.message)
                         loadImagemTable()
                         document.body.removeChild(modal);
                         document.body.removeChild(overlay);
@@ -542,7 +539,7 @@ function loadMaterialTable() {
             listContainer.innerHTML = "";
 
             let title = document.createElement("h2");
-            title.textContent = "Lista de Materiais";
+            title.textContent = "Materiais";
             listContainer.appendChild(title);
 
             let table = document.createElement("table");
@@ -571,7 +568,7 @@ function loadMaterialTable() {
                     <td name="quantity">${material.quantity}</td>
                     <td>
                         <button class="btn-edit" data-id="${material.material_list_id}">Alterar</button>
-                        <button class="btn-remove" data-id="${material.material_list_id}">Remover</button>
+                        <button class="btn-remove" data-id="${material.material_list_id}">Deletar</button>
                     </td>
                 `;
 
@@ -585,7 +582,7 @@ function loadMaterialTable() {
 
                     API.APIDelete_MaterialList(materialId)
                     .then(data => {
-                        alert(data.message);
+                        //alert(data.message);
                         loadMaterialTable()
                     });
                 });
@@ -637,7 +634,7 @@ function loadMaterialTable() {
     
                             API.APIPut_MaterialList(materialId, material, quantity)
                                 .then(data => {
-                                    alert(data.message);
+                                    //alert(data.message);
                                     loadMaterialTable() 
                                 });
                         });
@@ -676,7 +673,7 @@ function addRowMaterialTable() {
 
         API.APIPost_MaterialList(amigurumiId,material,quantity)
         .then(data => {
-            alert(data.message)
+            //alert(data.message)
             loadMaterialTable()
         })
     });
@@ -759,7 +756,7 @@ function createEditBox() {
  
                 API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs)
                 .then(data =>{
-                    alert(data.message)
+                    //alert(data.message)
                     loadMaterialTable()
                     loadInformatianAmigurumi()
                 })
@@ -786,7 +783,7 @@ function deleteAmigurumi(){
 
         API.APIDelete_FoundationList(amigurumi_id)
         .then(data => {
-            alert(data.message)
+            //alert(data.message)
             window.location.href = "_amigurumi.html"
         })
 
@@ -907,7 +904,7 @@ function addNewAmigurumi() {
 
         API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumiId,obsAmigurumi)
         .then(data => {
-            alert(data.message)
+            //alert(data.message)
             loadNewCardsBellow()
         })
         document.body.removeChild(modal);

@@ -12,7 +12,7 @@ function addNewAmigurumi() {
     let modal = document.createElement("div");
     modal.id = "addNewAmigurumiBox";
     modal.innerHTML = `
-        <h3>Adicionar Novo Amigurumi</h3>
+        <h3>Adicionar um Novo Amigurumi</h3>
         <label>Nome: <input type="text" id="editName" required></label><br><br>
         <label>Autor: <input type="text" id="editAuthor" required></label><br><br>
         <label>Tamanho: <input type="number" id="editSize" required></label><br><br>
