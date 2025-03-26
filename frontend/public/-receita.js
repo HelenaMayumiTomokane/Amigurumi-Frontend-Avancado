@@ -314,10 +314,14 @@ function loadStitchbookSequenceTable() {
 
             table.querySelector(".add_stitchbook_sequence").addEventListener("click", function () {
                 const newRow = table.insertRow();
+
+                const lastOrder = table.querySelectorAll("tbody tr td[name='element_order']");
+                const newOrder = lastOrder.length > 0 ? Math.max(...Array.from(lastOrder).map(cell => parseInt(cell.textContent.trim()))) + 1 : 1;
+
                 newRow.innerHTML = `
-                    <td><input type="number" name="element_order" required></td>
+                    <td><input type="number" name="element_order" value="${newOrder}" required></td>
                     <td><input type="text" name="element_name" required></td>
-                    <td><input type="number" name="repetition" required></td>
+                    <td><input type="number" name="repetition" value=1 required></td>
                     <td name="action">
                         <button class="addStitchSequence-btn">Adicionar</button>
                         <button class="deleteStitchSequence-btn">Remover</button>
