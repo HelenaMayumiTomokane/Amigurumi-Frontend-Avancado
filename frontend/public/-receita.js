@@ -66,8 +66,10 @@ function loadStitchbookTable() {
                                 <td name="stich_sequence">${row.stich_sequence || ""}</td>
                                 <td name="observation">${row.observation || ""}</td>
                                 <td>
-                                    <button class="btn-edit" alteration_botton_id="${row.line_id}">Alterar</button>
-                                    <button class="btn-remove" delete_botton_id="${row.line_id}">Deletar</button>
+                                    ${row.line_id ? `
+                                        <button class="btn-edit" alteration_botton_id="${row.line_id}">Alterar</button>
+                                        <button class="btn-remove" delete_botton_id="${row.line_id}">Deletar</button>
+                                    ` : ""}
                                 </td>
                             </tr>
                         `).join("")}
