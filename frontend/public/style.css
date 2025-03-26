@@ -273,7 +273,17 @@ button_next_previous {
     font-size: 16px;
 }
 
-
+#title_table_stichbook {
+    gap: 60px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: center;
+    color: #8c522d;
+    background-color: #d9c5b9;
+    border-block-end: thick double #8c522d;;
+}
 
 #table_stitchbook_sequence{
     width: 100%; 
