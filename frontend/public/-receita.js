@@ -89,7 +89,7 @@ function loadStitchbookTable() {
                         const stitchbookIdDelete = this.getAttribute("delete_botton_id");
                         API.APIDelete_Stitchbook(stitchbookIdDelete)
                             .then(data => {
-                                //alert(data.message);
+                                alert(data.message);
                                 loadStitchbookTable();
                             });
                     });
@@ -144,7 +144,7 @@ function loadStitchbookTable() {
 
                             API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id, number_row, colour_id, stich_sequence)
                                 .then(data => {
-                                    //alert(data.message);
+                                    alert(data.message);
                                     loadStitchbookTable();
                                 })
                         });
@@ -182,7 +182,7 @@ function loadStitchbookTable() {
 
                         API.APIPost_Stitchbook(amigurumiId, element_id, number_row, colour_id, stich_sequence, observation)
                             .then(data => {
-                                //alert(data.message);
+                                alert(data.message);
                                 loadStitchbookTable();
                             })
                     });
@@ -248,7 +248,7 @@ function loadStitchbookSequenceTable() {
 
                     API.APIDelete_Stitchbook_Sequence(elementId)
                         .then(data => {
-                            //alert(data.message);
+                            alert(data.message);
                             loadStitchbookSequenceTable();
                             loadStitchbookTable();
                         });
@@ -302,7 +302,7 @@ function loadStitchbookSequenceTable() {
 
                         API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order,repetition)
                             .then(data => {
-                                //alert(data.message);
+                                alert(data.message);
                                 loadStitchbookSequenceTable();
                                 loadStitchbookTable();
                             });
@@ -332,7 +332,7 @@ function loadStitchbookSequenceTable() {
 
                     API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,repetition)
                         .then(data => {
-                            //alert(data.message);
+                            alert(data.message);
                             loadStitchbookSequenceTable();
                             loadStitchbookTable();
                         });
@@ -471,7 +471,7 @@ function createImageEditBox() {
                 console.log(formData)
                 API.APIPost_Image(formData)
                 .then(data => {
-                    //alert(data.message)
+                    alert(data.message)
                     loadImagemTable()
                     document.body.removeChild(modal);
                     document.body.removeChild(overlay);
@@ -490,7 +490,7 @@ function createImageEditBox() {
 
                     API.APIDelete_Image(imageId)
                     .then(data => {
-                        //alert(data.message)
+                        alert(data.message)
                         loadImagemTable()
                         //btn.parentElement.remove();
                         document.body.removeChild(modal);
@@ -512,7 +512,7 @@ function createImageEditBox() {
 
                     API.APIPut_Image(imageId,observation,main_image,amigurumiId)
                     .then(data => {
-                        //alert(data.message)
+                        alert(data.message)
                         loadImagemTable()
                         document.body.removeChild(modal);
                         document.body.removeChild(overlay);
@@ -582,7 +582,7 @@ function loadMaterialTable() {
 
                     API.APIDelete_MaterialList(materialId)
                     .then(data => {
-                        //alert(data.message);
+                        alert(data.message);
                         loadMaterialTable()
                     });
                 });
@@ -634,7 +634,7 @@ function loadMaterialTable() {
     
                             API.APIPut_MaterialList(materialId, material, quantity)
                                 .then(data => {
-                                    //alert(data.message);
+                                    alert(data.message);
                                     loadMaterialTable() 
                                 });
                         });
@@ -673,7 +673,7 @@ function addRowMaterialTable() {
 
         API.APIPost_MaterialList(amigurumiId,material,quantity)
         .then(data => {
-            //alert(data.message)
+            alert(data.message)
             loadMaterialTable()
         })
     });
@@ -756,7 +756,7 @@ function createEditBox() {
  
                 API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs)
                 .then(data =>{
-                    //alert(data.message)
+                    alert(data.message)
                     loadMaterialTable()
                     loadInformatianAmigurumi()
                 })
@@ -783,7 +783,7 @@ function deleteAmigurumi(){
 
         API.APIDelete_FoundationList(amigurumi_id)
         .then(data => {
-            //alert(data.message)
+            alert(data.message)
             window.location.href = "_amigurumi.html"
         })
 
@@ -904,7 +904,7 @@ function addNewAmigurumi() {
 
         API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumiId,obsAmigurumi)
         .then(data => {
-            //alert(data.message)
+            alert(data.message)
             loadNewCardsBellow()
         })
         document.body.removeChild(modal);
