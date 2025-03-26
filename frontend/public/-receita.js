@@ -65,7 +65,7 @@ function loadStitchbookTable() {
                                 <td name="colour_id">${row.colour_id || ""}</td>
                                 <td name="stich_sequence">${row.stich_sequence || ""}</td>
                                 <td name="observation">${row.observation || ""}</td>
-                                <td>
+                                <td name="action">
                                     ${row.line_id ? `
                                         <button class="btn-edit" alteration_botton_id="${row.line_id}">Alterar</button>
                                         <button class="btn-remove" delete_botton_id="${row.line_id}">Deletar</button>
@@ -167,7 +167,7 @@ function loadStitchbookTable() {
                         <td><input type="number" name="colour_id" value="${lastRowData.colour_id}" required></td>
                         <td><input type="text" name="stich_sequence" value="${lastRowData.stich_sequence}" required></td>
                         <td><input type="text" name="observation" required></td>
-                        <td id="manual_fit_stitchbook">
+                        <td name="action">
                             <button class="addStitch-btn">Adicionar</button>
                             <button class="deleteStitch-btn">Remover</button>
                         </td>
@@ -229,7 +229,7 @@ function loadStitchbookSequenceTable() {
                             <td name="element_order">${row.element_order || ""}</td>
                             <td name="element_name">${row.element_name || ""}</td>
                             <td name="repetition">${row.repetition || ""}</td>
-                            <td>
+                            <td name="action">
                                 <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
                                 <button class="btn-remove" delete_botton_id="${row.element_id}">Deletar</button>
                             </td>
@@ -318,7 +318,7 @@ function loadStitchbookSequenceTable() {
                     <td><input type="number" name="element_order" required></td>
                     <td><input type="text" name="element_name" required></td>
                     <td><input type="number" name="repetition" required></td>
-                    <td id="manual_fit_stitchbook">
+                    <td name="action">
                         <button class="addStitchSequence-btn">Adicionar</button>
                         <button class="deleteStitchSequence-btn">Remover</button>
                     </td>
@@ -346,7 +346,6 @@ function loadStitchbookSequenceTable() {
             });
         })
 }
-
 
 
 // ------------------ tabela de Imagem -------------------------- \\
@@ -396,10 +395,6 @@ function loadImagemTable(){
 
 
 function createImageEditBox() {
-    /*if (document.getElementById("editImageBox")) {
-        return; 
-    }*/
-
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = urlParams.get("id").split("?")[0];
 
@@ -494,7 +489,6 @@ function createImageEditBox() {
                     .then(data => {
                         alert(data.message)
                         loadImagemTable()
-                        //btn.parentElement.remove();
                         document.body.removeChild(modal);
                         document.body.removeChild(overlay);
                     })
@@ -568,7 +562,7 @@ function loadMaterialTable() {
                 tr.innerHTML = `
                     <td name="material">${material.material}</td>
                     <td name="quantity">${material.quantity}</td>
-                    <td>
+                    <td name="action">
                         <button class="btn-edit" data-id="${material.material_list_id}">Alterar</button>
                         <button class="btn-remove" data-id="${material.material_list_id}">Deletar</button>
                     </td>
@@ -660,7 +654,7 @@ function addRowMaterialTable() {
     newRow.innerHTML = `
         <td><input type="text" name="material" required></td>
         <td><input type="number" name="quantity" required min="0"></td>
-        <td>
+        <td name="action">
             <button class="addMaterial-btn">Adicionar</button>
             <button class="deleteMaterial-btn">Remover</button>
         </td>
@@ -938,3 +932,4 @@ document.getElementById("amigurumi_edit").addEventListener("click", createEditBo
 document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);
 document.getElementById('add_material').addEventListener('click', addRowMaterialTable)
 document.getElementById('add_new_element_stitchbook').addEventListener('click', addNewElement)
+
