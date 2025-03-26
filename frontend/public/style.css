@@ -385,8 +385,8 @@ td#manual_fit_stitchbook, th#manual_fit_stitchbook {
 }
 
 #editAmigurumiBox ul, #editImageBox ul, #addNewAmigurumiBox ul, #responseMessageImputRecipe ul, #addNewAmigurumiBoxiRelationship ul {
-    list-style-type: none; /* Remove o bullet point da lista */
-    padding-left: 0; /* Remove o recuo da lista */
+    list-style-type: none; 
+    padding-left: 0;
 }
 
 #editAmigurumiBox input, #editImageBox input, #addNewAmigurumiBox input, #responseMessageImputRecipe input, #addNewAmigurumiBoxiRelationship input{

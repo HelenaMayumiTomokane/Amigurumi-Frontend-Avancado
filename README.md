@@ -1,12 +1,12 @@
 # 🧵 Frontend: Amigurumi
 
-🚀 Uma API para armazenar e gerenciar receitas de amigurumi.
+🚀 Código para construção do frontend de um local host, para interação com as APIs desenvolvias no backend, e alimentação e ajuste dos dados no banco de dados
 
 ## 📌 Funcionalidades
 
 - 📖 Criar, listar e buscar receitas de amigurumi.
 - 📦 Upload e exibição de imagens dos amigurumis e das receitas.
-- 📊 Organização das receitas por ID, elementos e número de fileiras.
+- 📊 Organização das receitas, imagens, materiais etc por ID.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -23,10 +23,13 @@
 
     2.1 Criar um Ambiente Virtual => ``` py -m venv venv ```
 
-    2.2 Ativar o Ambiente Virtual => ``` venv\Scripts\Activate ```
+    2.2 Ativar o Ambiente Virtual => no Windows ``` venv\Scripts\Activate ``` ou Mac/Linux ``` source venv/bin/activate ```
 
 3. Faça o dowload dos arquivos necessáros => ``` pip install -r requirements.txt ```
 
-4. Execulte o código para rodar o Backend => ``` node frontend\__init__.js ```
+4. Execulte o código para rodar o Frontend => ``` node frontend\__init__.js ```
 
-5. Para parar a execução => ``` Ctrl + C ```
+5. Para parar a execução pressione => ``` Ctrl + C ```
+
+
+💡 Caso tenha dúvidas ou encontre problemas, consulte a documentação ou abra uma issue no repositório! 🚀
