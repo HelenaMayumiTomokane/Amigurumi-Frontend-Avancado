@@ -29,7 +29,9 @@
 
 4. Execulte o código para rodar o Frontend => ``` node frontend\__init__.js ```
 
-5. Para parar a execução pressione => ``` Ctrl + C ```
+5. Acesse a página no browser => ```http://localhost:5000```
+
+6. Para parar a execução pressione => ``` Ctrl + C ```
 
 
 💡 Caso tenha dúvidas ou encontre problemas, consulte a documentação ou abra uma issue no repositório! 🚀
