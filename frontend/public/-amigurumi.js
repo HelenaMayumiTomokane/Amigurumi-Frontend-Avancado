@@ -1,10 +1,6 @@
 import * as API from './--api.js';
 
 function addNewAmigurumi() {
-    if (document.getElementById("addNewAmigurumiBox")) {
-        return;
-    }
-
     let overlay = document.createElement("div");
     overlay.id = "modalOverlayAmigurumi";
     document.body.appendChild(overlay);
@@ -109,7 +105,7 @@ function filterAmigurumis() {
                         titleElement.textContent = amigurumi.name;
 
                         const link = document.createElement('a');
-                        link.href = `_receita.html?id=${amigurumi.amigurumi_id}?name=${amigurumi.name}`;
+                        link.href = `_receita.html?id=${amigurumi.amigurumi_id}`;
                         link.textContent = 'Ver Mais';
 
                         card.appendChild(titleElement);

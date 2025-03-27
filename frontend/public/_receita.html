@@ -9,17 +9,8 @@
 <body>
     <div id= "full_amigurumi_data">
 
-        <div id="div_stitchbookList">
-            <h1 id="title_table_stichbook">Receita</h1>
-            <table id="table_stitchbookList">
-                <tbody id="data_stitchbookList">
-                    <!-- Linhas adicionadas pelo JavaScript -->
-                </tbody>
-            </table>
-        </div>
+        <div id="div_stitchbookList"></div>
 
-
-    
         <div id="amigurumi_information">
             <h1 id="amigurmi_name_recipe"> </h1>
 
@@ -28,6 +19,7 @@
                 <br>
                 <span id="amigurmi_name_autor"></span>
                 <span id="amigurmi_name_size"></span>
+                <span id="amigurmi_name_obs"></span>
             </div>
 
             <br>
@@ -49,7 +41,22 @@
             <hr>
             <div>
                 <h2>Elementos</h2>
-                <table id = "table_stitchbook_sequence"></table>
+                <table id = "table_stitchbook_sequence">
+                    <thead>
+                        <tr>
+                            <th>Ordem</th>
+                            <th>Elemento</th>
+                            <th>Qtde</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas adicionadas pelo JavaScript -->
+                    </tbody>
+                </table>
+                <br>
+                <br>
+                <button id="add_stitchbook_sequence">Adicionar</button>
             </div>
 
             <br>
@@ -57,8 +64,16 @@
             <br>
             
             <hr>
+            <h2>Materiais</h2>
             <table id="table_amigurumi_material">
-                <tbody id="data_amigurumi_material">
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Qtde</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <!-- Linhas adicionadas pelo JavaScript -->
                 </tbody>
             </table>

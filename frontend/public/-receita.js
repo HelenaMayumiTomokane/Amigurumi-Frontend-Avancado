@@ -8,7 +8,7 @@ var amigurumiId = urlParams.get("id").split("?")[0];
 function loadStitchbookTable() {
     API.APIGet_Stitchbook()
         .then(data => {
-            const stitchbookList = document.getElementById("data_stitchbookList");
+            const stitchbookList = document.getElementById("div_stitchbookList");
             stitchbookList.innerHTML = "";
 
             var urlParams = new URLSearchParams(window.location.search);
@@ -31,7 +31,6 @@ function loadStitchbookTable() {
             });
 
             sortedElementIds.forEach(element_id => {
-
                 const tableContainer = document.createElement("div");
                 tableContainer.classList.add("table-container");
 
@@ -39,7 +38,7 @@ function loadStitchbookTable() {
                 const repetition = groupedData[element_id][0].repetition;
 
                 const tableTitle = document.createElement("h1");
-                tableTitle.classList.add("table-title");
+                tableTitle.classList.add("stitchbook-table-title");
                 tableTitle.textContent = `${elementName} x${repetition}`;
                 tableContainer.appendChild(tableTitle);
 
@@ -168,13 +167,13 @@ function loadStitchbookTable() {
                         <td><input type="text" name="stich_sequence" value="${lastRowData.stich_sequence}" required></td>
                         <td><input type="text" name="observation" required></td>
                         <td name="action">
-                            <button class="addStitch-btn">Adicionar</button>
-                            <button class="deleteStitch-btn">Remover</button>
+                            <button class="btn-edit">Adicionar</button>
+                            <button class="btn-remove">Remover</button>
                         </td>
                     `;
 
-                    const addButton = newRow.querySelector(".addStitch-btn");
-                    const deleteButton = newRow.querySelector(".deleteStitch-btn");
+                    const addButton = newRow.querySelector(".btn-edit");
+                    const deleteButton = newRow.querySelector(".btn-remove");
 
                     addButton.addEventListener("click", function () {
                         const number_row = newRow.querySelector('input[name="number_row"]').value;
@@ -203,46 +202,29 @@ function loadStitchbookTable() {
 function loadStitchbookSequenceTable() {
     API.APIGet_Stitchbook_Sequence()
         .then(data => {
-            const sequenceList = document.getElementById("table_stitchbook_sequence");
-            sequenceList.innerHTML = "";
+            const table = document.getElementById("table_stitchbook_sequence");
+            let tbody = table.querySelector("tbody");
+
+            tbody.innerHTML = ""
 
             var urlParams = new URLSearchParams(window.location.search);
             var amigurumiId = urlParams.get("id").split("?")[0];
 
             const filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
 
-            const table = document.createElement("table");
-            table.classList.add("stitchbook-sequence-table");
-
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Ordem</th>
-                        <th>Elemento</th>
-                        <th>Qtde</th>
-                        <th>Ações</th>
+            tbody.innerHTML = `
+                ${filteredData.map(row => `
+                    <tr data-id="${row.element_id}">
+                        <td name="element_order">${row.element_order || ""}</td>
+                        <td name="element_name">${row.element_name || ""}</td>
+                        <td name="repetition">${row.repetition || ""}</td>
+                        <td name="action">
+                            <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
+                            <button class="btn-remove" delete_botton_id="${row.element_id}">Deletar</button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    ${filteredData.map(row => `
-                        <tr data-id="${row.element_id}">
-                            <td name="element_order">${row.element_order || ""}</td>
-                            <td name="element_name">${row.element_name || ""}</td>
-                            <td name="repetition">${row.repetition || ""}</td>
-                            <td name="action">
-                                <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
-                                <button class="btn-remove" delete_botton_id="${row.element_id}">Deletar</button>
-                            </td>
-                        </tr>
-                    `).join("")}
-                </tbody>
-                <br>
-                <button class="add_stitchbook_sequence">Adicionar</button>
-                <br>
-                <br>
+                `).join("")}
             `;
-
-            sequenceList.appendChild(table);
 
             table.querySelectorAll(".btn-remove").forEach(button => {
                 button.addEventListener("click", function () {
@@ -311,44 +293,52 @@ function loadStitchbookSequenceTable() {
                     });
                 });
             });
-
-            table.querySelector(".add_stitchbook_sequence").addEventListener("click", function () {
-                const newRow = table.insertRow();
-
-                const lastOrder = table.querySelectorAll("tbody tr td[name='element_order']");
-                const newOrder = lastOrder.length > 0 ? Math.max(...Array.from(lastOrder).map(cell => parseInt(cell.textContent.trim()))) + 1 : 1;
-
-                newRow.innerHTML = `
-                    <td><input type="number" name="element_order" value="${newOrder}" required></td>
-                    <td><input type="text" name="element_name" required></td>
-                    <td><input type="number" name="repetition" value=1 required></td>
-                    <td name="action">
-                        <button class="addStitchSequence-btn">Adicionar</button>
-                        <button class="deleteStitchSequence-btn">Remover</button>
-                    </td>
-                `;
-
-                const addButton = newRow.querySelector(".addStitchSequence-btn");
-                const deleteButton = newRow.querySelector(".deleteStitchSequence-btn");
-
-                addButton.addEventListener("click", function () {
-                    const element_name = newRow.querySelector('input[name="element_name"]').value;
-                    const element_order = newRow.querySelector('input[name="element_order"]').value;
-                    const repetition = newRow.querySelector('input[name="repetition"]').value;
-
-                    API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,repetition)
-                        .then(data => {
-                            alert(data.message);
-                            loadStitchbookSequenceTable();
-                            loadStitchbookTable();
-                        });
-                });
-
-                deleteButton.addEventListener("click", function () {
-                    newRow.remove();
-                });
-            });
         })
+}
+
+
+
+
+    
+function addNewElementRow() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var amigurumiId = urlParams.get("id").split("?")[0];
+
+    const table = document.getElementById("table_stitchbook_sequence").getElementsByTagName('tbody')[0];
+    const newRow = table.insertRow();
+
+    const lastOrder = table.querySelectorAll("tr td[name='element_order']");
+    const newOrder = lastOrder.length > 0 ? Math.max(...Array.from(lastOrder).map(cell => parseInt(cell.textContent.trim()))) + 1 : 1;
+
+    newRow.innerHTML = `
+        <td><input type="number" name="element_order" value="${newOrder}" required></td>
+        <td><input type="text" name="element_name" required></td>
+        <td><input type="number" name="repetition" value=1 required></td>
+        <td name="action">
+            <button class="btn-edit">Adicionar</button>
+            <button class="btn-remove">Remover</button>
+        </td>
+    `;
+
+    const addButton = newRow.querySelector(".btn-edit");
+    const deleteButton = newRow.querySelector(".btn-remove");
+
+    addButton.addEventListener("click", function () {
+        const element_name = newRow.querySelector('input[name="element_name"]').value;
+        const element_order = newRow.querySelector('input[name="element_order"]').value;
+        const repetition = newRow.querySelector('input[name="repetition"]').value;
+
+        API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,repetition)
+            .then(data => {
+                alert(data.message);
+                loadStitchbookSequenceTable();
+                loadStitchbookTable();
+            });
+    });
+
+    deleteButton.addEventListener("click", function () {
+        newRow.remove();
+    });
 }
 
 
@@ -535,49 +525,30 @@ function createImageEditBox() {
 function loadMaterialTable() {
     API.APIGet_MaterialList()
         .then(data => {
-            let listContainer = document.getElementById("data_amigurumi_material");
-            listContainer.innerHTML = "";
-
-            let title = document.createElement("h2");
-            title.textContent = "Materiais";
-            listContainer.appendChild(title);
-
-            let table = document.createElement("table");
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>Material</th>
-                        <th>Qtde</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            `;
-
-            listContainer.appendChild(table);
+            let table = document.getElementById("table_amigurumi_material");
             let tbody = table.querySelector("tbody");
 
-            data
-            .filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId))
-            .forEach(material => {
-                let tr = document.createElement("tr");
+            tbody.innerHTML = ""
 
-                tr.innerHTML = `
-                    <td name="material">${material.material}</td>
-                    <td name="quantity">${material.quantity}</td>
-                    <td name="action">
-                        <button class="btn-edit" data-id="${material.material_list_id}">Alterar</button>
-                        <button class="btn-remove" data-id="${material.material_list_id}">Deletar</button>
-                    </td>
-                `;
+            var urlParams = new URLSearchParams(window.location.search);
+            var amigurumiId = urlParams.get("id").split("?")[0];
+            let filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId))
 
-                tbody.appendChild(tr); 
+            tbody.innerHTML = `
+                ${filteredData.map(row => `
+                    <tr data-id="${row.material_list_id}">
+                        <td name="material">${row.material || ""}</td>
+                        <td name="quantity">${row.quantity || ""}</td>
+                        <td name="action">
+                            <button class="btn-edit" data-id="${row.material_list_id}">Alterar</button>
+                            <button class="btn-remove" data-id="${row.material_list_id}">Deletar</button>
+                        </td>
+                    </tr>
+                `).join("")}
+            `;
 
-                let removeButton = tr.querySelector(".btn-remove");
-                let editButton = table.querySelectorAll(".btn-edit")
-
-                removeButton.addEventListener("click", function () {
+            table.querySelectorAll(".btn-remove").forEach(button => { 
+                button.addEventListener("click", function () {
                     let materialId = this.getAttribute("data-id");
 
                     API.APIDelete_MaterialList(materialId)
@@ -586,58 +557,61 @@ function loadMaterialTable() {
                         loadMaterialTable()
                     });
                 });
+            })
 
-                editButton.forEach(button => {
-                    button.addEventListener("click", function () {
-                        const materialId = this.getAttribute("data-id");
-                        const tr = this.closest("tr");
-                        const originalValues = {};
-    
-                        const removeButton = tr.querySelector(".btn-remove");
-                        const alterButton = tr.querySelector(".btn-edit");
-                    
-    
+            table.querySelectorAll(".btn-edit").forEach(button => {
+                button.addEventListener("click", function () {
+                    const materialId = this.getAttribute("data-id");
+                    const tr = this.closest("tr");
+                    const originalValues = {};
+
+                    const removeButton = tr.querySelector(".btn-remove");
+                    const alterButton = tr.querySelector(".btn-edit");
+                
+
+                    ["material", "quantity"].forEach(name => {
+                        let cell = tr.querySelector(`[name="${name}"]`);
+                        originalValues[name] = cell.textContent.trim();
+                        cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
+                    });
+
+                    removeButton.style.display = "none";
+                    alterButton.style.display = "none";
+
+                    let saveButton = document.createElement("button");
+                    saveButton.textContent = "Salvar";
+                    saveButton.classList.add("btn-save");
+                    tr.querySelector("td:last-child").appendChild(saveButton);
+
+                    let cancelButton = document.createElement("button");
+                    cancelButton.textContent = "Cancelar";
+                    cancelButton.classList.add("btn-cancel");
+                    tr.querySelector("td:last-child").appendChild(cancelButton);
+
+                    cancelButton.addEventListener("click", function () {
+                        //loadMaterialTable() 
+
+                        cancelButton.remove();
+                        saveButton.remove();
+
                         ["material", "quantity"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
-                            originalValues[name] = cell.textContent.trim();
-                            cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
+                            cell.innerHTML = originalValues[name];
                         });
 
-                        removeButton.remove()
-                        alterButton.remove()
-    
-                        let saveButton = document.createElement("button");
-                        saveButton.textContent = "Salvar";
-                        saveButton.classList.add("btn-save");
-                        tr.querySelector("td:last-child").appendChild(saveButton);
-    
-                        let cancelButton = document.createElement("button");
-                        cancelButton.textContent = "Cancelar";
-                        cancelButton.classList.add("btn-cancel");
-                        tr.querySelector("td:last-child").appendChild(cancelButton);
-    
-                        cancelButton.addEventListener("click", function () {
-                            cancelButton.remove();
-                            saveButton.remove();
-    
-                            ["material", "quantity"].forEach(name => {
-                                let cell = tr.querySelector(`[name="${name}"]`);
-                                cell.innerHTML = originalValues[name];
+                        removeButton.style.display = "inline-block";
+                        alterButton.style.display = "inline-block";
+                    });
+
+                    saveButton.addEventListener("click", function () {
+                        const material = tr.querySelector('input[name="material"]').value;
+                        const quantity = tr.querySelector('input[name="quantity"]').value;
+
+                        API.APIPut_MaterialList(materialId, material, quantity)
+                            .then(data => {
+                                alert(data.message);
+                                loadMaterialTable() 
                             });
-    
-                            loadMaterialTable() 
-                        });
-    
-                        saveButton.addEventListener("click", function () {
-                            const material = tr.querySelector('input[name="material"]').value;
-                            const quantity = tr.querySelector('input[name="quantity"]').value;
-    
-                            API.APIPut_MaterialList(materialId, material, quantity)
-                                .then(data => {
-                                    alert(data.message);
-                                    loadMaterialTable() 
-                                });
-                        });
                     });
                 });
             });
@@ -705,6 +679,12 @@ function loadInformatianAmigurumi(){
 
                 const amigumi_autor = document.getElementById("amigurmi_name_autor")
                 amigumi_autor.textContent = "Criador: " + foundation_list.autor;
+
+                const amigumi_obs = document.getElementById("amigurmi_name_obs")
+                amigumi_obs.textContent = ""
+                if(foundation_list.obs.length >0){
+                    amigumi_obs.textContent = "Observação: " + foundation_list.obs;
+                }
             });
     })
 
@@ -757,7 +737,6 @@ function createEditBox() {
                 API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs)
                 .then(data =>{
                     alert(data.message)
-                    loadMaterialTable()
                     loadInformatianAmigurumi()
                 })
 
@@ -847,7 +826,7 @@ function loadNewCardsBellow(){
                             titleElement.textContent = amigurumi.name;
 
                             const link = document.createElement('a');
-                            link.href = `_receita.html?id=${amigurumi.amigurumi_id}?name=${amigurumi.name}`;
+                            link.href = `_receita.html?id=${amigurumi.amigurumi_id}`;
                             link.textContent = 'Ver Mais';
 
                             card.appendChild(titleElement);
@@ -935,5 +914,5 @@ document.getElementById("amigurumi_image_edit").addEventListener("click", create
 document.getElementById("amigurumi_edit").addEventListener("click", createEditBox);
 document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);
 document.getElementById('add_material').addEventListener('click', addRowMaterialTable)
-document.getElementById('add_new_element_stitchbook').addEventListener('click', addNewElement)
+document.getElementById("add_stitchbook_sequence").addEventListener("click", addNewElementRow)
 
