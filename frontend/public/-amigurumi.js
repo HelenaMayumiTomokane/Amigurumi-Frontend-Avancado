@@ -1,6 +1,10 @@
-import * as API from './--api.js';
+import * as API from './--support_code.js';
 
 function addNewAmigurumi() {
+    if (document.getElementById("addNewAmigurumiBox")) {
+        return;
+    }
+
     let overlay = document.createElement("div");
     overlay.id = "modalOverlayAmigurumi";
     document.body.appendChild(overlay);
@@ -33,7 +37,7 @@ function addNewAmigurumi() {
         API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumi_id_of_linked_amigurumiAmigurumi,obsAmigurumi)
         .then(data => {
             alert(data.message)
-            filterAmigurumis()
+            allAmigurumiAvailable()
         })
         document.body.removeChild(modal);
         document.body.removeChild(overlay);
@@ -46,84 +50,52 @@ function addNewAmigurumi() {
 }
 
 
+function allAmigurumiAvailable() {
+    API.APIGet_FoundationList()
+        .then(data => {
+            const cardID = "cardAmigurumi"            
+            let filteredData = data.filter(row => row.amigurumi_id_of_linked_amigurumi == "");
+
+            API.createAmigurumiImageCard(cardID, filteredData)
+        })
+}
+
+
 function filterAmigurumis() {
     const searchQuery = document.getElementById("searchInput").value.toLowerCase();
     API.APIGet_FoundationList()
         .then(data => {
-            const cardAmigurumi = document.getElementById("cardAmigurumi");
-            cardAmigurumi.innerHTML = "";
+            const cardID = "cardAmigurumi"
             
             let filteredData = data.filter(row => row.amigurumi_id_of_linked_amigurumi == "");
 
-            if (searchQuery) {
+            if (filteredData.length > 0 && searchQuery) {
                 filteredData = data.filter(row => row.name.toLowerCase().includes(searchQuery) && row.amigurumi_id_of_linked_amigurumi == "");
             }
 
             if (filteredData.length === 0 && searchQuery) {
+                const cardAmigurumi = document.getElementById(cardID);
+                cardAmigurumi.innerHTML = "";
                 const noResultsMessage = document.createElement('p');
-                noResultsMessage.textContent = "Nenhum resultado encontrado. Tente outra busca!";
+                noResultsMessage.textContent = 'Nenhum resultado encontrado. Tente outra busca ou limpe a barra de pesquisa, e clique novamente em "Pesquisar" para voltar ao início!';
                 noResultsMessage.style.textAlign = "center";
                 cardAmigurumi.appendChild(noResultsMessage);
             }
 
-            filteredData.forEach(amigurumi => {
-                const card = document.createElement("div");
-                card.className = "cardAmigurumi";
-
-                API.APIGet_Image()
-                    .then(imageData => {
-                        const imageSrcArray = imageData
-                            .filter(row => row.amigurumi_id == amigurumi.amigurumi_id)
-                            .map(row => row.image_route); 
-                        
-                        let currentIndex = 0;
-
-                        const imageElement = document.createElement('img');
-                        imageElement.src = `http://localhost:8000/${imageSrcArray[currentIndex]}`
-                        imageElement.alt = amigurumi.name;
-                        imageElement.id = "cardAmigurumiImage";
-
-                        function showNextImage() {
-                            currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                            imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`
-                        }
-
-                        function showPreviousImage() {
-                            currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                            imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`
-                        }
-
-                        const nextButton = document.createElement('button_next_previous');
-                        nextButton.innerText = ">";
-                        nextButton.addEventListener('click', showNextImage);
-                        
-                        const prevButton = document.createElement('button_next_previous');
-                        prevButton.innerText = "<";
-                        prevButton.addEventListener('click', showPreviousImage);
-
-                        const titleElement = document.createElement('h3');
-                        titleElement.textContent = amigurumi.name;
-
-                        const link = document.createElement('a');
-                        link.href = `_receita.html?id=${amigurumi.amigurumi_id}`;
-                        link.textContent = 'Ver Mais';
-
-                        card.appendChild(titleElement);
-                        card.appendChild(imageElement);
-                        card.appendChild(prevButton);
-                        card.appendChild(nextButton);
-                        card.appendChild(link);
-
-                        cardAmigurumi.appendChild(card);
-                    })
-            });
+           
+            API.createAmigurumiImageCard(cardID, filteredData)
+            
         })
 }
 
 
 
 
-
-document.addEventListener("DOMContentLoaded", () => {filterAmigurumis()});
+document.addEventListener("DOMContentLoaded", () => {
+    allAmigurumiAvailable()
+});
 
 document.getElementById("add_new_amigurumi").addEventListener("click", addNewAmigurumi);
+document.getElementById("search_amigurumi").addEventListener("click", filterAmigurumis);
+
+

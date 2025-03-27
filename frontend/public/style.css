@@ -97,18 +97,7 @@ button_next_previous {
 }
 
 /* ------------ HTML _Amigurumi -------------- */
-#searchInput {
-    width: 70%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1.1em;
-    color: #8c522d;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#cardAmigurumi{
+#cardAmigurumi, #cardAmigurumiRelationship{
     gap:20px;
     display: flex;            
     flex-wrap: wrap;                        
@@ -159,6 +148,17 @@ button_next_previous {
 
 
 /* ------------ HTML _Receita -------------- */
+#searchInput {
+    width: 70%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1.1em;
+    color: #8c522d;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 #amigurmi_name_recipe {
     color: #8c522d;
     font-size: 48px;

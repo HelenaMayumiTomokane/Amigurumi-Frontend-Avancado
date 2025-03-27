@@ -1,4 +1,4 @@
-import * as API from './--api.js';
+import * as API from './--support_code.js';
 
 var urlParams = new URLSearchParams(window.location.search);
 var amigurumiId = urlParams.get("id").split("?")[0];
@@ -349,8 +349,7 @@ function loadImagemTable(){
             const container = document.getElementById("cardAmigurumiRecipeImage");
             container.innerHTML = "";
 
-            const filteredImages = imageData
-                .filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
+            const filteredImages = imageData.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
 
             if (filteredImages.length === 0) return;
 
@@ -589,8 +588,6 @@ function loadMaterialTable() {
                     tr.querySelector("td:last-child").appendChild(cancelButton);
 
                     cancelButton.addEventListener("click", function () {
-                        //loadMaterialTable() 
-
                         cancelButton.remove();
                         saveButton.remove();
 
@@ -777,70 +774,23 @@ function deleteAmigurumi(){
 function loadNewCardsBellow(){
     API.APIGet_FoundationList()
         .then(data => {
-            const cardAmigurumi = document.getElementById("cardAmigurumi");
-            cardAmigurumi.innerHTML = "";
+            var cardID = "cardAmigurumiRelationship"
 
             const filteredData = data.filter(row => parseInt(row.amigurumi_id_of_linked_amigurumi) === parseInt(amigurumiId));
 
             if (filteredData.length === 0) {
+                const cardAmigurumi = document.getElementById(cardID);
+                cardAmigurumi.innerHTML = "";
+
                 const noResultsMessage = document.createElement('p');
                 noResultsMessage.textContent = "Parece que não encontramos nada relacionado a esse item. Não desanime! Tente explorar outras opções incríveis!";
                 cardAmigurumi.appendChild(noResultsMessage);
             } else {
-                filteredData.forEach(amigurumi => {
-                    const card = document.createElement("div");
-                    card.className = "cardAmigurumi";
-
-                    API.APIGet_Image()
-                        .then(imageData => {
-                            const imageSrcArray = imageData
-                                .filter(row => row.amigurumi_id == amigurumi.amigurumi_id)
-                                .map(row => row.image_route); 
-
-                            let currentIndex = 0;
-
-                            const imageElement = document.createElement('img');
-                            imageElement.src = `http://localhost:8000/${imageSrcArray[currentIndex]}`;
-                            imageElement.alt = amigurumi.name;
-                            imageElement.id = "cardAmigurumiImage";
-
-                            function showPreviousImage() {
-                                currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                                imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
-                            }
-                            
-                            function showNextImage() {
-                                currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                                imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
-                            }
-
-                            const nextButton = document.createElement('button_next_previous');
-                            nextButton.innerText = ">";
-                            nextButton.addEventListener('click', showNextImage); 
-
-                            const prevButton = document.createElement('button_next_previous');
-                            prevButton.innerText = "<";
-                            prevButton.addEventListener('click', showPreviousImage);
-
-                            const titleElement = document.createElement('h3');
-                            titleElement.textContent = amigurumi.name;
-
-                            const link = document.createElement('a');
-                            link.href = `_receita.html?id=${amigurumi.amigurumi_id}`;
-                            link.textContent = 'Ver Mais';
-
-                            card.appendChild(titleElement);
-                            card.appendChild(imageElement);
-                            card.appendChild(prevButton);
-                            card.appendChild(nextButton);
-                            card.appendChild(link);
-
-                            cardAmigurumi.appendChild(card);
-                        })
-                });
+                API.createAmigurumiImageCard(cardID, filteredData)
             }
         })
 }
+
 
 
 
