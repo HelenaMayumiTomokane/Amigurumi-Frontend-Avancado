@@ -155,16 +155,15 @@ function loadStitchbookTable() {
                 addRowButton.addEventListener("click", function () {
                     const newRow = table.insertRow();
                     const lastRow = table.rows[table.rows.length - 2];
-                    let lastRowData = {
-                        number_row: lastRow.querySelector('td[name="number_row"]')?.textContent || '',
-                        colour_id: lastRow.querySelector('td[name="colour_id"]')?.textContent || '',
-                        stich_sequence: lastRow.querySelector('td[name="stich_sequence"]')?.textContent || '',
-                    };
+                    const number_row = lastRow ? parseInt(lastRow.querySelector('td[name="number_row"]')?.textContent)+1|| 0+1 : 1
+                    const colour_id =  lastRow ? lastRow.querySelector('td[name="colour_id"]')?.textContent || 1: 1
+                    const stich_sequence =  lastRow ? lastRow.querySelector('td[name="stich_sequence"]')?.textContent || "": ''
+
 
                     newRow.innerHTML = `
-                        <td><input type="number" name="number_row" value="${parseInt(lastRowData.number_row) + 1}" required></td>
-                        <td><input type="number" name="colour_id" value="${lastRowData.colour_id}" required></td>
-                        <td><input type="text" name="stich_sequence" value="${lastRowData.stich_sequence}" required></td>
+                        <td><input type="number" name="number_row" value="${number_row}" required></td>
+                        <td><input type="number" name="colour_id" value="${colour_id}" required></td>
+                        <td><input type="text" name="stich_sequence" value="${stich_sequence}" required></td>
                         <td><input type="text" name="observation" required></td>
                         <td name="action">
                             <button class="btn-edit">Adicionar</button>
