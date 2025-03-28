@@ -244,19 +244,33 @@ button_next_previous {
     list-style: none;
 }
 
+#table_amigurumi_material [name="recipe_id"] {
+    width: 7%;
+}
+
+#table_amigurumi_material [name="colour_id"] {
+    width: 7%;
+}
+
+#table_amigurumi_material [name="material_class"] {
+    width: 16%;
+}
+
 #table_amigurumi_material [name="material"] {
-    width: 55%;
+    width: 40%;
 }
 
 #table_amigurumi_material [name="quantity"] {
-    width: 15%;
+    width: 7%;
 }
 
 #table_amigurumi_material [name="action"] {
-    width: 30%;
+    width: 20%;
 }
 
-#table_amigurumi_material input[name="action"], #table_amigurumi_material input[name="quantity"], #table_amigurumi_material input[name="material"]{
+#table_amigurumi_material input[name="recipe_id"],#table_amigurumi_material input[name="material_class"], 
+#table_amigurumi_material input[name="quantity"], #table_amigurumi_material input[name="material"],
+#table_amigurumi_material input[name="colour_id"]{
     width: 100%;
     box-sizing: border-box;
 }
