@@ -74,9 +74,8 @@ function loadStitchbookTable() {
                         `).join("")}
                     </tbody>
                     <br>
-                    <button class="add_stitchbook">Adicionar</button>
                     <br>
-                    <br>
+                    <button class="add_stitchbook" id="add_stitchbook_line">Adicionar</button>
                 `;
 
                 stitchbookList.appendChild(tableContainer);
@@ -88,11 +87,15 @@ function loadStitchbookTable() {
                 removeButton.forEach(row => {
                     row.addEventListener("click", function () {
                         const stitchbookIdDelete = this.getAttribute("delete_botton_id");
-                        API.APIDelete_Stitchbook(stitchbookIdDelete)
-                            .then(data => {
-                                alert(data.message);
-                                loadStitchbookTable();
-                            });
+                        let confirmDelete = confirm("Tem certeza que deseja excluir esta carreira?");
+    
+                        if (confirmDelete) {
+                            API.APIDelete_Stitchbook(stitchbookIdDelete)
+                                .then(data => {
+                                    alert(data.message);
+                                    loadStitchbookTable();
+                                });
+                        }
                     });
                 });
 
@@ -228,13 +231,16 @@ function loadStitchbookSequenceTable() {
             table.querySelectorAll(".btn-remove").forEach(button => {
                 button.addEventListener("click", function () {
                     const elementId = this.getAttribute("delete_botton_id");
-
-                    API.APIDelete_Stitchbook_Sequence(elementId)
-                        .then(data => {
-                            alert(data.message);
-                            loadStitchbookSequenceTable();
-                            loadStitchbookTable();
-                        });
+                    let confirmDelete = confirm("Tem certeza que deseja excluir este Elemento?");
+    
+                    if (confirmDelete) {
+                        API.APIDelete_Stitchbook_Sequence(elementId)
+                            .then(data => {
+                                alert(data.message);
+                                loadStitchbookSequenceTable();
+                                loadStitchbookTable();
+                            });
+                    }
                 });
             });
 
@@ -476,14 +482,18 @@ function createImageEditBox() {
             deleteBtns.forEach(btn => {
                 btn.addEventListener("click", function() {
                     const imageId = btn.getAttribute("data-id");
+                    let confirmDelete = confirm("Tem certeza que deseja excluir esta Imagem?");
+    
+                    if (confirmDelete) {
 
-                    API.APIDelete_Image(imageId)
-                    .then(data => {
-                        alert(data.message)
-                        loadImagemTable()
-                        document.body.removeChild(modal);
-                        document.body.removeChild(overlay);
-                    })
+                        API.APIDelete_Image(imageId)
+                        .then(data => {
+                            alert(data.message)
+                            loadImagemTable()
+                            document.body.removeChild(modal);
+                            document.body.removeChild(overlay);
+                        })
+                    }
 
                     
                 });
@@ -548,12 +558,15 @@ function loadMaterialTable() {
             table.querySelectorAll(".btn-remove").forEach(button => { 
                 button.addEventListener("click", function () {
                     let materialId = this.getAttribute("data-id");
+                    let confirmDelete = confirm("Tem certeza que deseja excluir este Material?");
 
-                    API.APIDelete_MaterialList(materialId)
-                    .then(data => {
-                        alert(data.message);
-                        loadMaterialTable()
-                    });
+                    if (confirmDelete) {
+                        API.APIDelete_MaterialList(materialId)
+                        .then(data => {
+                            alert(data.message);
+                            loadMaterialTable()
+                        });
+                    }
                 });
             })
 
@@ -762,9 +775,7 @@ function deleteAmigurumi(){
             window.location.href = "_amigurumi.html"
         })
 
-    } else {
-        alert("Ação cancelada.");
-    } 
+    }
 }
 
 
