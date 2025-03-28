@@ -544,7 +544,42 @@ function createImageEditBox() {
 
 
 // ------------------ tabela de Lista de Materiais -------------------------- \\
-function loadMaterialTable() {
+
+function selectMaterialList() {
+    API.APIGet_MaterialList()
+        .then(data => {
+            let list = document.getElementById("material_list_recipe");
+
+            list.innerHTML = "";
+
+            let defaultOption = document.createElement("option");
+            defaultOption.textContent = "Escolha uma Receita";
+            defaultOption.value = "";
+            list.appendChild(defaultOption);
+
+            let uniqueRecipes = Array.from(new Set(data.map(row => row.recipe_id)))
+                                     .map(id => {
+                                         return data.find(row => row.recipe_id === id);
+                                     });
+
+            uniqueRecipes.forEach(row => {
+                let option = document.createElement("option");
+                option.value = row.recipe_id;
+                option.textContent = `Receita ${row.recipe_id}`;
+                list.appendChild(option);
+            });
+
+            list.addEventListener("change", function() {
+                let selectedRecipeId = list.value;
+
+                loadMaterialTable(selectedRecipeId)
+            });
+        })
+}
+
+
+
+function loadMaterialTable(selectedRecipeId=1) {
     API.APIGet_MaterialList()
         .then(data => {
             let table = document.getElementById("table_amigurumi_material");
@@ -554,7 +589,7 @@ function loadMaterialTable() {
 
             var urlParams = new URLSearchParams(window.location.search);
             var amigurumiId = urlParams.get("id").split("?")[0];
-            let filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId))
+            let filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId) && parseInt(selectedRecipeId) == parseInt(row.recipe_id))
 
             tbody.innerHTML = `
                 ${filteredData.map(row => `
@@ -901,4 +936,5 @@ document.getElementById("amigurumi_edit").addEventListener("click", createEditBo
 document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);
 document.getElementById('add_material').addEventListener('click', addRowMaterialTable)
 document.getElementById("add_stitchbook_sequence").addEventListener("click", addNewElementRow)
+document.getElementById("material_list_recipe").addEventListener("click", selectMaterialList)
 
