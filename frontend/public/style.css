@@ -347,12 +347,16 @@ button_next_previous {
     height: 100%; 
 }
 
-.stitchbook-table [name="number_row"],.stitchbook-table [name="colour_id"]{
+.stitchbook-table [name="colour_id"]{
+    width: 11%;
+}
+
+.stitchbook-table [name="number_row"]{
     width: 7%;
 }
 
 .stitchbook-table [name="stich_sequence"]{
-    width: 51%; 
+    width: 47%; 
 }
 
 .stitchbook-table [name="observation"]{
