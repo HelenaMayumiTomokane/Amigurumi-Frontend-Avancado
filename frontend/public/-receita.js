@@ -348,6 +348,7 @@ function createImageEditBox() {
 
 
 // ------------------ tabela de Lista de Materiais -------------------------- \\
+let lastSelectedRecipeId = 1; 
 
 function selectMaterialList() {
     var urlParams = new URLSearchParams(window.location.search);
@@ -363,7 +364,7 @@ function selectMaterialList() {
             list.innerHTML = "";
 
             let defaultOption = document.createElement("option");
-            defaultOption.textContent = "Escolha uma Receita";
+            defaultOption.textContent = "Escolha a Receita";
             defaultOption.value = "";
             list.appendChild(defaultOption);
 
@@ -387,16 +388,14 @@ function selectMaterialList() {
                 let selectedRecipeId = list.value;
 
                 if (selectedRecipeId) {
+                    lastSelectedRecipeId = selectedRecipeId
                     loadMaterialTable(selectedRecipeId);
-                    loadStitchbookTable(selectedRecipeId);
                 }
             });
         });
 }
 
-
-
-function loadMaterialTable(selectedRecipeId=1) {
+function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
     API.APIGet_MaterialList()
         .then(data => {
             let table = document.getElementById("table_amigurumi_material");
@@ -407,8 +406,6 @@ function loadMaterialTable(selectedRecipeId=1) {
             var urlParams = new URLSearchParams(window.location.search);
             var amigurumiId = urlParams.get("id").split("?")[0];
             let filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId) && parseInt(selectedRecipeId) == parseInt(row.recipe_id))
-
-            loadStitchbookTable(filteredData);
 
             tbody.innerHTML = `
                 ${filteredData.map(row => `
@@ -605,11 +602,12 @@ function loadStitchbookTable() {
                         </tr>
                     </thead>
                     <tbody>
-                        ${groupedData[element_id].map(row => {                            
+                        ${groupedData[element_id].map(row => {        
+                            
                             return  `
                             <tr data-id="${row.line_id}">
                                 <td name="number_row">${row.number_row || ""}</td>
-                                <td name="colour_id">${row.colour_id}</td>
+                                <td name="colour_id">${row.colour_id || ""} </td>
                                 <td name="stich_sequence">${row.stich_sequence || ""}</td>
                                 <td name="observation">${row.observation || ""}</td>
                                 <td name="action">
