@@ -15,7 +15,7 @@ function addNewAmigurumi() {
         <h3>Adicionar um Novo Amigurumi</h3>
         <label>Nome*: <input type="text" id="editName" required></label><br><br>
         <label>Autor*: <input type="text" id="editAuthor" required></label><br><br>
-        <label>Tamanho*: <input type="number" id="editSize" required></label><br><br>
+        <label>Tamanho (cm)*: <input type="number" id="editSize" required></label><br><br>
         <label>Link: <input type="url" id="editLink" required></label><br><br>
         <label>Observação: <input type="text" id="editObs"></label><br><br>
         <button id="saveEdit">Salvar</button>

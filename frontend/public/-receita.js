@@ -705,7 +705,7 @@ function loadStitchbookTable() {
                     const newRow = table.insertRow();
                     const lastRow = table.rows[table.rows.length - 2];
                     const number_row = lastRow ? parseInt(lastRow.querySelector('td[name="number_row"]')?.textContent)+1|| 0+1 : 1
-                    const colour_id =  lastRow ? lastRow.querySelector('td[name="colour_id"]')?.textContent || 1: 1
+                    const colour_id =  lastRow ? parseInt(lastRow.querySelector('td[name="colour_id"]')?.textContent) || 1: 1
                     const stich_sequence =  lastRow ? lastRow.querySelector('td[name="stich_sequence"]')?.textContent || "": ''
 
 

@@ -325,6 +325,7 @@ button_next_previous {
     top: 0; 
     z-index: 1;
     height: 40px;
+    border: 1px solid #b6b4b4;
 }
 
 .stitchbook-table td {
