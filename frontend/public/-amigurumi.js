@@ -28,9 +28,9 @@ function addNewAmigurumi() {
 
         const nameAmigurumi = document.getElementById("editName").value
         const autorAmigurumi =  document.getElementById("editAuthor").value
-        const sizeAmigurumi = parseInt(document.getElementById("editSize").value)
+        const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
         const linkAmigurumi =  document.getElementById("editLink").value
-        const amigurumi_id_of_linked_amigurumiAmigurumi =  ""
+        const amigurumi_id_of_linked_amigurumiAmigurumi =  null
         const obsAmigurumi =  document.getElementById("editObs").value
         
 
@@ -54,7 +54,7 @@ function allAmigurumiAvailable() {
     API.APIGet_FoundationList()
         .then(data => {
             const cardID = "cardAmigurumi"            
-            let filteredData = data.filter(row => row.amigurumi_id_of_linked_amigurumi == "");
+            let filteredData = data.filter(row => row.amigurumi_id_of_linked_amigurumi == "" || row.amigurumi_id_of_linked_amigurumi == null);
 
             API.createAmigurumiImageCard(cardID, filteredData)
         })
@@ -67,7 +67,7 @@ function filterAmigurumis() {
         .then(data => {
             const cardID = "cardAmigurumi"
             
-            let filteredData = data.filter(row => row.amigurumi_id_of_linked_amigurumi == "");
+            let filteredData = data.filter(row => row.amigurumi_id_of_linked_amigurumi == "" || row.amigurumi_id_of_linked_amigurumi == null);
 
             if (filteredData.length > 0 && searchQuery) {
                 filteredData = data.filter(row => row.name.toLowerCase().includes(searchQuery) && row.amigurumi_id_of_linked_amigurumi == "");

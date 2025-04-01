@@ -12,12 +12,12 @@ export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour_id,
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            "amigurumi_id": amigurumi_id ,
-            "observation": observation,
-            "element_id": element_id,
-            "number_row": number_row,
-            "colour_id": colour_id,
-            "stich_sequence": stich_sequence
+            "amigurumi_id": parseInt(amigurumi_id) ,
+            "observation": String(observation),
+            "element_id": parseInt(element_id),
+            "number_row": parseInt(number_row),
+            "colour_id": parseInt(colour_id),
+            "stich_sequence": String(stich_sequence),
         })
     })
     .then(response => response.json())
@@ -26,18 +26,18 @@ export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour_id,
 
 
 
-export function APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id,number_row,colour_id,stich_sequence){
+export function APIPut_Stitchbook(stitchbookIdPut, amigurumi_id, observation, element_id,number_row,colour_id,stich_sequence){
     return fetch(`http://127.0.0.1:5000/stitchbook/line_id`, { 
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-                "line_id": stitchbookIdPut,
-                "amigurumi_id": amigurumiId,
-                "observation": observation,
-                "element_id": element_id,
-                "number_row": number_row,
-                "colour_id": colour_id,
-                "stich_sequence": stich_sequence
+                "line_id": parseInt(stitchbookIdPut),
+                "amigurumi_id": parseInt(amigurumi_id),
+                "observation": String(observation),
+                "element_id": parseInt(element_id),
+                "number_row": parseInt(number_row),
+                "colour_id": parseInt(colour_id),
+                "stich_sequence": String(stich_sequence),
             })
         })
         .then(response => response.json())
@@ -51,7 +51,7 @@ export function APIDelete_Stitchbook(stitchbookIdDelete){
             method: "DELETE",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-                "line_id": stitchbookIdDelete,
+                "line_id": parseInt(stitchbookIdDelete),
             })
         })
         .then(response => response.json())
@@ -74,10 +74,10 @@ export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_or
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            "amigurumi_id": amigurumi_id ,
-            "element_name": element_name,
-            "element_order": element_order,
-            "repetition": repetition,
+            "amigurumi_id": parseInt(amigurumi_id) ,
+            "element_name": String(element_name),
+            "element_order": parseInt(element_order),
+            "repetition": parseInt(repetition),
         })
     })
     .then(response => response.json())
@@ -91,11 +91,11 @@ export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name,
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            "element_id": element_id,
-            "amigurumi_id":amigurumiId,
-            "element_order": element_order,
-            "element_name": element_name,
-            "repetition": repetition,
+            "element_id": parseInt(element_id),
+            "amigurumi_id":parseInt(amigurumiId),
+            "element_order": parseInt(element_order),
+            "element_name": String(element_name),
+            "repetition": parseInt(repetition),
         })
     })
     .then(response => response.json())
@@ -109,7 +109,7 @@ export function APIDelete_Stitchbook_Sequence(element_id){
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            "element_id": element_id,
+            "element_id": parseInt(element_id),
         })
     })
     .then(response => response.json())
@@ -138,15 +138,16 @@ export function APIGet_Image(){
 
 
 
-export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id){
+export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id,image_route){
     return fetch(`http://127.0.0.1:5000/image/image_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "image_id": image_id,
-            "main_image": main_image,
-            "amigurumi_id": amigurumi_id,
-            "recipe_id":recipe_id,
+            "image_id": parseInt(image_id),
+            "main_image": Boolean(main_image),
+            "amigurumi_id": parseInt(amigurumi_id),
+            "recipe_id":parseInt(recipe_id),
+            "image_route": String(image_route)
             
         })
     })
@@ -160,7 +161,7 @@ export function APIDelete_Image(imageId){
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "image_id": imageId
+            "image_id": parseInt(imageId)
         })
     })
     .then(response => response.json())
@@ -177,16 +178,16 @@ export function APIGet_MaterialList(){
 
 
 
-export function APIPost_MaterialList(amigurumi_id,material,quantity,recipe_id,colour_id){
+export function APIPost_MaterialList(amigurumi_id,material_name,quantity,recipe_id,colour_id){
     return fetch("http://127.0.0.1:5000/material_list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "amigurumi_id": amigurumi_id,
-            "material_name": material,
-            "quantity": quantity,
-            "recipe_id": recipe_id,
-            "colour_id": colour_id,
+            "amigurumi_id": parseInt(amigurumi_id),
+            "material_name": String(material_name),
+            "quantity": String(quantity),
+            "recipe_id": parseInt(recipe_id),
+            "colour_id": parseInt(colour_id),
         })
     })
     .then(response => response.json())
@@ -195,16 +196,17 @@ export function APIPost_MaterialList(amigurumi_id,material,quantity,recipe_id,co
 
 
 
-export function APIPut_MaterialList(material_list_id, material, quantity,recipe_id,colour_id){
+export function APIPut_MaterialList(materialId, material_name, quantity,recipe_id,colour_id,amigurumi_id){
     return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "material_list_id":material_list_id,
-            "material_name": material,
-            "quantity": quantity,
-            "recipe_id": recipe_id,
-            "colour_id": colour_id,
+            "material_list_id":parseInt(materialId),
+            "material_name": String(material_name),
+            "quantity": String(quantity),
+            "recipe_id": parseInt(recipe_id),
+            "colour_id": parseInt(colour_id),
+            "amigurumi_id": parseInt(amigurumi_id),
         })
     })
     .then(response => response.json())
@@ -218,7 +220,7 @@ export function APIDelete_MaterialList(materialId){
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "material_list_id":materialId
+            "material_list_id": parseInt(materialId)
         })
     })
     .then(response => response.json())
@@ -241,12 +243,12 @@ export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurum
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "name": nameAmigurumi,
-            "autor": autorAmigurumi,
-            "size": sizeAmigurumi,
-            "link": linkAmigurumi,
-            "amigurumi_id_of_linked_amigurumi": amigurumi_id_of_linked_amigurumiAmigurumi,
-            "obs": obsAmigurumi
+            "name": String(nameAmigurumi),
+            "autor": String(autorAmigurumi),
+            "size": parseFloat(sizeAmigurumi),
+            "link": String(linkAmigurumi),
+            "amigurumi_id_of_linked_amigurumi": parseInt(amigurumi_id_of_linked_amigurumiAmigurumi),
+            "obs": String(obsAmigurumi),
         })
     })
     .then(response => response.json())
@@ -255,18 +257,19 @@ export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurum
 
 
 
-export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs){
+export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs,date){
     return fetch(`http://127.0.0.1:5000/foundation_list/amigurumi_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "amigurumi_id": amigurumi_id,
-            "name": name,
-            "autor": autor,
-            "size": size,
-            "link": link,
-            "amigurumi_id_of_linked_amigurumi": amigurumi_id_of_linked_amigurumi,
-            "obs": obs
+            "amigurumi_id": parseInt(amigurumi_id),
+            "name": String(name),
+            "autor": String(autor),
+            "size": parseFloat(size),
+            "link": String(link),
+            "amigurumi_id_of_linked_amigurumi": parseInt(amigurumi_id_of_linked_amigurumi),
+            "obs": String(obs),
+            "date": new Date(date)
         })
     })
     .then(response => response.json())
@@ -280,7 +283,7 @@ export function APIDelete_FoundationList(amigurumi_id){
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "amigurumi_id": amigurumi_id,
+            "amigurumi_id": parseInt(amigurumi_id),
         })
     })
     .then(response => response.json())

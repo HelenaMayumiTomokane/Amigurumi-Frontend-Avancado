@@ -1,7 +1,7 @@
 import * as API from './--support_code.js';
 
 var urlParams = new URLSearchParams(window.location.search);
-var amigurumiId = urlParams.get("id").split("?")[0];
+var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
 // ------------------ Stitchbook Element -------------------------- \\
 
@@ -14,9 +14,9 @@ function loadStitchbookSequenceTable() {
             tbody.innerHTML = ""
 
             var urlParams = new URLSearchParams(window.location.search);
-            var amigurumiId = urlParams.get("id").split("?")[0];
+            var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
-            const filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
+            const filteredData = data.filter(row => parseInt(row.amigurumi_id) === amigurumiId);
 
             tbody.innerHTML = `
                 ${filteredData.map(row => `
@@ -34,7 +34,7 @@ function loadStitchbookSequenceTable() {
 
             table.querySelectorAll(".btn-remove").forEach(button => {
                 button.addEventListener("click", function () {
-                    const elementId = this.getAttribute("delete_botton_id");
+                    const elementId = parseInt(this.getAttribute("delete_botton_id"));
                     let confirmDelete = confirm("Tem certeza que deseja excluir este Elemento?");
     
                     if (confirmDelete) {
@@ -50,7 +50,7 @@ function loadStitchbookSequenceTable() {
 
             table.querySelectorAll(".btn-edit").forEach(button => {
                 button.addEventListener("click", function () {
-                    const elementId = this.getAttribute("alteration_botton_id");
+                    const elementId = parseInt(this.getAttribute("alteration_botton_id"));
                     const tr = this.closest("tr");
                     const originalValues = {};
 
@@ -90,10 +90,10 @@ function loadStitchbookSequenceTable() {
 
                     saveButton.addEventListener("click", function () {
                         const element_name = tr.querySelector('input[name="element_name"]').value;
-                        const element_order = tr.querySelector('input[name="element_order"]').value;
-                        const repetition = tr.querySelector('input[name="repetition"]').value;
+                        const element_order = parseInt(tr.querySelector('input[name="element_order"]').value);
+                        const repetition = parseInt(tr.querySelector('input[name="repetition"]').value);
 
-                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order,repetition)
+                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order, repetition)
                             .then(data => {
                                 alert(data.message);
                                 loadStitchbookSequenceTable();
@@ -111,7 +111,7 @@ function loadStitchbookSequenceTable() {
     
 function addNewElementRow() {
     var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = urlParams.get("id").split("?")[0];
+    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
     const table = document.getElementById("table_stitchbook_sequence").getElementsByTagName('tbody')[0];
     const newRow = table.insertRow();
@@ -134,8 +134,8 @@ function addNewElementRow() {
 
     addButton.addEventListener("click", function () {
         const element_name = newRow.querySelector('input[name="element_name"]').value;
-        const element_order = newRow.querySelector('input[name="element_order"]').value;
-        const repetition = newRow.querySelector('input[name="repetition"]').value;
+        const element_order = parseInt(newRow.querySelector('input[name="element_order"]').value);
+        const repetition = parseInt(newRow.querySelector('input[name="repetition"]').value);
 
         API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,repetition)
             .then(data => {
@@ -158,7 +158,7 @@ function loadImagemTable(){
             const container = document.getElementById("cardAmigurumiRecipeImage");
             container.innerHTML = "";
 
-            const filteredImages = imageData.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
+            const filteredImages = imageData.filter(row => parseInt(row.amigurumi_id) === amigurumiId);
 
             if (filteredImages.length === 0) return;
 
@@ -205,7 +205,7 @@ function loadImagemTable(){
 
 function createImageEditBox() {
     var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = urlParams.get("id").split("?")[0];
+    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
     API.APIGet_Image()
         .then(data => {
@@ -220,7 +220,7 @@ function createImageEditBox() {
                 <h3>Adicionar ou Excluir Imagem do Amigurumi</h3>
                 <label>Selecione um arquivo: <input type="file" id="editImageFile" accept="image/*"></label><br><br>
                 <label>Imagem Principal: <input type="checkbox" id="editImagePrincipal"></label><br><br>
-                <label>ID da Receita: <input type="numeber" id="editImageRecipeID"></label><br><br>
+                <label>ID da Receita: <input type="number" id="editImageRecipeID"></label><br><br>
                 <br>
                 <br>
                 <button id="saveImageEdit">Adicionar</button>
@@ -232,7 +232,7 @@ function createImageEditBox() {
                 <h4>Imagens Existentes</h4>
                 <ul id="imageList">
                     ${data
-                        .filter(row=> parseInt(row.amigurumi_id) === parseInt(amigurumiId))
+                        .filter(row=> parseInt(row.amigurumi_id) === amigurumiId)
                         .map(image => `
                         <li>
                             <img src= http://localhost:8000/${image.image_route} alt="Imagem"  width="200" height="auto">
@@ -258,8 +258,8 @@ function createImageEditBox() {
 
             document.getElementById("saveImageEdit").addEventListener("click", function () {
 
-                const recipe_id = document.getElementById("editImageRecipeID").value
-                const main_image = document.getElementById("editImagePrincipal").checked
+                const recipe_id = parseInt(document.getElementById("editImageRecipeID").value)
+                const main_image = Boolean(document.getElementById("editImagePrincipal").checked)
                 const image_route = document.getElementById("editImageFile").files[0]
                 
                 if (!image_route) {
@@ -271,9 +271,8 @@ function createImageEditBox() {
                 formData.append("recipe_id", recipe_id);
                 formData.append("main_image", main_image);
                 formData.append("image_route", image_route);
-                formData.append("amigurumi_id", parseInt(amigurumiId));
+                formData.append("amigurumi_id", amigurumiId);
 
-                console.log(formData)
                 API.APIPost_Image(formData)
                 .then(data => {
                     alert(data.message)
@@ -316,9 +315,10 @@ function createImageEditBox() {
 
                     const imageId = btn.getAttribute("data-id");
                     const main_image = listItem.querySelector('input[name="main_image"]').checked;
-                    const recipe_id = listItem.querySelector('input[name="recipe_id"]').value;
+                    const recipe_id = parseInt(listItem.querySelector('input[name="recipe_id"]').value);
+                    const image_route = listItem.image_route
 
-                    API.APIPut_Image(imageId,main_image,amigurumiId,recipe_id)
+                    API.APIPut_Image(imageId,main_image,amigurumiId,recipe_id,image_route)
                     .then(data => {
                         alert(data.message)
                         loadImagemTable()
@@ -344,7 +344,7 @@ let lastSelectedRecipeId = 1;
 
 function selectMaterialList() {
     var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = urlParams.get("id").split("?")[0];
+    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
     API.APIGet_MaterialList()
         .then(data => {
@@ -360,7 +360,7 @@ function selectMaterialList() {
             defaultOption.value = "";
             list.appendChild(defaultOption);
 
-            let uniqueRecipes = Array.from(new Set(data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId)).map(row => row.recipe_id)))
+            let uniqueRecipes = Array.from(new Set(data.filter(row => parseInt(row.amigurumi_id) === amigurumiId).map(row => row.recipe_id)))
                                      .map(id => data.find(row => row.recipe_id === id));
 
             uniqueRecipes.forEach(row => {
@@ -396,8 +396,8 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
             tbody.innerHTML = ""
 
             var urlParams = new URLSearchParams(window.location.search);
-            var amigurumiId = urlParams.get("id").split("?")[0];
-            let filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId) && parseInt(selectedRecipeId) == parseInt(row.recipe_id))
+            var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
+            let filteredData = data.filter(row => parseInt(row.amigurumi_id) === amigurumiId && parseInt(selectedRecipeId) == parseInt(row.recipe_id))
 
             tbody.innerHTML = `
                 ${filteredData.map(row => `
@@ -477,7 +477,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                         const material_name = tr.querySelector('input[name="material_name"]').value;
                         const quantity = tr.querySelector('input[name="quantity"]').value;
 
-                        API.APIPut_MaterialList(materialId, material_name, quantity,recipe_id,colour_id)
+                        API.APIPut_MaterialList(materialId, material_name, quantity,recipe_id,colour_id,amigurumiId)
                             .then(data => {
                                 alert(data.message);
                                 loadMaterialTable() 
@@ -494,7 +494,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
 
 function addRowMaterialTable() {
     var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = urlParams.get("id").split("?")[0];
+    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
     const table = document.getElementById("table_amigurumi_material").getElementsByTagName('tbody')[0];
     const newRow = table.insertRow();
@@ -503,7 +503,7 @@ function addRowMaterialTable() {
         <td><input type="number" name="recipe_id" required min="0"></td>
         <td><input type="number" name="colour_id" required min="0"></td>
         <td><input type="text" name="material_name" required></td>
-        <td><input type="number" name="quantity" required min="0"></td>
+        <td><input type="text" name="quantity" required></td>
         <td name="action">
             <button class="addMaterial-btn">Adicionar</button>
             <button class="deleteMaterial-btn">Remover</button>
@@ -519,7 +519,7 @@ function addRowMaterialTable() {
         const material_name = newRow.querySelector('input[name="material_name"]').value;
         const quantity = newRow.querySelector('input[name="quantity"]').value;
 
-        API.APIPost_MaterialList(amigurumiId,material_name,quantity,recipe_id,colour_id)
+        API.APIPost_MaterialList(amigurumiId, material_name, quantity, recipe_id, colour_id)
         .then(data => {
             alert(data.message)
             loadMaterialTable()
@@ -544,9 +544,9 @@ function loadStitchbookTable() {
             stitchbookList.innerHTML = "";
 
             var urlParams = new URLSearchParams(window.location.search);
-            var amigurumiId = urlParams.get("id").split("?")[0];
+            var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
-            const filteredData = data.filter(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
+            const filteredData = data.filter(row => parseInt(row.amigurumi_id) === amigurumiId);
 
             const groupedData = filteredData.reduce((acc, row) => {
                 if (!acc[row.element_id]) {
@@ -675,8 +675,8 @@ function loadStitchbookTable() {
                         });
 
                         saveButton.addEventListener("click", function () {
-                            const number_row = tr.querySelector('input[name="number_row"]').value;
-                            const colour_id = tr.querySelector('input[name="colour_id"]').value;
+                            const number_row = parseInt(tr.querySelector('input[name="number_row"]').value);
+                            const colour_id = parseInt(tr.querySelector('input[name="colour_id"]').value);
                             const stich_sequence = tr.querySelector('input[name="stich_sequence"]').value;
                             const observation = tr.querySelector('input[name="observation"]').value;
 
@@ -712,8 +712,8 @@ function loadStitchbookTable() {
                     const deleteButton = newRow.querySelector(".btn-remove");
 
                     addButton.addEventListener("click", function () {
-                        const number_row = newRow.querySelector('input[name="number_row"]').value;
-                        const colour_id = newRow.querySelector('input[name="colour_id"]').value;
+                        const number_row = parseInt(newRow.querySelector('input[name="number_row"]').value);
+                        const colour_id = parseInt(newRow.querySelector('input[name="colour_id"]').value);
                         const stich_sequence = newRow.querySelector('input[name="stich_sequence"]').value;
                         const observation = newRow.querySelector('input[name="observation"]').value;
 
@@ -740,7 +740,7 @@ function loadInformatianAmigurumi(){
     API.APIGet_FoundationList()
         .then(data => {
             data
-            .filter(row=> parseInt(row.amigurumi_id) == parseInt(amigurumiId))
+            .filter(row=> parseInt(row.amigurumi_id) == amigurumiId)
             .forEach(foundation_list => {
 
                 const amigumi_name = document.getElementById("amigurmi_name_recipe")
@@ -759,11 +759,11 @@ function loadInformatianAmigurumi(){
 
 function createEditBoxFoundation() {
     var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = urlParams.get("id").split("?")[0];
+    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
     API.APIGet_FoundationList()
         .then(data => {
-            const amigurumiData = data.find(row => parseInt(row.amigurumi_id) === parseInt(amigurumiId));
+            const amigurumiData = data.find(row => parseInt(row.amigurumi_id) === amigurumiId);
 
             if (!amigurumiData) {
                 alert("Amigurumi não encontrado!");
@@ -795,12 +795,13 @@ function createEditBoxFoundation() {
                 const amigurumi_id = amigurumiId
                 const name = document.getElementById("editName").value
                 const autor = document.getElementById("editAuthor").value
-                const size = document.getElementById("editSize").value
+                const size = parseFloat(document.getElementById("editSize").value)
                 const link = document.getElementById("editLink").value
-                const amigurumi_id_of_linked_amigurumi = amigurumiData.amigurumi_id_of_linked_amigurumi
+                const amigurumi_id_of_linked_amigurumi = parseInt(amigurumiData.amigurumi_id_of_linked_amigurumi)
+                const date = new Date(amigurumiData.date)
                 const obs = document.getElementById("editObs").value
  
-                API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs)
+                API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs,date)
                 .then(data =>{
                     alert(data.message)
                     loadInformatianAmigurumi()
@@ -824,7 +825,7 @@ function deleteAmigurumi(){
     
     if (confirmDelete) {
         var urlParams = new URLSearchParams(window.location.search);
-        var amigurumi_id = urlParams.get("id").split("?")[0]
+        var amigurumi_id = parseInt(urlParams.get("id").split("?")[0])
 
         API.APIDelete_FoundationList(amigurumi_id)
         .then(data => {
@@ -843,7 +844,7 @@ function loadNewCardsBellow(){
         .then(data => {
             var cardID = "cardAmigurumiRelationship"
 
-            const filteredData = data.filter(row => parseInt(row.amigurumi_id_of_linked_amigurumi) === parseInt(amigurumiId));
+            const filteredData = data.filter(row => parseInt(row.amigurumi_id_of_linked_amigurumi) === amigurumiId);
 
             if (filteredData.length === 0) {
                 const cardAmigurumi = document.getElementById(cardID);
@@ -867,7 +868,7 @@ function loadNewCardsBellow(){
 
 function addNewAmigurumi() {
     var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = urlParams.get("id").split("?")[0];
+    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
 
     let overlay = document.createElement("div");
@@ -893,7 +894,7 @@ function addNewAmigurumi() {
 
         const nameAmigurumi = document.getElementById("editName").value
         const autorAmigurumi =  document.getElementById("editAuthor").value
-        const sizeAmigurumi = parseInt(document.getElementById("editSize").value)
+        const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
         const linkAmigurumi =  document.getElementById("editLink").value
         const obsAmigurumi =  document.getElementById("editObs").value
         
