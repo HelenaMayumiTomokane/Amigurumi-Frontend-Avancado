@@ -221,7 +221,6 @@ function createImageEditBox() {
                 <label>Selecione um arquivo: <input type="file" id="editImageFile" accept="image/*"></label><br><br>
                 <label>Imagem Principal: <input type="checkbox" id="editImagePrincipal"></label><br><br>
                 <label>ID da Receita: <input type="numeber" id="editImageRecipeID"></label><br><br>
-                <label>Observação: <input type="text" id="editImageObs" placeholder="Adicione uma observação"></label><br><br>
                 <br>
                 <br>
                 <button id="saveImageEdit">Adicionar</button>
@@ -241,11 +240,7 @@ function createImageEditBox() {
                             <br>
                             <span>Imagem Principal: <input type="checkbox" name="main_image" ${image.main_image ? "checked" : ""}></span>
                             <br>
-                            <span>ID da Receita: <input type="number" name="recipe_id" value="${image.recipe_id}"></span>
-                            <br>
-                            <span>Observação: <input type="text" name="observation" value="${image.observation}"></span>
-                            
-
+                            <span>ID da Receita: <input type="number" name="recipe_id" value="${image.recipe_id}"></span>                           
                             <br>
                             <br>
                             <button class="btn-edit" data-id="${image.image_id}">Alterar</button>
@@ -266,7 +261,6 @@ function createImageEditBox() {
                 const recipe_id = document.getElementById("editImageRecipeID").value
                 const main_image = document.getElementById("editImagePrincipal").checked
                 const image_route = document.getElementById("editImageFile").files[0]
-                const observation = document.getElementById("editImageObs").value
                 
                 if (!image_route) {
                     alert("Por favor, selecione uma imagem.");
@@ -277,7 +271,6 @@ function createImageEditBox() {
                 formData.append("recipe_id", recipe_id);
                 formData.append("main_image", main_image);
                 formData.append("image_route", image_route);
-                formData.append("observation", observation);
                 formData.append("amigurumi_id", parseInt(amigurumiId));
 
                 console.log(formData)
@@ -322,11 +315,10 @@ function createImageEditBox() {
                     const listItem = btn.closest("li");
 
                     const imageId = btn.getAttribute("data-id");
-                    const observation = listItem.querySelector('input[name="observation"]').value;
                     const main_image = listItem.querySelector('input[name="main_image"]').checked;
                     const recipe_id = listItem.querySelector('input[name="recipe_id"]').value;
 
-                    API.APIPut_Image(imageId,observation,main_image,amigurumiId,recipe_id)
+                    API.APIPut_Image(imageId,main_image,amigurumiId,recipe_id)
                     .then(data => {
                         alert(data.message)
                         loadImagemTable()
@@ -412,8 +404,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                     <tr data-id="${row.material_list_id}">
                         <td name="recipe_id">${row.recipe_id || ""}</td>
                         <td name="colour_id">${row.colour_id || ""}</td>
-                        <td name="material_class">${row.material_class || ""}</td>
-                        <td name="material">${row.material || ""}</td>
+                        <td name="material_name">${row.material_name || ""}</td>
                         <td name="quantity">${row.quantity || ""}</td>
                         <td name="action">
                             <button class="btn-edit" data-id="${row.material_list_id}">Alterar</button>
@@ -448,7 +439,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                     const alterButton = tr.querySelector(".btn-edit");
                 
 
-                    ["recipe_id","colour_id","material_class","material", "quantity"].forEach(name => {
+                    ["recipe_id","colour_id","material_name", "quantity"].forEach(name => {
                         let cell = tr.querySelector(`[name="${name}"]`);
                         originalValues[name] = cell.textContent.trim();
                         cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
@@ -471,7 +462,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                         cancelButton.remove();
                         saveButton.remove();
 
-                        ["recipe_id","colour_id","material_class","material", "quantity"].forEach(name => {
+                        ["recipe_id","colour_id","material_name", "quantity"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             cell.innerHTML = originalValues[name];
                         });
@@ -483,11 +474,10 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                     saveButton.addEventListener("click", function () {
                         const colour_id = tr.querySelector('input[name="colour_id"]').value;
                         const recipe_id = tr.querySelector('input[name="recipe_id"]').value;
-                        const material_class = tr.querySelector('input[name="material_class"]').value;
-                        const material = tr.querySelector('input[name="material"]').value;
+                        const material_name = tr.querySelector('input[name="material_name"]').value;
                         const quantity = tr.querySelector('input[name="quantity"]').value;
 
-                        API.APIPut_MaterialList(materialId, material, quantity,material_class,recipe_id,colour_id)
+                        API.APIPut_MaterialList(materialId, material_name, quantity,recipe_id,colour_id)
                             .then(data => {
                                 alert(data.message);
                                 loadMaterialTable() 
@@ -512,8 +502,7 @@ function addRowMaterialTable() {
     newRow.innerHTML = `
         <td><input type="number" name="recipe_id" required min="0"></td>
         <td><input type="number" name="colour_id" required min="0"></td>
-        <td><input type="text" name="material_class" required></td>
-        <td><input type="text" name="material" required></td>
+        <td><input type="text" name="material_name" required></td>
         <td><input type="number" name="quantity" required min="0"></td>
         <td name="action">
             <button class="addMaterial-btn">Adicionar</button>
@@ -527,11 +516,10 @@ function addRowMaterialTable() {
     addButton.addEventListener("click", function() {
         const colour_id = newRow.querySelector('input[name="colour_id"]').value;
         const recipe_id = newRow.querySelector('input[name="recipe_id"]').value;
-        const material_class = newRow.querySelector('input[name="material_class"]').value;
-        const material = newRow.querySelector('input[name="material"]').value;
+        const material_name = newRow.querySelector('input[name="material_name"]').value;
         const quantity = newRow.querySelector('input[name="quantity"]').value;
 
-        API.APIPost_MaterialList(amigurumiId,material,quantity,material_class,recipe_id,colour_id)
+        API.APIPost_MaterialList(amigurumiId,material_name,quantity,recipe_id,colour_id)
         .then(data => {
             alert(data.message)
             loadMaterialTable()
@@ -763,12 +751,6 @@ function loadInformatianAmigurumi(){
 
                 const amigumi_autor = document.getElementById("amigurmi_name_autor")
                 amigumi_autor.textContent = "Criador: " + foundation_list.autor;
-
-                const amigumi_obs = document.getElementById("amigurmi_name_obs")
-                amigumi_obs.textContent = ""
-                if(foundation_list.obs.length >0){
-                    amigumi_obs.textContent = "Observação: " + foundation_list.obs;
-                }
             });
     })
 

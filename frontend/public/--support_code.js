@@ -138,13 +138,12 @@ export function APIGet_Image(){
 
 
 
-export function APIPut_Image(image_id,observation,main_image,amigurumi_id,recipe_id){
+export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id){
     return fetch(`http://127.0.0.1:5000/image/image_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             "image_id": image_id,
-            "observation": observation,
             "main_image": main_image,
             "amigurumi_id": amigurumi_id,
             "recipe_id":recipe_id,
@@ -178,15 +177,14 @@ export function APIGet_MaterialList(){
 
 
 
-export function APIPost_MaterialList(amigurumi_id,material,quantity,material_class,recipe_id,colour_id){
+export function APIPost_MaterialList(amigurumi_id,material,quantity,recipe_id,colour_id){
     return fetch("http://127.0.0.1:5000/material_list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             "amigurumi_id": amigurumi_id,
-            "material": material,
+            "material_name": material,
             "quantity": quantity,
-            "material_class": material_class,
             "recipe_id": recipe_id,
             "colour_id": colour_id,
         })
@@ -197,15 +195,14 @@ export function APIPost_MaterialList(amigurumi_id,material,quantity,material_cla
 
 
 
-export function APIPut_MaterialList(material_list_id, material, quantity,material_class,recipe_id,colour_id){
+export function APIPut_MaterialList(material_list_id, material, quantity,recipe_id,colour_id){
     return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             "material_list_id":material_list_id,
-            "material": material,
+            "material_name": material,
             "quantity": quantity,
-            "material_class": material_class,
             "recipe_id": recipe_id,
             "colour_id": colour_id,
         })
