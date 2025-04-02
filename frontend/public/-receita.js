@@ -257,30 +257,28 @@ function createImageEditBox() {
             document.body.appendChild(modal);
 
             document.getElementById("saveImageEdit").addEventListener("click", function () {
-
-                const recipe_id = parseInt(document.getElementById("editImageRecipeID").value)
-                const main_image = Boolean(document.getElementById("editImagePrincipal").checked)
-                const image_route = document.getElementById("editImageFile").files[0]
+                const recipe_id = document.getElementById("editImageRecipeID").value;
+                const main_image = document.getElementById("editImagePrincipal").checked;
+                const image_route = document.getElementById("editImageFile").files[0];
+            
+                const reader = new FileReader();
                 
-                if (!image_route) {
-                    alert("Por favor, selecione uma imagem.");
-                    return;
-                }
+                reader.onloadend = function() {
+                    const base64String = reader.result.split(',')[1];
+                    console.log(base64String);
 
-                const formData = new FormData();
-                formData.append("recipe_id", recipe_id);
-                formData.append("main_image", main_image);
-                formData.append("image_route", image_route);
-                formData.append("amigurumi_id", amigurumiId);
-
-                API.APIPost_Image(formData)
-                .then(data => {
-                    alert(data.message)
-                    loadImagemTable()
-                    document.body.removeChild(modal);
-                    document.body.removeChild(overlay);
-                })
+                    API.APIPost_Image(main_image, amigurumiId, recipe_id,  base64String)
+                        .then(data => {
+                            alert(data.message);
+                            loadImagemTable();
+                            document.body.removeChild(modal);
+                            document.body.removeChild(overlay);
+                        })
+                };
+        
+                reader.readAsDataURL(image_route);
             });
+            
 
             document.getElementById("cancelImageEdit").addEventListener("click", function () {
                 document.body.removeChild(modal);
@@ -302,9 +300,7 @@ function createImageEditBox() {
                             document.body.removeChild(modal);
                             document.body.removeChild(overlay);
                         })
-                    }
-
-                    
+                    }   
                 });
             });
 
@@ -316,7 +312,7 @@ function createImageEditBox() {
                     const imageId = btn.getAttribute("data-id");
                     const main_image = listItem.querySelector('input[name="main_image"]').checked;
                     const recipe_id = parseInt(listItem.querySelector('input[name="recipe_id"]').value);
-                    const image_route = listItem.image_route
+                    const image_route = listItem.querySelector("img").src.split('/').pop()
 
                     API.APIPut_Image(imageId,main_image,amigurumiId,recipe_id,image_route)
                     .then(data => {
@@ -324,10 +320,7 @@ function createImageEditBox() {
                         loadImagemTable()
                         document.body.removeChild(modal);
                         document.body.removeChild(overlay);
-                    })
-
-                    
-                    
+                    })                    
                 });
             });
         })

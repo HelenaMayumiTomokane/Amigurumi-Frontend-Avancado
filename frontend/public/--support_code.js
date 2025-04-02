@@ -119,10 +119,17 @@ export function APIDelete_Stitchbook_Sequence(element_id){
 
 
 /*------------------- Image ---------------------------*/
-export function APIPost_Image(formData){
+export function APIPost_Image(main_image,amigurumi_id,recipe_id,image_route){
     return fetch(`http://127.0.0.1:5000/image`, {
         method: "POST",
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            "main_image": Boolean(main_image),
+            "amigurumi_id": parseInt(amigurumi_id),
+            "recipe_id":parseInt(recipe_id),
+            "image_route": String(image_route)
+            
+        })
     })
     .then(response => response.json())
     .then(data => data)
@@ -152,6 +159,7 @@ export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id,image_ro
         })
     })
     .then(response => response.json())
+    .then(data => data)
 }
 
 
@@ -165,6 +173,7 @@ export function APIDelete_Image(imageId){
         })
     })
     .then(response => response.json())
+    .then(data => data)
 }
 
 
