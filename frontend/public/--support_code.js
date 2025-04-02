@@ -1,6 +1,8 @@
+const baseURL = "http://127.0.0.1:5000"
+
 /*------------------- Stitchbook ---------------------------*/
 export function APIGet_Stitchbook(){
-    return fetch(`http://127.0.0.1:5000/stitchbook`)
+    return fetch(`${baseURL}/stitchbook`)
         .then(response => response.json())
         .then(data => data)
 }
@@ -8,7 +10,7 @@ export function APIGet_Stitchbook(){
 
 
 export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour_id,stich_sequence,observation){
-    return fetch("http://127.0.0.1:5000/stitchbook", {
+    return fetch(`${baseURL}/stitchbook`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -27,7 +29,7 @@ export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour_id,
 
 
 export function APIPut_Stitchbook(stitchbookIdPut, amigurumi_id, observation, element_id,number_row,colour_id,stich_sequence){
-    return fetch(`http://127.0.0.1:5000/stitchbook/line_id`, { 
+    return fetch(`${baseURL}/stitchbook/line_id`, { 
             method: "PUT",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
@@ -47,7 +49,7 @@ export function APIPut_Stitchbook(stitchbookIdPut, amigurumi_id, observation, el
 
 
 export function APIDelete_Stitchbook(stitchbookIdDelete){
-    return fetch(`http://127.0.0.1:5000/stitchbook/line_id`, { 
+    return fetch(`${baseURL}/stitchbook/line_id`, { 
             method: "DELETE",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
@@ -62,7 +64,7 @@ export function APIDelete_Stitchbook(stitchbookIdDelete){
 
 /*------------------- Stitchbook Sequence ---------------------------*/
 export function APIGet_Stitchbook_Sequence(){
-    return fetch("http://127.0.0.1:5000/stitchbook_sequence")
+    return fetch(`${baseURL}/stitchbook_sequence`)
     .then(response => response.json())
     .then(data => data)
 }
@@ -70,7 +72,7 @@ export function APIGet_Stitchbook_Sequence(){
 
 
 export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_order,repetition){
-    return fetch("http://127.0.0.1:5000/stitchbook_sequence", {
+    return fetch(`${baseURL}/stitchbook_sequence`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -87,7 +89,7 @@ export function APIPost_Stitchbook_Sequence(amigurumi_id,element_name,element_or
 
 
 export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name, element_order,repetition){
-    return fetch(`http://127.0.0.1:5000/stitchbook_sequence/element_id`, { 
+    return fetch(`${baseURL}/stitchbook_sequence/element_id`, { 
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -105,7 +107,7 @@ export function APIPut_Stitchbook_Sequence(element_id,amigurumiId, element_name,
 
 
 export function APIDelete_Stitchbook_Sequence(element_id){
-    return fetch(`http://127.0.0.1:5000/stitchbook_sequence/element_id`, { 
+    return fetch(`${baseURL}/stitchbook_sequence/element_id`, { 
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -119,16 +121,15 @@ export function APIDelete_Stitchbook_Sequence(element_id){
 
 
 /*------------------- Image ---------------------------*/
-export function APIPost_Image(main_image,amigurumi_id,recipe_id,image_route){
-    return fetch(`http://127.0.0.1:5000/image`, {
+export function APIPost_Image(main_image,amigurumi_id,recipe_id,image_base64){
+    return fetch(`${baseURL}/image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             "main_image": Boolean(main_image),
             "amigurumi_id": parseInt(amigurumi_id),
             "recipe_id":parseInt(recipe_id),
-            "image_route": String(image_route)
-            
+            "image_base64": String(image_base64)
         })
     })
     .then(response => response.json())
@@ -138,15 +139,15 @@ export function APIPost_Image(main_image,amigurumi_id,recipe_id,image_route){
 
 
 export function APIGet_Image(){
-    return fetch(`http://127.0.0.1:5000/image`)
+    return fetch(`${baseURL}/image`)
         .then(response => response.json())
         .then(data => data)
 }
 
 
 
-export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id,image_route){
-    return fetch(`http://127.0.0.1:5000/image/image_id`, {
+export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id,image_base64){
+    return fetch(`${baseURL}/image/image_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -154,8 +155,7 @@ export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id,image_ro
             "main_image": Boolean(main_image),
             "amigurumi_id": parseInt(amigurumi_id),
             "recipe_id":parseInt(recipe_id),
-            "image_route": String(image_route)
-            
+            "image_base64": String(image_base64)
         })
     })
     .then(response => response.json())
@@ -165,7 +165,7 @@ export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id,image_ro
 
 
 export function APIDelete_Image(imageId){
-    return fetch(`http://127.0.0.1:5000/image/image_id`, {
+    return fetch(`${baseURL}/image/image_id`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -180,7 +180,7 @@ export function APIDelete_Image(imageId){
 
 /*------------------- Material ---------------------------*/
 export function APIGet_MaterialList(){
-    return fetch(`http://127.0.0.1:5000/material_list`)
+    return fetch(`${baseURL}/material_list`)
     .then(response => response.json())
     .then(data => data)
 }
@@ -188,7 +188,7 @@ export function APIGet_MaterialList(){
 
 
 export function APIPost_MaterialList(amigurumi_id,material_name,quantity,recipe_id,colour_id){
-    return fetch("http://127.0.0.1:5000/material_list", {
+    return fetch(`${baseURL}/material_list`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -206,7 +206,7 @@ export function APIPost_MaterialList(amigurumi_id,material_name,quantity,recipe_
 
 
 export function APIPut_MaterialList(materialId, material_name, quantity,recipe_id,colour_id,amigurumi_id){
-    return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
+    return fetch(`${baseURL}/material_list/material_list_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -225,7 +225,7 @@ export function APIPut_MaterialList(materialId, material_name, quantity,recipe_i
 
 
 export function APIDelete_MaterialList(materialId){
-    return fetch(`http://127.0.0.1:5000/material_list/material_list_id`, {
+    return fetch(`${baseURL}/material_list/material_list_id`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -240,7 +240,7 @@ export function APIDelete_MaterialList(materialId){
 
 /*------------------- Foundation ---------------------------*/
 export function APIGet_FoundationList(){
-    return fetch(`http://127.0.0.1:5000/foundation_list`)
+    return fetch(`${baseURL}/foundation_list`)
         .then(response => response.json())
         .then(data => data)
 }
@@ -248,7 +248,7 @@ export function APIGet_FoundationList(){
 
 
 export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumi_id_of_linked_amigurumiAmigurumi,obsAmigurumi){
-    return fetch(`http://127.0.0.1:5000/foundation_list`, {
+    return fetch(`${baseURL}/foundation_list`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -267,7 +267,7 @@ export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurum
 
 
 export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs,date){
-    return fetch(`http://127.0.0.1:5000/foundation_list/amigurumi_id`, {
+    return fetch(`${baseURL}/foundation_list/amigurumi_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -288,7 +288,7 @@ export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurum
 
 
 export function APIDelete_FoundationList(amigurumi_id){
-    return fetch(`http://127.0.0.1:5000/foundation_list/amigurumi_id`, {
+    return fetch(`${baseURL}/foundation_list/amigurumi_id`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -318,24 +318,24 @@ export function createAmigurumiImageCard(cardID, filteredData){
             APIGet_Image()
                 .then(imageData => {
                     const imageSrcArray = imageData
-                        .filter(row => row.amigurumi_id == amigurumi.amigurumi_id)
-                        .map(row => row.image_route); 
+                        .filter(row => parseInt(row.amigurumi_id) == parseInt(amigurumi.amigurumi_id))
+                        .map(row => row.image_base64); 
 
                     let currentIndex = 0;
 
                     const imageElement = document.createElement('img');
-                    imageElement.src = `http://localhost:8000/${imageSrcArray[currentIndex]}`;
+                    imageElement.src = `data:image/jpeg;base64,${imageSrcArray[currentIndex]}`
                     imageElement.alt = amigurumi.name;
                     imageElement.id = "cardAmigurumiImage";
 
                     function showPreviousImage() {
                         currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                        imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
+                        imageElement.src = `data:image/jpeg;base64,${imageSrcArray[currentIndex]}`;
                     }
                     
                     function showNextImage() {
                         currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                        imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex]}`;
+                        imageElement.src = `data:image/jpeg;base64,${imageSrcArray[currentIndex]}`;
                     }
 
                     const nextButton = document.createElement('button_next_previous');

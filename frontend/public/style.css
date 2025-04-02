@@ -91,7 +91,7 @@ button_next_previous {
     top: 0;
     left: 0;
     z-index: -1;
-    background-image: url('http://localhost:8000/support_image/image_id_back_index.png');
+    background-image: url('image_id_back_index.png');
     background-size: cover;
     background-position: center;
 }

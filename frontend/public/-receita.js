@@ -162,12 +162,12 @@ function loadImagemTable(){
 
             if (filteredImages.length === 0) return;
 
-            const imageSrcArray = filteredImages.map(row => [row.image_route, row.recipe_id]);
+            const imageSrcArray = filteredImages.map(row => [row.image_base64, row.recipe_id]);
 
             let currentIndex = 0;
 
             const imageElement = document.createElement('img');
-            imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex][0]}`;
+            imageElement.src =  `data:image/jpeg;base64,${imageSrcArray[currentIndex][0]}`;
             imageElement.id = "amigurumiRecipeImageDisplay";
 
             const textRecipe = document.createElement('h2');
@@ -175,13 +175,13 @@ function loadImagemTable(){
   
             function showPreviousImage() {
                 currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex][0]}`;
+                imageElement.src =  `data:image/jpeg;base64,${imageSrcArray[currentIndex][0]}`;
                 textRecipe.innerText = `Receita: ${imageSrcArray[currentIndex][1]}`;
             }
             
             function showNextImage() {
                 currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                imageElement.src =  `http://localhost:8000/${imageSrcArray[currentIndex][0]}`;
+                imageElement.src =  `data:image/jpeg;base64,${imageSrcArray[currentIndex][0]}`;
                 textRecipe.innerText = `Receita: ${imageSrcArray[currentIndex][1]}`;
             }
             
@@ -235,7 +235,7 @@ function createImageEditBox() {
                         .filter(row=> parseInt(row.amigurumi_id) === amigurumiId)
                         .map(image => `
                         <li>
-                            <img src= http://localhost:8000/${image.image_route} alt="Imagem"  width="200" height="auto">
+                            <img src= data:image/jpeg;base64,${image.image_base64} alt="Imagem"  width="200" height="auto">
                             <br>
                             <br>
                             <span>Imagem Principal: <input type="checkbox" name="main_image" ${image.main_image ? "checked" : ""}></span>
@@ -259,7 +259,7 @@ function createImageEditBox() {
             document.getElementById("saveImageEdit").addEventListener("click", function () {
                 const recipe_id = document.getElementById("editImageRecipeID").value;
                 const main_image = document.getElementById("editImagePrincipal").checked;
-                const image_route = document.getElementById("editImageFile").files[0];
+                const image_base64 = document.getElementById("editImageFile").files[0];
             
                 const reader = new FileReader();
                 
@@ -276,7 +276,7 @@ function createImageEditBox() {
                         })
                 };
         
-                reader.readAsDataURL(image_route);
+                reader.readAsDataURL(image_base64);
             });
             
 
@@ -312,9 +312,11 @@ function createImageEditBox() {
                     const imageId = btn.getAttribute("data-id");
                     const main_image = listItem.querySelector('input[name="main_image"]').checked;
                     const recipe_id = parseInt(listItem.querySelector('input[name="recipe_id"]').value);
-                    const image_route = listItem.querySelector("img").src.split('/').pop()
+                    
+                    const imageSrc = listItem.querySelector("img").src;
+                    const image_base64 = imageSrc.split(',')[1];
 
-                    API.APIPut_Image(imageId,main_image,amigurumiId,recipe_id,image_route)
+                    API.APIPut_Image(imageId,main_image,amigurumiId,recipe_id,image_base64)
                     .then(data => {
                         alert(data.message)
                         loadImagemTable()
