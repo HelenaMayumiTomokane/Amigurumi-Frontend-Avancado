@@ -3,7 +3,7 @@ import * as API from './--support_code.js';
 var urlParams = new URLSearchParams(window.location.search);
 var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
-// ------------------ Stitchbook Element -------------------------- \\
+// ------------------ Dados da Tabela Stitchbook Element -------------------------- \\
 
 function loadStitchbookSequenceTable() {
     API.APIGet_Stitchbook_Sequence()
@@ -151,7 +151,7 @@ function addNewElementRow() {
 }
 
 
-// ------------------ tabela de Imagem -------------------------- \\
+// ------------------ Dados da Tabela Imagem -------------------------- \\
 function loadImagemTable(){
     API.APIGet_Image()
         .then(imageData => {
@@ -218,7 +218,7 @@ function createImageEditBox() {
 
             modal.innerHTML = `
                 <h3>Adicionar ou Excluir Imagem do Amigurumi</h3>
-                <label>Selecione um arquivo: <input type="file" id="editImageFile" accept="image/*"></label><br><br>
+                <label>Selecione um arquivo*: <input type="file" id="editImageFile" accept="image/*"></label><br><br>
                 <label>Imagem Principal: <input type="checkbox" id="editImagePrincipal"></label><br><br>
                 <label>ID da Receita: <input type="number" id="editImageRecipeID"></label><br><br>
                 <br>
@@ -334,7 +334,7 @@ function createImageEditBox() {
 
 
 
-// ------------------ tabela de Lista de Materiais -------------------------- \\
+// ------------------ Dados da Tabela Lista de Materiais -------------------------- \\
 let lastSelectedRecipeId = 1; 
 
 function selectMaterialList() {
@@ -352,7 +352,7 @@ function selectMaterialList() {
 
             let defaultOption = document.createElement("option");
             defaultOption.textContent = "Escolha a Receita";
-            defaultOption.value = "";
+            defaultOption.value = "Escolha a Receita";
             list.appendChild(defaultOption);
 
             let uniqueRecipes = Array.from(new Set(data.filter(row => parseInt(row.amigurumi_id) === amigurumiId).map(row => row.recipe_id)))
@@ -381,6 +381,8 @@ function selectMaterialList() {
             });
         });
 }
+
+
 
 function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
     API.APIGet_MaterialList()
@@ -530,7 +532,7 @@ function addRowMaterialTable() {
 
 
 
-// ------------------ Construção dos Dados -------------------------- \\
+// ------------------ Dados da Tabela Stitchbook -------------------------- \\
 
 function loadStitchbookTable() {
     API.APIGet_Stitchbook()
@@ -577,9 +579,9 @@ function loadStitchbookTable() {
                 table.innerHTML = `
                     <thead>
                         <tr>
-                            <th>Carreira</th>
-                            <th>Cor</th>
-                            <th>Sequência de Ponto</th>
+                            <th>Carreira*</th>
+                            <th>Cor*</th>
+                            <th>Sequência de Ponto*</th>
                             <th>Observação</th>
                             <th>Ações</th>
                         </tr>
@@ -730,8 +732,8 @@ function loadStitchbookTable() {
 
 
 
-// ------------------ tabela de Dados Básicos -------------------------- \\
-function loadInformatianAmigurumi(){
+// ------------------ Dados da Tabela Foundation -------------------------- \\
+function loadFoundationInformation(){
     API.APIGet_FoundationList()
         .then(data => {
             data
@@ -760,11 +762,6 @@ function createEditBoxFoundation() {
         .then(data => {
             const amigurumiData = data.find(row => parseInt(row.amigurumi_id) === amigurumiId);
 
-            if (!amigurumiData) {
-                alert("Amigurumi não encontrado!");
-                return;
-            }
-
             let overlay = document.createElement("div");
             overlay.id = "modalOverlayAmigurumi";
             document.body.appendChild(overlay);
@@ -774,9 +771,9 @@ function createEditBoxFoundation() {
 
             modal.innerHTML = `
                 <h3>Editar Amigurumi</h3>
-                <label>Nome: <input type="text" id="editName" value="${amigurumiData.name}"></label><br><br>
-                <label>Autor: <input type="text" id="editAuthor" value="${amigurumiData.autor}"></label><br><br>
-                <label>Tamanho: <input type="number" id="editSize" value="${amigurumiData.size}" required min="0"></label><br><br>
+                <label>Nome*: <input type="text" id="editName" value="${amigurumiData.name}"></label><br><br>
+                <label>Autor*: <input type="text" id="editAuthor" value="${amigurumiData.autor}"></label><br><br>
+                <label>Tamanho*: <input type="number" id="editSize" value="${amigurumiData.size}" required min="0"></label><br><br>
                 <label>Link: <input type="url" id="editLink" value="${amigurumiData.link}"></label><br><br>
                 <button id="saveEdit">Salvar</button>
                 <button id="cancelEdit">Cancelar</button>
@@ -791,13 +788,13 @@ function createEditBoxFoundation() {
                 const autor = document.getElementById("editAuthor").value
                 const size = parseFloat(document.getElementById("editSize").value)
                 const link = document.getElementById("editLink").value
-                const amigurumi_id_of_linked_amigurumi = parseInt(amigurumiData.amigurumi_id_of_linked_amigurumi)
+                const relationship = parseInt(amigurumiData.relationship)
                 const date = new Date(amigurumiData.date)
  
-                API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,date)
+                API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,relationship,date)
                 .then(data =>{
                     alert(data.message)
-                    loadInformatianAmigurumi()
+                    loadFoundationInformation()
                 })
 
                 document.body.removeChild(modal);
@@ -813,7 +810,7 @@ function createEditBoxFoundation() {
 
 
 
-function deleteAmigurumi(){
+function deleteAmigurumiFoundation(){
     let confirmDelete = confirm("Tem certeza que deseja excluir este Amigurumi?");
     
     if (confirmDelete) {
@@ -830,14 +827,25 @@ function deleteAmigurumi(){
 }
 
 
+// ------------------ Criação dos Cards das Receitas Relacionadas a Receita Principal -------------------------- \\
 
-// ------------------ Card de Novas Receitas -------------------------- \\
-function loadNewCardsBellow(){
+async function addNewAmigurumiFoundationRelationship() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var relationship = parseInt(urlParams.get("id").split("?")[0]);
+
+    await API.addNewAmigurumiFoundation(relationship)
+    .then(() => {
+        loadCardsRelationshipAmigurumi();
+    })
+}
+
+
+function loadCardsRelationshipAmigurumi(){
     API.APIGet_FoundationList()
         .then(data => {
             var cardID = "cardAmigurumiRelationship"
 
-            const filteredData = data.filter(row => parseInt(row.amigurumi_id_of_linked_amigurumi) === amigurumiId);
+            const filteredData = data.filter(row => parseInt(row.relationship) === amigurumiId);
 
             if (filteredData.length === 0) {
                 const cardAmigurumi = document.getElementById(cardID);
@@ -854,64 +862,9 @@ function loadNewCardsBellow(){
 
 
 
-
-
-
-// ------------------ Criando Novas Receitas -------------------------- \\
-
-function addNewAmigurumi() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
-
-
-    let overlay = document.createElement("div");
-    overlay.id = "modalOverlayAmigurumiRelationship";
-    document.body.appendChild(overlay);
-
-    let modal = document.createElement("div");
-    modal.id = "addNewAmigurumiBoxiRelationship";
-    modal.innerHTML = `
-        <h3>Adicionar Novo Amigurumi</h3>
-        <label>Nome: <input type="text" id="editName" required></label><br><br>
-        <label>Autor: <input type="text" id="editAuthor" required></label><br><br>
-        <label>Tamanho: <input type="number" id="editSize" required min="0"></label><br><br>
-        <label>Link: <input type="url" id="editLink" required></label><br><br>
-        <label>Observação: <input type="text" id="editObs"></label><br><br>
-        <button id="saveEdit">Salvar</button>
-        <button id="cancelEdit">Cancelar</button>
-    `;
-
-    document.body.appendChild(modal);
-
-    document.getElementById("saveEdit").addEventListener("click", function () {
-
-        const nameAmigurumi = document.getElementById("editName").value
-        const autorAmigurumi =  document.getElementById("editAuthor").value
-        const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
-        const linkAmigurumi =  document.getElementById("editLink").value
-        const obsAmigurumi =  document.getElementById("editObs").value
-        
-
-        API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumiId,obsAmigurumi)
-        .then(data => {
-            alert(data.message)
-            loadNewCardsBellow()
-        })
-        document.body.removeChild(modal);
-        document.body.removeChild(overlay);
-    });
-
-    document.getElementById("cancelEdit").addEventListener("click", function () {
-        document.body.removeChild(modal);
-        document.body.removeChild(overlay);
-    })
-}
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
-    loadNewCardsBellow();
-    loadInformatianAmigurumi();
+    loadCardsRelationshipAmigurumi();
+    loadFoundationInformation();
     loadStitchbookTable();
     loadImagemTable();
     loadMaterialTable();
@@ -920,10 +873,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-document.getElementById("add_new_amigurumi_relationship").addEventListener("click", addNewAmigurumi);
+document.getElementById("add_new_amigurumi_relationship").addEventListener("click", addNewAmigurumiFoundationRelationship);
 document.getElementById("amigurumi_image_edit").addEventListener("click", createImageEditBox);
 document.getElementById("amigurumi_edit").addEventListener("click", createEditBoxFoundation);
-document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumi);
+document.getElementById("delete_amigurumi").addEventListener("click", deleteAmigurumiFoundation);
 document.getElementById('add_material').addEventListener('click', addRowMaterialTable)
 document.getElementById("add_stitchbook_sequence").addEventListener("click", addNewElementRow)
 document.getElementById("material_list_recipe").addEventListener("click", selectMaterialList)

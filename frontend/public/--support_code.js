@@ -247,7 +247,7 @@ export function APIGet_FoundationList(){
 
 
 
-export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumi_id_of_linked_amigurumiAmigurumi){
+export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,relationship){
     return fetch(`${baseURL}/foundation_list`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -256,7 +256,7 @@ export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurum
             "autor": String(autorAmigurumi),
             "size": parseFloat(sizeAmigurumi),
             "link": String(linkAmigurumi),
-            "amigurumi_id_of_linked_amigurumi": parseInt(amigurumi_id_of_linked_amigurumiAmigurumi),
+            "relationship": parseInt(relationship),
         })
     })
     .then(response => response.json())
@@ -265,7 +265,7 @@ export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurum
 
 
 
-export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,date){
+export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,relationship,date){
     return fetch(`${baseURL}/foundation_list/amigurumi_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -275,7 +275,7 @@ export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurum
             "autor": String(autor),
             "size": parseFloat(size),
             "link": String(link),
-            "amigurumi_id_of_linked_amigurumi": parseInt(amigurumi_id_of_linked_amigurumi),
+            "relationship": parseInt(relationship),
             "date": new Date(date)
         })
     })
@@ -360,5 +360,51 @@ export function createAmigurumiImageCard(cardID, filteredData){
                     cardAmigurumi.appendChild(card);
                 })
         }
+    });
+}
+
+
+
+export function addNewAmigurumiFoundation(relationship) {
+    return new Promise(resolve => {
+        let overlay = document.createElement("div");
+        overlay.id = "modalOverlayAmigurumi";
+        document.body.appendChild(overlay);
+
+        let modal = document.createElement("div");
+        modal.id = "addNewAmigurumiBox";
+        modal.innerHTML = `
+            <h3>Adicionar um Novo Amigurumi</h3>
+            <label>Nome*: <input type="text" id="editName" required></label><br><br>
+            <label>Autor*: <input type="text" id="editAuthor" required></label><br><br>
+            <label>Tamanho (cm)*: <input type="number" id="editSize" required></label><br><br>
+            <label>Link: <input type="url" id="editLink" required></label><br><br>
+            <button id="saveEdit">Salvar</button>
+            <button id="cancelEdit">Cancelar</button>
+        `;
+
+        document.body.appendChild(modal);
+
+        document.getElementById("saveEdit").addEventListener("click", function () {
+
+            const nameAmigurumi = document.getElementById("editName").value
+            const autorAmigurumi =  document.getElementById("editAuthor").value
+            const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
+            const linkAmigurumi =  document.getElementById("editLink").value       
+
+            APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,relationship)
+            .then(data => {
+                alert(data.message)
+                resolve()
+            })
+            document.body.removeChild(modal);
+            document.body.removeChild(overlay);
+        });
+
+        document.getElementById("cancelEdit").addEventListener("click", function () {
+            document.body.removeChild(modal);
+            document.body.removeChild(overlay);
+        })
+
     });
 }

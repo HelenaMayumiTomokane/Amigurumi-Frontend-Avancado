@@ -1,49 +1,10 @@
 import * as API from './--support_code.js';
 
 function addNewAmigurumi() {
-    if (document.getElementById("addNewAmigurumiBox")) {
-        return;
-    }
-
-    let overlay = document.createElement("div");
-    overlay.id = "modalOverlayAmigurumi";
-    document.body.appendChild(overlay);
-
-    let modal = document.createElement("div");
-    modal.id = "addNewAmigurumiBox";
-    modal.innerHTML = `
-        <h3>Adicionar um Novo Amigurumi</h3>
-        <label>Nome*: <input type="text" id="editName" required></label><br><br>
-        <label>Autor*: <input type="text" id="editAuthor" required></label><br><br>
-        <label>Tamanho (cm)*: <input type="number" id="editSize" required></label><br><br>
-        <label>Link: <input type="url" id="editLink" required></label><br><br>
-        <button id="saveEdit">Salvar</button>
-        <button id="cancelEdit">Cancelar</button>
-    `;
-
-    document.body.appendChild(modal);
-
-    document.getElementById("saveEdit").addEventListener("click", function () {
-
-        const nameAmigurumi = document.getElementById("editName").value
-        const autorAmigurumi =  document.getElementById("editAuthor").value
-        const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
-        const linkAmigurumi =  document.getElementById("editLink").value
-        const amigurumi_id_of_linked_amigurumiAmigurumi =  null
-        
-
-        API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumi_id_of_linked_amigurumiAmigurumi)
-        .then(data => {
-            alert(data.message)
-            allAmigurumiAvailable()
-        })
-        document.body.removeChild(modal);
-        document.body.removeChild(overlay);
-    });
-
-    document.getElementById("cancelEdit").addEventListener("click", function () {
-        document.body.removeChild(modal);
-        document.body.removeChild(overlay);
+    const relationship = null
+    API.addNewAmigurumiFoundation(relationship)
+    .then(()=>{
+        allAmigurumiAvailable();
     })
 }
 
@@ -52,7 +13,7 @@ function allAmigurumiAvailable() {
     API.APIGet_FoundationList()
         .then(data => {
             const cardID = "cardAmigurumi"            
-            let filteredData = data.filter(row => row.amigurumi_id_of_linked_amigurumi == "" || row.amigurumi_id_of_linked_amigurumi == null);
+            let filteredData = data.filter(row => row.relationship == "" || row.relationship == null);
 
             API.createAmigurumiImageCard(cardID, filteredData)
         })
@@ -65,10 +26,10 @@ function filterAmigurumis() {
         .then(data => {
             const cardID = "cardAmigurumi"
             
-            let filteredData = data.filter(row => row.amigurumi_id_of_linked_amigurumi == "" || row.amigurumi_id_of_linked_amigurumi == null);
+            let filteredData = data.filter(row => row.relationship == "" || row.relationship == null);
 
             if (filteredData.length > 0 && searchQuery) {
-                filteredData = data.filter(row => row.name.toLowerCase().includes(searchQuery) && row.amigurumi_id_of_linked_amigurumi == "");
+                filteredData = data.filter(row => row.name.toLowerCase().includes(searchQuery) && row.relationship == "");
             }
 
             if (filteredData.length === 0 && searchQuery) {
