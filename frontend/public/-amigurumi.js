@@ -17,7 +17,6 @@ function addNewAmigurumi() {
         <label>Autor*: <input type="text" id="editAuthor" required></label><br><br>
         <label>Tamanho (cm)*: <input type="number" id="editSize" required></label><br><br>
         <label>Link: <input type="url" id="editLink" required></label><br><br>
-        <label>Observação: <input type="text" id="editObs"></label><br><br>
         <button id="saveEdit">Salvar</button>
         <button id="cancelEdit">Cancelar</button>
     `;
@@ -31,10 +30,9 @@ function addNewAmigurumi() {
         const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
         const linkAmigurumi =  document.getElementById("editLink").value
         const amigurumi_id_of_linked_amigurumiAmigurumi =  null
-        const obsAmigurumi =  document.getElementById("editObs").value
         
 
-        API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumi_id_of_linked_amigurumiAmigurumi,obsAmigurumi)
+        API.APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,amigurumi_id_of_linked_amigurumiAmigurumi)
         .then(data => {
             alert(data.message)
             allAmigurumiAvailable()

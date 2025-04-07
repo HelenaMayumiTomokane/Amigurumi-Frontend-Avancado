@@ -778,7 +778,6 @@ function createEditBoxFoundation() {
                 <label>Autor: <input type="text" id="editAuthor" value="${amigurumiData.autor}"></label><br><br>
                 <label>Tamanho: <input type="number" id="editSize" value="${amigurumiData.size}" required min="0"></label><br><br>
                 <label>Link: <input type="url" id="editLink" value="${amigurumiData.link}"></label><br><br>
-                <label>Observação: <input type="text" id="editObs" value="${amigurumiData.obs}"></label><br><br>
                 <button id="saveEdit">Salvar</button>
                 <button id="cancelEdit">Cancelar</button>
             `;
@@ -794,9 +793,8 @@ function createEditBoxFoundation() {
                 const link = document.getElementById("editLink").value
                 const amigurumi_id_of_linked_amigurumi = parseInt(amigurumiData.amigurumi_id_of_linked_amigurumi)
                 const date = new Date(amigurumiData.date)
-                const obs = document.getElementById("editObs").value
  
-                API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,obs,date)
+                API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,amigurumi_id_of_linked_amigurumi,date)
                 .then(data =>{
                     alert(data.message)
                     loadInformatianAmigurumi()
