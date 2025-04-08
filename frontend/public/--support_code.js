@@ -1,3 +1,5 @@
+//aba destinada para códigos reutilizáveis
+
 const baseURL = "http://127.0.0.1:5000"
 
 /*------------------- Stitchbook ---------------------------*/
@@ -350,12 +352,14 @@ export function createAmigurumiImageCard(cardID, filteredData){
                     const link = document.createElement('a');
                     link.href = `_receita.html?id=${amigurumi.amigurumi_id}`;
                     link.textContent = 'Ver Mais';
+                    
 
                     card.appendChild(titleElement);
                     card.appendChild(imageElement);
                     card.appendChild(prevButton);
                     card.appendChild(nextButton);
                     card.appendChild(link);
+                    
 
                     cardAmigurumi.appendChild(card);
                 })
@@ -366,45 +370,53 @@ export function createAmigurumiImageCard(cardID, filteredData){
 
 
 export function addNewAmigurumiFoundation(relationship) {
-    return new Promise(resolve => {
-        let overlay = document.createElement("div");
-        overlay.id = "modalOverlayAmigurumi";
-        document.body.appendChild(overlay);
+    let overlay = document.createElement("div");
+    overlay.id = "modalOverlayAmigurumi";
+    document.body.appendChild(overlay);
 
-        let modal = document.createElement("div");
-        modal.id = "addNewAmigurumiBox";
-        modal.innerHTML = `
-            <h3>Adicionar um Novo Amigurumi</h3>
-            <label>Nome*: <input type="text" id="editName" required></label><br><br>
-            <label>Autor*: <input type="text" id="editAuthor" required></label><br><br>
-            <label>Tamanho (cm)*: <input type="number" id="editSize" required></label><br><br>
-            <label>Link: <input type="url" id="editLink" required></label><br><br>
-            <button id="saveEdit">Salvar</button>
-            <button id="cancelEdit">Cancelar</button>
-        `;
+    let modal = document.createElement("div");
+    modal.id = "addNewAmigurumiBox";
+    modal.innerHTML = `
+        <h3>Adicionar um Novo Amigurumi</h3>
+        <label>Nome*: <input type="text" id="editName" required></label><br><br>
+        <label>Autor*: <input type="text" id="editAuthor" required></label><br><br>
+        <label>Tamanho (cm)*: <input type="number" id="editSize" required></label><br><br>
+        <label>Link: <input type="url" id="editLink" required></label><br><br>
+        <button id="saveEdit">Salvar</button>
+        <button id="cancelEdit">Cancelar</button>
+    `;
 
-        document.body.appendChild(modal);
+    document.body.appendChild(modal);
 
-        document.getElementById("saveEdit").addEventListener("click", function () {
+    document.getElementById("saveEdit").addEventListener("click", function () {
 
-            const nameAmigurumi = document.getElementById("editName").value
-            const autorAmigurumi =  document.getElementById("editAuthor").value
-            const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
-            const linkAmigurumi =  document.getElementById("editLink").value       
+        const nameAmigurumi = document.getElementById("editName").value
+        const autorAmigurumi =  document.getElementById("editAuthor").value
+        const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
+        const linkAmigurumi =  document.getElementById("editLink").value       
 
-            APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,relationship)
-            .then(data => {
+        APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,relationship)
+        .then(data => {
+            if(data.message !== undefined){
                 alert(data.message)
-                resolve()
-            })
-            document.body.removeChild(modal);
-            document.body.removeChild(overlay);
-        });
+                window.location.href = `_receita.html?id=${data.amigurumi_id}`
+            }else{
+                const errorMessage = data.map(err => {
+                    const field = err.loc?.join('.') || 'campo desconhecido';
+                    return `Error in field "${field}": ${err.msg} (${err.type})`;
+                }).join('\n');
 
-        document.getElementById("cancelEdit").addEventListener("click", function () {
-            document.body.removeChild(modal);
-            document.body.removeChild(overlay);
+                alert(errorMessage);
+            }           
         })
 
+        document.body.removeChild(modal);
+        document.body.removeChild(overlay);
     });
+
+    document.getElementById("cancelEdit").addEventListener("click", function () {
+        document.body.removeChild(modal);
+        document.body.removeChild(overlay);
+    })
+
 }

@@ -1,3 +1,5 @@
+// Aba destinada para acionamento do cabeçalho e rodapé
+
 document.addEventListener("DOMContentLoaded", function () {
     fetch("__header.html")
         .then(response => response.text())

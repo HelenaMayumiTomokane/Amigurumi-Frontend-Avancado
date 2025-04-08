@@ -2,119 +2,137 @@
 <html lang="pt-BR">
 
 <head>
-    <script src="--header_footer.js" defer></script>
-    <div id="header_container"></div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <title>Receita</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id= "full_amigurumi_data">
+    <!-- Cabeçalho carregado dinamicamente -->
+    <header id="header_container"></header>
 
-        <div id="div_stitchbookList"></div>
+    <main>
+        <!-- Informações completas do amigurumi -->
+        <section  id= "full_amigurumi_data">
 
-        <div id="amigurumi_information">
-            <h1 id="amigurmi_name_recipe"> </h1>
+            <!-- Pontos utilizados na contrução do amigurumi, carregados dinamicamente -->
+            <div id="div_stitchbookList"></div>
 
-            <div id = "amigurumi_imagem_autor">
-                <div id="cardAmigurumiRecipeImage"></div>
+            <!-- Informações sobre o amigurumi -->
+            <article id="amigurumi_information">
+                <h1 id="amigurmi_name_recipe"> </h1>
+
+                <div id = "amigurumi_imagem_autor">
+                    <div id="cardAmigurumiRecipeImage"></div>
+                    <br>
+                    <span id="amigurmi_name_autor"></span>
+                    <span id="amigurmi_name_size"></span>
+                    <span id="amigurmi_name_obs"></span>
+                </div>  
+
                 <br>
-                <span id="amigurmi_name_autor"></span>
-                <span id="amigurmi_name_size"></span>
-                <span id="amigurmi_name_obs"></span>
-            </div>
 
-            <br>
-            <button id="amigurumi_edit"> Editar Amigurumi</button>
-            <br>
-            <br>
-            <button id="amigurumi_image_edit"> Editar Imagem</button>
-            <br>
-            <br>
-            <button id="add_new_amigurumi_relationship"> Adicionar Receita Relacionada</button>
-            <br>
-            <br>
-            <button id="pdf_button_recipe" onclick="window.print()">Salvar PDF</button>
-            <br>
-            <br>
-            <button id="delete_amigurumi"> Excluir Amigurumi</button>
-            <br>
-            <br>
+                <!-- Botões de acionamento de scripts -->
+                <div>
+                    <button id="amigurumi_edit"> Editar Amigurumi</button>
+
+                    <br><br>
+                    
+                    <button id="amigurumi_image_edit"> Editar Imagem</button>
+
+                    <br><br>
+                    
+                    <button id="add_new_amigurumi_relationship"> Adicionar Receita Relacionada</button>
+
+                    <br><br>
+                    
+                    <button id="pdf_button_recipe" onclick="window.print()">Salvar PDF</button>
+
+                    <br><br>
+                    
+                    <button id="delete_amigurumi"> Excluir Amigurumi</button>
+                </div>
+
+                <br><br>
+                <hr>
+
+                <!-- Partes do amigurumi -->
+                <section>
+                    <h2>Elementos</h2>
+                    <table id = "table_stitchbook_sequence">
+                        <thead>
+                            <tr>
+                                <th>Ordem*</th>
+                                <th>Elemento*</th>
+                                <th>Qtde*</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Linhas adicionadas dinamicamente -->
+                        </tbody>
+                    </table>
+                    
+                    <br><br>
+
+                    <button id="add_stitchbook_sequence">Adicionar</button>
+                </section>
+
+                <br><br><br>
+                <hr>
+
+                <!-- Materiais utilizados -->
+                <section  id="div_amigurumi_material" >
+                    <h2>Materiais</h2>
+                    <label for="material_list_recipe">Escolha a Receita:</label> <br>
+                    <select id="material_list_recipe" name="material_list_recipe">
+                        <!-- As opções serão preenchidas dinamicamente -->
+                    </select>
+
+                    <button id="select_material_recipe">Selecionar</button>
+                    
+                    <br><br><br>
+                    
+                    <table id="table_amigurumi_material">
+                        <thead>
+                            <tr>
+                                <th>Receita*</th>
+                                <th>Cor</th>
+                                <th>Material*</th>
+                                <th>Qtde*</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Linhas adicionadas dinamicamente -->
+                        </tbody>
+                    </table>
+
+                    <br><br>
+
+                    <button id="add_material"> Adicionar</button>
+                </section >
+
+                <br><br><br><br><br>
+            </article>
+        </section >
+        
+        <section  id = "amigurumi_relationship">
+            <h2 id = "amigurumi_relationship_header">Receitas Relacionadas</h2>
+            <div id="cardAmigurumiRelationship"></div>
             <hr>
-            <div>
-                <h2>Elementos</h2>
-                <table id = "table_stitchbook_sequence">
-                    <thead>
-                        <tr>
-                            <th>Ordem*</th>
-                            <th>Elemento*</th>
-                            <th>Qtde*</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Linhas adicionadas pelo JavaScript -->
-                    </tbody>
-                </table>
-                <br>
-                <br>
-                <button id="add_stitchbook_sequence">Adicionar</button>
-            </div>
+        </section >
 
-            <br>
-            <br>
-            <br>
-            
-            <hr>
-            <div id="div_amigurumi_material" >
-                <h2>Materiais</h2>
-                <label for="material_list_recipe">Escolha a Receita:</label> <br>
-                <select id="material_list_recipe" name="material_list_recipe">
-                    <!-- As opções serão preenchidas dinamicamente -->
-                </select>
-                <button id="select_material_recipe">Selecionar</button>
-                
-                <br>
-                <br>
-                <br>
-                
-                <table id="table_amigurumi_material">
-                    <thead>
-                        <tr>
-                            <th>Receita*</th>
-                            <th>Cor</th>
-                            <th>Material*</th>
-                            <th>Qtde*</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Linhas adicionadas pelo JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-
-            <br>
-            <br>
-
-            <button id="add_material"> Adicionar</button>
-            
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-        </div>
-    </div>
-    
-    <div id = "amigurumi_relationship">
-        <h2 id = "amigurumi_relationship_header">Receitas Relacionadas</h2>
-        <div id="cardAmigurumiRelationship"></div>
         <br>
-        <hr>
-    </div>
 
-    <br>
+    </main>
     
-</body>
+    <!-- Rodapé carregado dinamicamente -->
+    <footer id="footer"></footer>
+
+    <!-- Scripts -->
+    <script src="--header_footer.js" defer></script>
     <script type="module" src="-receita.js"></script>
-    <div id="footer"></div>
+</body>
 </html>

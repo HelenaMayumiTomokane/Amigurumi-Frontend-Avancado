@@ -1,158 +1,15 @@
+//aba destinada para agrupamento das funções da aba receita
+
 import * as API from './--support_code.js';
 
 var urlParams = new URLSearchParams(window.location.search);
 var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
-
-// ------------------ Dados da Tabela Stitchbook Element -------------------------- \\
-
-function loadStitchbookSequenceTable() {
-    API.APIGet_Stitchbook_Sequence()
-        .then(data => {
-            const table = document.getElementById("table_stitchbook_sequence");
-            let tbody = table.querySelector("tbody");
-
-            tbody.innerHTML = ""
-
-            var urlParams = new URLSearchParams(window.location.search);
-            var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
-
-            const filteredData = data.filter(row => parseInt(row.amigurumi_id) === amigurumiId);
-
-            tbody.innerHTML = `
-                ${filteredData.map(row => `
-                    <tr data-id="${row.element_id}">
-                        <td name="element_order">${row.element_order || ""}</td>
-                        <td name="element_name">${row.element_name || ""}</td>
-                        <td name="repetition">${row.repetition || ""}</td>
-                        <td name="action">
-                            <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
-                            <button class="btn-remove" delete_botton_id="${row.element_id}">Deletar</button>
-                        </td>
-                    </tr>
-                `).join("")}
-            `;
-
-            table.querySelectorAll(".btn-remove").forEach(button => {
-                button.addEventListener("click", function () {
-                    const elementId = parseInt(this.getAttribute("delete_botton_id"));
-                    let confirmDelete = confirm("Tem certeza que deseja excluir este Elemento?");
-    
-                    if (confirmDelete) {
-                        API.APIDelete_Stitchbook_Sequence(elementId)
-                            .then(data => {
-                                alert(data.message);
-                                loadStitchbookSequenceTable();
-                                loadStitchbookTable();
-                            });
-                    }
-                });
-            });
-
-            table.querySelectorAll(".btn-edit").forEach(button => {
-                button.addEventListener("click", function () {
-                    const elementId = parseInt(this.getAttribute("alteration_botton_id"));
-                    const tr = this.closest("tr");
-                    const originalValues = {};
-
-                    const removeButton = tr.querySelector(".btn-remove");
-                    const alterButton = tr.querySelector(".btn-edit");
-                    removeButton.style.display = "none";
-                    alterButton.style.display = "none";
-
-                    ["element_order", "element_name", "repetition"].forEach(name => {
-                        let cell = tr.querySelector(`[name="${name}"]`);
-                        originalValues[name] = cell.textContent.trim();
-                        cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
-                    });
-
-                    let saveButton = document.createElement("button");
-                    saveButton.textContent = "Salvar";
-                    saveButton.classList.add("btn-save");
-                    tr.querySelector("td:last-child").appendChild(saveButton);
-
-                    let cancelButton = document.createElement("button");
-                    cancelButton.textContent = "Cancelar";
-                    cancelButton.classList.add("btn-cancel");
-                    tr.querySelector("td:last-child").appendChild(cancelButton);
-
-                    cancelButton.addEventListener("click", function () {
-                        cancelButton.remove();
-                        saveButton.remove();
-
-                        ["element_order", "element_name","repetition"].forEach(name => {
-                            let cell = tr.querySelector(`[name="${name}"]`);
-                            cell.innerHTML = originalValues[name];
-                        });
-
-                        removeButton.style.display = "inline-block";
-                        alterButton.style.display = "inline-block";
-                    });
-
-                    saveButton.addEventListener("click", function () {
-                        const element_name = tr.querySelector('input[name="element_name"]').value;
-                        const element_order = parseInt(tr.querySelector('input[name="element_order"]').value);
-                        const repetition = parseInt(tr.querySelector('input[name="repetition"]').value);
-
-                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order, repetition)
-                            .then(data => {
-                                alert(data.message);
-                                loadStitchbookSequenceTable();
-                                loadStitchbookTable();
-                            });
-                    });
-                });
-            });
-        })
-}
-
-
-
-
-    
-function addNewElementRow() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
-
-    const table = document.getElementById("table_stitchbook_sequence").getElementsByTagName('tbody')[0];
-    const newRow = table.insertRow();
-
-    const lastOrder = table.querySelectorAll("tr td[name='element_order']");
-    const newOrder = lastOrder.length > 0 ? Math.max(...Array.from(lastOrder).map(cell => parseInt(cell.textContent.trim()))) + 1 : 1;
-
-    newRow.innerHTML = `
-        <td><input type="number" name="element_order" value="${newOrder}" required min="0"></td>
-        <td><input type="text" name="element_name" required></td>
-        <td><input type="number" name="repetition" value=1 required min="0"></td>
-        <td name="action">
-            <button class="btn-edit">Adicionar</button>
-            <button class="btn-remove">Remover</button>
-        </td>
-    `;
-
-    const addButton = newRow.querySelector(".btn-edit");
-    const deleteButton = newRow.querySelector(".btn-remove");
-
-    addButton.addEventListener("click", function () {
-        const element_name = newRow.querySelector('input[name="element_name"]').value;
-        const element_order = parseInt(newRow.querySelector('input[name="element_order"]').value);
-        const repetition = parseInt(newRow.querySelector('input[name="repetition"]').value);
-
-        API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,repetition)
-            .then(data => {
-                alert(data.message);
-                loadStitchbookSequenceTable();
-                loadStitchbookTable();
-            });
-    });
-
-    deleteButton.addEventListener("click", function () {
-        newRow.remove();
-    });
-}
-
+let lastSelectedRecipeId = 1; 
+let lastFilterMaterialList = [];
 
 // ------------------ Dados da Tabela Imagem -------------------------- \\
-function loadImagemTable(){
+//carregar as imagens do amigurumi
+function loadImagemTable(){ 
     API.APIGet_Image()
         .then(imageData => {
             const container = document.getElementById("cardAmigurumiRecipeImage");
@@ -202,8 +59,8 @@ function loadImagemTable(){
 
 }
 
-
-function createImageEditBox() {
+//criar uma caixa para alteração, edição e imputação de novas imagens
+function createImageEditBox() { 
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
 
@@ -255,8 +112,10 @@ function createImageEditBox() {
             `;
 
             document.body.appendChild(modal);
-
-            document.getElementById("saveImageEdit").addEventListener("click", function () {
+            
+            //adicionar novas imagens
+            const addButton = document.getElementById("saveImageEdit")
+            addButton.addEventListener("click", function () {
                 const recipe_id = document.getElementById("editImageRecipeID").value;
                 const main_image = document.getElementById("editImagePrincipal").checked;
                 const image_base64 = document.getElementById("editImageFile").files[0];
@@ -269,7 +128,16 @@ function createImageEditBox() {
 
                     API.APIPost_Image(main_image, amigurumiId, recipe_id,  base64String)
                         .then(data => {
-                            alert(data.message);
+                            if(data.message !== undefined){
+                                alert(data.message)
+                            }else{
+                                const errorMessage = data.map(err => {
+                                    const field = err.loc?.join('.') || 'campo desconhecido';
+                                    return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                }).join('\n');
+                
+                                alert(errorMessage);
+                            } 
                             loadImagemTable();
                             document.body.removeChild(modal);
                             document.body.removeChild(overlay);
@@ -279,14 +147,16 @@ function createImageEditBox() {
                 reader.readAsDataURL(image_base64);
             });
             
-
-            document.getElementById("cancelImageEdit").addEventListener("click", function () {
+            //Cancelar operação
+            const cancelButon = document.getElementById("cancelImageEdit")
+            cancelButon.addEventListener("click", function () {
                 document.body.removeChild(modal);
                 document.body.removeChild(overlay);
             });
 
-            const deleteBtns = document.querySelectorAll('.deleteImageBtn');
-            deleteBtns.forEach(btn => {
+            //deletar a imagem
+            const deleteButton= document.querySelectorAll('.deleteImageBtn');
+            deleteButton.forEach(btn => {
                 btn.addEventListener("click", function() {
                     const imageId = btn.getAttribute("data-id");
                     let confirmDelete = confirm("Tem certeza que deseja excluir esta Imagem?");
@@ -295,7 +165,16 @@ function createImageEditBox() {
 
                         API.APIDelete_Image(imageId)
                         .then(data => {
-                            alert(data.message)
+                            if(data.message !== undefined){
+                                alert(data.message)
+                            }else{
+                                const errorMessage = data.map(err => {
+                                    const field = err.loc?.join('.') || 'campo desconhecido';
+                                    return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                }).join('\n');
+                
+                                alert(errorMessage);
+                            } 
                             loadImagemTable()
                             document.body.removeChild(modal);
                             document.body.removeChild(overlay);
@@ -304,8 +183,9 @@ function createImageEditBox() {
                 });
             });
 
-            const edit_button = document.querySelectorAll('.btn-edit');
-            edit_button.forEach(btn => {
+            //editar a imagem
+            const editButton = document.querySelectorAll('.btn-edit');
+            editButton.forEach(btn => {
                 btn.addEventListener("click", function() {
                     const listItem = btn.closest("li");
 
@@ -318,7 +198,16 @@ function createImageEditBox() {
 
                     API.APIPut_Image(imageId,main_image,amigurumiId,recipe_id,image_base64)
                     .then(data => {
-                        alert(data.message)
+                        if(data.message !== undefined){
+                            alert(data.message)
+                        }else{
+                            const errorMessage = data.map(err => {
+                                const field = err.loc?.join('.') || 'campo desconhecido';
+                                return `Error in field "${field}": ${err.msg} (${err.type})`;
+                            }).join('\n');
+            
+                            alert(errorMessage);
+                        } 
                         loadImagemTable()
                         document.body.removeChild(modal);
                         document.body.removeChild(overlay);
@@ -330,13 +219,8 @@ function createImageEditBox() {
 
 
 
-
-
-
-
 // ------------------ Dados da Tabela Lista de Materiais -------------------------- \\
-let lastSelectedRecipeId = 1; 
-
+//selecionar materiais utilizados em cada receita
 function selectMaterialList() {
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
@@ -383,7 +267,7 @@ function selectMaterialList() {
 }
 
 
-
+//Carregar os materiais selecionados na função selectMaterialList, permitindo deletar ou editar o material 
 function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
     API.APIGet_MaterialList()
         .then(data => {
@@ -395,6 +279,9 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
             var urlParams = new URLSearchParams(window.location.search);
             var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
             let filteredData = data.filter(row => parseInt(row.amigurumi_id) === amigurumiId && parseInt(selectedRecipeId) == parseInt(row.recipe_id))
+
+            lastFilterMaterialList = filteredData;
+            loadStitchbookTable(lastFilterMaterialList)
 
             tbody.innerHTML = `
                 ${filteredData.map(row => `
@@ -410,8 +297,10 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                     </tr>
                 `).join("")}
             `;
-
-            table.querySelectorAll(".btn-remove").forEach(button => { 
+            
+            //Deletar materiais
+            const deleteButton = table.querySelectorAll(".btn-remove")
+            deleteButton.forEach(button => { 
                 button.addEventListener("click", function () {
                     let materialId = this.getAttribute("data-id");
                     let confirmDelete = confirm("Tem certeza que deseja excluir este Material?");
@@ -419,14 +308,25 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                     if (confirmDelete) {
                         API.APIDelete_MaterialList(materialId)
                         .then(data => {
-                            alert(data.message);
+                            if(data.message !== undefined){
+                                alert(data.message)
+                            }else{
+                                const errorMessage = data.map(err => {
+                                    const field = err.loc?.join('.') || 'campo desconhecido';
+                                    return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                }).join('\n');
+                
+                                alert(errorMessage);
+                            } 
                             loadMaterialTable()
                         });
                     }
                 });
             })
 
-            table.querySelectorAll(".btn-edit").forEach(button => {
+            //Editar materiais
+            const editButton = table.querySelectorAll(".btn-edit")
+            editButton.forEach(button => {
                 button.addEventListener("click", function () {
                     const materialId = this.getAttribute("data-id");
                     const tr = this.closest("tr");
@@ -455,6 +355,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                     cancelButton.classList.add("btn-cancel");
                     tr.querySelector("td:last-child").appendChild(cancelButton);
 
+                    //cancelar operação
                     cancelButton.addEventListener("click", function () {
                         cancelButton.remove();
                         saveButton.remove();
@@ -468,6 +369,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                         alterButton.style.display = "inline-block";
                     });
 
+                    //salvar alteração
                     saveButton.addEventListener("click", function () {
                         const colour_id = tr.querySelector('input[name="colour_id"]').value;
                         const recipe_id = tr.querySelector('input[name="recipe_id"]').value;
@@ -476,7 +378,16 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
 
                         API.APIPut_MaterialList(materialId, material_name, quantity,recipe_id,colour_id,amigurumiId)
                             .then(data => {
-                                alert(data.message);
+                                if(data.message !== undefined){
+                                    alert(data.message)
+                                }else{
+                                    const errorMessage = data.map(err => {
+                                        const field = err.loc?.join('.') || 'campo desconhecido';
+                                        return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                    }).join('\n');
+                    
+                                    alert(errorMessage);
+                                } 
                                 loadMaterialTable() 
                             });
                     });
@@ -488,7 +399,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
 }
 
 
-
+//adicionar novos materiais
 function addRowMaterialTable() {
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
@@ -503,13 +414,12 @@ function addRowMaterialTable() {
         <td><input type="text" name="quantity" required></td>
         <td name="action">
             <button class="addMaterial-btn">Adicionar</button>
-            <button class="deleteMaterial-btn">Remover</button>
+            <button class="cancelaMaterial-btn">Remover</button>
         </td>
     `;
 
+    //adicionar um novo material
     const addButton = newRow.querySelector(".addMaterial-btn");
-    const deleteButton = newRow.querySelector(".deleteMaterial-btn");
-
     addButton.addEventListener("click", function() {
         const colour_id = newRow.querySelector('input[name="colour_id"]').value;
         const recipe_id = newRow.querySelector('input[name="recipe_id"]').value;
@@ -518,13 +428,24 @@ function addRowMaterialTable() {
 
         API.APIPost_MaterialList(amigurumiId, material_name, quantity, recipe_id, colour_id)
         .then(data => {
-            alert(data.message)
+            if(data.message !== undefined){
+                alert(data.message)
+            }else{
+                const errorMessage = data.map(err => {
+                    const field = err.loc?.join('.') || 'campo desconhecido';
+                    return `Error in field "${field}": ${err.msg} (${err.type})`;
+                }).join('\n');
+
+                alert(errorMessage);
+            } 
             loadMaterialTable()
         })
     });
 
-    deleteButton.addEventListener("click", function() {
-        const row = deleteButton.parentNode.parentNode;
+    //cancelar operação
+    const cancelButton = newRow.querySelector(".cancelaMaterial-btn");
+    cancelButton.addEventListener("click", function() {
+        const row = cancelButton.parentNode.parentNode;
         row.parentNode.removeChild(row);
     });
 }
@@ -533,8 +454,8 @@ function addRowMaterialTable() {
 
 
 // ------------------ Dados da Tabela Stitchbook -------------------------- \\
-
-function loadStitchbookTable() {
+//editar e deletar as carreiras dos pontos do amigurumi, sofrendo alteração da função loadMaterialTable, apenas na coluna Cor (para trazer o nome da linha)
+function loadStitchbookTable(filterMaterialList = lastFilterMaterialList) {
     API.APIGet_Stitchbook()
         .then(data => {
             const stitchbookList = document.getElementById("div_stitchbookList");
@@ -588,13 +509,14 @@ function loadStitchbookTable() {
                     </thead>
                     <tbody>
                         ${groupedData[element_id].map(row => {        
-                            
+                            const matchColourID = filterMaterialList.filter(rows => parseInt(rows.colour_id) === parseInt(row.colour_id))[0] || ""
+                            const nameColour =  matchColourID.material_name? `: ${matchColourID.material_name.replace("Linha: ","") ||""}` :""
                             return  `
-                            <tr data-id="${row.line_id}">
-                                <td name="number_row">${row.number_row || ""}</td>
-                                <td name="colour_id">${row.colour_id || ""} </td>
-                                <td name="stich_sequence">${row.stich_sequence || ""}</td>
-                                <td name="observation">${row.observation || ""}</td>
+                            <tr data-id="${row.line_id||""}">
+                                <td name="number_row">${row.number_row||""}</td>
+                                <td name="colour_id">${row.colour_id||""}${nameColour||""}</td>
+                                <td name="stich_sequence">${row.stich_sequence||""}</td>
+                                <td name="observation">${row.observation||""}</td>
                                 <td name="action">
                                     ${row.line_id ? `
                                         <button class="btn-edit" alteration_botton_id="${row.line_id}">Alterar</button>
@@ -610,11 +532,9 @@ function loadStitchbookTable() {
                 `;
 
                 stitchbookList.appendChild(tableContainer);
-
+                
+                //remover a carreira
                 const removeButton = table.querySelectorAll(".btn-remove");
-                const addRowButton = table.querySelector(".add_stitchbook");
-                const alterButton = table.querySelectorAll(".btn-edit");
-
                 removeButton.forEach(row => {
                     row.addEventListener("click", function () {
                         const stitchbookIdDelete = this.getAttribute("delete_botton_id");
@@ -623,13 +543,24 @@ function loadStitchbookTable() {
                         if (confirmDelete) {
                             API.APIDelete_Stitchbook(stitchbookIdDelete)
                                 .then(data => {
-                                    alert(data.message);
+                                    if(data.message !== undefined){
+                                        alert(data.message)
+                                    }else{
+                                        const errorMessage = data.map(err => {
+                                            const field = err.loc?.join('.') || 'campo desconhecido';
+                                            return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                        }).join('\n');
+                        
+                                        alert(errorMessage);
+                                    } 
                                     loadStitchbookTable();
                                 });
                         }
                     });
                 });
 
+                //alterar a carreira
+                const alterButton = table.querySelectorAll(".btn-edit");
                 alterButton.forEach(editButton => {
                     editButton.addEventListener("click", function () {
                         const stitchbookIdPut = this.getAttribute("alteration_botton_id");
@@ -644,7 +575,7 @@ function loadStitchbookTable() {
                         ["number_row", "colour_id", "stich_sequence", "observation"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             originalValues[name] = cell.textContent.trim();
-                            cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
+                            cell.innerHTML = `<input type="text" name="${name}" value="${name =="colour_id"? parseInt(originalValues[name]) :originalValues[name]}">`;
                         });
 
                         let saveButton = document.createElement("button");
@@ -658,6 +589,7 @@ function loadStitchbookTable() {
                         cancelButton.classList.add("btn-cancel");
                         tr.querySelector("td:last-child").appendChild(cancelButton);
 
+                        //cancelar a operação
                         cancelButton.addEventListener("click", function () {
                             cancelButton.remove();
                             saveButton.remove();
@@ -671,6 +603,7 @@ function loadStitchbookTable() {
                             alterButton.style.display = "inline-block";
                         });
 
+                        //alterar carreira
                         saveButton.addEventListener("click", function () {
                             const number_row = parseInt(tr.querySelector('input[name="number_row"]').value);
                             const colour_id = parseInt(tr.querySelector('input[name="colour_id"]').value);
@@ -679,13 +612,24 @@ function loadStitchbookTable() {
 
                             API.APIPut_Stitchbook(stitchbookIdPut, amigurumiId, observation, element_id, number_row, colour_id, stich_sequence)
                                 .then(data => {
-                                    alert(data.message);
+                                    if(data.message !== undefined){
+                                        alert(data.message)
+                                    }else{
+                                        const errorMessage = data.map(err => {
+                                            const field = err.loc?.join('.') || 'campo desconhecido';
+                                            return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                        }).join('\n');
+                        
+                                        alert(errorMessage);
+                                    } 
                                     loadStitchbookTable();
                                 })
                         });
                     });
                 });
 
+                //adicionar uma nova carreira
+                const addRowButton = table.querySelector(".add_stitchbook");
                 addRowButton.addEventListener("click", function () {
                     const newRow = table.insertRow();
                     const lastRow = table.rows[table.rows.length - 2];
@@ -716,7 +660,16 @@ function loadStitchbookTable() {
 
                         API.APIPost_Stitchbook(amigurumiId, element_id, number_row, colour_id, stich_sequence, observation)
                             .then(data => {
-                                alert(data.message);
+                                if(data.message !== undefined){
+                                    alert(data.message)
+                                }else{
+                                    const errorMessage = data.map(err => {
+                                        const field = err.loc?.join('.') || 'campo desconhecido';
+                                        return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                    }).join('\n');
+                    
+                                    alert(errorMessage);
+                                } 
                                 loadStitchbookTable();
                             })
                     });
@@ -732,7 +685,186 @@ function loadStitchbookTable() {
 
 
 
+// ------------------ Dados da Tabela Stitchbook Element -------------------------- \\
+//construção da tabela de partes do amigurumi, para deletar e editar
+function loadStitchbookSequenceTable() {
+    API.APIGet_Stitchbook_Sequence()
+        .then(data => {
+            const table = document.getElementById("table_stitchbook_sequence");
+            let tbody = table.querySelector("tbody");
+
+            tbody.innerHTML = ""
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
+
+            const filteredData = data.filter(row => parseInt(row.amigurumi_id) === amigurumiId);
+
+            tbody.innerHTML = `
+                ${filteredData.map(row => `
+                    <tr data-id="${row.element_id}">
+                        <td name="element_order">${row.element_order || ""}</td>
+                        <td name="element_name">${row.element_name || ""}</td>
+                        <td name="repetition">${row.repetition || ""}</td>
+                        <td name="action">
+                            <button class="btn-edit" alteration_botton_id="${row.element_id}">Alterar</button>
+                            <button class="btn-remove" delete_botton_id="${row.element_id}">Deletar</button>
+                        </td>
+                    </tr>
+                `).join("")}
+            `;
+            
+            const deleteButton = table.querySelectorAll(".btn-remove")
+            deleteButton.forEach(button => {
+                button.addEventListener("click", function () {
+                    const elementId = parseInt(this.getAttribute("delete_botton_id"));
+                    let confirmDelete = confirm("Tem certeza que deseja excluir este Elemento?");
+    
+                    if (confirmDelete) {
+                        API.APIDelete_Stitchbook_Sequence(elementId)
+                            .then(data => {
+                                if(data.message !== undefined){
+                                    alert(data.message)
+                                }else{
+                                    const errorMessage = data.map(err => {
+                                        const field = err.loc?.join('.') || 'campo desconhecido';
+                                        return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                    }).join('\n');
+                    
+                                    alert(errorMessage);
+                                } 
+                                loadStitchbookSequenceTable();
+                                loadStitchbookTable();
+                            });
+                    }
+                });
+            });
+
+            const editButton = table.querySelectorAll(".btn-edit")
+            editButton.forEach(button => {
+                button.addEventListener("click", function () {
+                    const elementId = parseInt(this.getAttribute("alteration_botton_id"));
+                    const tr = this.closest("tr");
+                    const originalValues = {};
+
+                    const removeButton = tr.querySelector(".btn-remove");
+                    const editButton = tr.querySelector(".btn-edit");
+                    removeButton.style.display = "none";
+                    editButton.style.display = "none";
+
+                    ["element_order", "element_name", "repetition"].forEach(name => {
+                        let cell = tr.querySelector(`[name="${name}"]`);
+                        originalValues[name] = cell.textContent.trim();
+                        cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
+                    });
+
+                    let saveButton = document.createElement("button");
+                    saveButton.textContent = "Salvar";
+                    saveButton.classList.add("btn-save");
+                    tr.querySelector("td:last-child").appendChild(saveButton);
+
+                    let cancelButton = document.createElement("button");
+                    cancelButton.textContent = "Cancelar";
+                    cancelButton.classList.add("btn-cancel");
+                    tr.querySelector("td:last-child").appendChild(cancelButton);
+
+                    //Cancelar operação
+                    cancelButton.addEventListener("click", function () {
+                        cancelButton.remove();
+                        saveButton.remove();
+
+                        ["element_order", "element_name","repetition"].forEach(name => {
+                            let cell = tr.querySelector(`[name="${name}"]`);
+                            cell.innerHTML = originalValues[name];
+                        });
+
+                        removeButton.style.display = "inline-block";
+                        editButton.style.display = "inline-block";
+                    });
+
+                    //salvar edição
+                    saveButton.addEventListener("click", function () {
+                        const element_name = tr.querySelector('input[name="element_name"]').value;
+                        const element_order = parseInt(tr.querySelector('input[name="element_order"]').value);
+                        const repetition = parseInt(tr.querySelector('input[name="repetition"]').value);
+
+                        API.APIPut_Stitchbook_Sequence(elementId, amigurumiId, element_name, element_order, repetition)
+                            .then(data => {
+                                if(data.message !== undefined){
+                                    alert(data.message)
+                                }else{
+                                    const errorMessage = data.map(err => {
+                                        const field = err.loc?.join('.') || 'campo desconhecido';
+                                        return `Error in field "${field}": ${err.msg} (${err.type})`;
+                                    }).join('\n');
+                    
+                                    alert(errorMessage);
+                                } 
+                                loadStitchbookSequenceTable();
+                                loadStitchbookTable();
+                            });
+                    });
+                });
+            });
+        })
+}
+
+
+//adicionar uma nova parte do amigurumi
+function addNewElementRow() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
+
+    const table = document.getElementById("table_stitchbook_sequence").getElementsByTagName('tbody')[0];
+    const newRow = table.insertRow();
+
+    const lastOrder = table.querySelectorAll("tr td[name='element_order']");
+    const newOrder = lastOrder.length > 0 ? Math.max(...Array.from(lastOrder).map(cell => parseInt(cell.textContent.trim()))) + 1 : 1;
+
+    newRow.innerHTML = `
+        <td><input type="number" name="element_order" value="${newOrder}" required min="0"></td>
+        <td><input type="text" name="element_name" required></td>
+        <td><input type="number" name="repetition" value=1 required min="0"></td>
+        <td name="action">
+            <button class="btn-edit">Adicionar</button>
+            <button class="btn-remove">Remover</button>
+        </td>
+    `;
+
+    const addButton = newRow.querySelector(".btn-edit");
+    const deleteButton = newRow.querySelector(".btn-remove");
+
+    addButton.addEventListener("click", function () {
+        const element_name = newRow.querySelector('input[name="element_name"]').value;
+        const element_order = parseInt(newRow.querySelector('input[name="element_order"]').value);
+        const repetition = parseInt(newRow.querySelector('input[name="repetition"]').value);
+
+        API.APIPost_Stitchbook_Sequence(amigurumiId, element_name, element_order,repetition)
+            .then(data => {
+                if(data.message !== undefined){
+                    alert(data.message)
+                }else{
+                    const errorMessage = data.map(err => {
+                        const field = err.loc?.join('.') || 'campo desconhecido';
+                        return `Error in field "${field}": ${err.msg} (${err.type})`;
+                    }).join('\n');
+    
+                    alert(errorMessage);
+                } 
+                loadStitchbookSequenceTable();
+                loadStitchbookTable();
+            });
+    });
+
+    deleteButton.addEventListener("click", function () {
+        newRow.remove();
+    });
+}
+
+
+
 // ------------------ Dados da Tabela Foundation -------------------------- \\
+//carregar informações sobre o amigurumi
 function loadFoundationInformation(){
     API.APIGet_FoundationList()
         .then(data => {
@@ -754,6 +886,7 @@ function loadFoundationInformation(){
 }
 
 
+//editar informações sobre o amigurumi
 function createEditBoxFoundation() {
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
@@ -781,7 +914,9 @@ function createEditBoxFoundation() {
 
             document.body.appendChild(modal);
 
-            document.getElementById("saveEdit").addEventListener("click", function () {
+            //editar informações
+            const editButton = document.getElementById("saveEdit")
+            editButton.addEventListener("click", function () {
 
                 const amigurumi_id = amigurumiId
                 const name = document.getElementById("editName").value
@@ -793,7 +928,16 @@ function createEditBoxFoundation() {
  
                 API.APIPut_FoundationList(amigurumi_id,name,autor,size,link,relationship,date)
                 .then(data =>{
-                    alert(data.message)
+                    if(data.message !== undefined){
+                        alert(data.message)
+                    }else{
+                        const errorMessage = data.map(err => {
+                            const field = err.loc?.join('.') || 'campo desconhecido';
+                            return `Error in field "${field}": ${err.msg} (${err.type})`;
+                        }).join('\n');
+        
+                        alert(errorMessage);
+                    }  
                     loadFoundationInformation()
                 })
 
@@ -801,7 +945,9 @@ function createEditBoxFoundation() {
                 document.body.removeChild(overlay);
             });
 
-            document.getElementById("cancelEdit").addEventListener("click", function () {
+            //cancelar operação
+            const cancelButton =  document.getElementById("cancelEdit")
+            cancelButton.addEventListener("click", function () {
                 document.body.removeChild(modal);
                 document.body.removeChild(overlay);
             });
@@ -809,7 +955,7 @@ function createEditBoxFoundation() {
 }
 
 
-
+//Deletar tudo do amigurumi cadastrado no banco de dados
 function deleteAmigurumiFoundation(){
     let confirmDelete = confirm("Tem certeza que deseja excluir este Amigurumi?");
     
@@ -819,8 +965,18 @@ function deleteAmigurumiFoundation(){
 
         API.APIDelete_FoundationList(amigurumi_id)
         .then(data => {
-            alert(data.message)
-            window.location.href = "_amigurumi.html"
+            if(data.message !== undefined){
+                alert(data.message)
+                window.location.href = "_amigurumi.html"
+            }else{
+                const errorMessage = data.map(err => {
+                    const field = err.loc?.join('.') || 'campo desconhecido';
+                    return `Error in field "${field}": ${err.msg} (${err.type})`;
+                }).join('\n');
+
+                alert(errorMessage);
+            }  
+            
         })
 
     }
@@ -828,18 +984,15 @@ function deleteAmigurumiFoundation(){
 
 
 // ------------------ Criação dos Cards das Receitas Relacionadas a Receita Principal -------------------------- \\
-
-async function addNewAmigurumiFoundationRelationship() {
+//Adicição de um novo amigurumi relacionado ao amigurumi principal
+function addNewAmigurumiFoundationRelationship() {
     var urlParams = new URLSearchParams(window.location.search);
-    var relationship = parseInt(urlParams.get("id").split("?")[0]);
+    var amigurumiID = parseInt(urlParams.get("id").split("?")[0]);
 
-    await API.addNewAmigurumiFoundation(relationship)
-    .then(() => {
-        loadCardsRelationshipAmigurumi();
-    })
+    API.addNewAmigurumiFoundation(amigurumiID)
 }
 
-
+//criação de cards dos amigurumis relacionadas
 function loadCardsRelationshipAmigurumi(){
     API.APIGet_FoundationList()
         .then(data => {
@@ -861,7 +1014,7 @@ function loadCardsRelationshipAmigurumi(){
 }
 
 
-
+//acionamento instantâneo de todas as tabelas e dados
 document.addEventListener("DOMContentLoaded", () => {
     loadCardsRelationshipAmigurumi();
     loadFoundationInformation();
@@ -872,7 +1025,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
+//acionamento por ação
 document.getElementById("add_new_amigurumi_relationship").addEventListener("click", addNewAmigurumiFoundationRelationship);
 document.getElementById("amigurumi_image_edit").addEventListener("click", createImageEditBox);
 document.getElementById("amigurumi_edit").addEventListener("click", createEditBoxFoundation);

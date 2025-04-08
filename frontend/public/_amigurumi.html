@@ -1,35 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <script src="--header_footer.js" defer></script>
-    <div id="header_container"></div>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=2.0">
+        <title>Amigurumis Principais</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
 
-<body>
-    <br>
-    <br>
+    <body>
+        <!-- Cabeçalho carregado dinamicamente -->
+        <header id="header_container"></header>
 
-    <div>
-        <input type="text" id="searchInput" placeholder="Pesquisar amigurumi..." oninput="filterAmigurumis()">
-        <button id="search_amigurumi"> Pesquisar</button>
-    </div>
+        <main>
+            <br><br>
 
-    <br>
+            <!-- Seção de busca -->
+            <section> 
+                <input type="text" id="searchInput" placeholder="Pesquisar amigurumi..." oninput="filterAmigurumis()">
+                <button id="search_amigurumi"> Pesquisar</button>
+            </section>
 
-    <button id="add_new_amigurumi"> Novo Amigurumi</button>
+            <br>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+            <!-- Ação: Adicionar novo amigurumi -->
+            <section> 
+                <button id="add_new_amigurumi">Novo Amigurumi</button>
+            </section>
 
-    <div id="cardAmigurumi"></div>
+            <br><br><br><br><br>
 
-    <br>
-    <br>
-    
-</body> 
-    <script type="module" src="-amigurumi.js" defer></script>
-    <div id="footer"></div>
+            <!-- Lista de amigurumis -->
+            <section id="cardAmigurumi"></section> 
+
+            <br><br>
+        </main>
+
+        <!-- Rodapé carregado dinamicamente -->
+        <footer id="footer"></footer>
+
+        <!-- Scripts -->
+        <script src="--header_footer.js" defer></script>
+        <script type="module" src="-amigurumi.js" defer></script>
+    </body> 
 </html>

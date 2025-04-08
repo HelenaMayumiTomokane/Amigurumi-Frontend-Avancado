@@ -296,17 +296,6 @@ button_next_previous {
     width: 100%;
     box-sizing: border-box;
 }
-/*
-#title_table_stichbook {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: center;
-    color: #8c522d;
-    background-color: #d9c5b9;
-    border-block-end: thick double #8c522d;
-    width: 100%; 
-}*/
 
 .stitchbook-table{
     width: 100%; 
