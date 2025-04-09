@@ -1,11 +1,12 @@
+//aba dedicada ao acionamento do frontend
+
 import express from 'express';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 
 const app = express();
 const port = 5000;
 
-// Precisa ajustar __dirname para ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

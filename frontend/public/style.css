@@ -170,7 +170,7 @@ button_next_previous {
     padding: 5px
 }
 
-#amigurmi_name_autor, #amigurmi_name_size, #amigurmi_name_obs {
+#amigurmi_name_autor, #amigurmi_name_size, #amigurmi_name_obs, #amigurmi_name_link {
     color: #8c522d;
     font-size: 14px;
     font-weight: bold;

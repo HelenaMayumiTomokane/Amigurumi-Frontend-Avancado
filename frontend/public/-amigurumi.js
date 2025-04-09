@@ -1,14 +1,14 @@
-// aba destinada para agrupar todas as funções utilizadas pela página Amigurumi
+// aba destinada para agrupar todas as funções utilizadas pela página Amigurumi Principal
 
 import * as API from './--support_code.js';
 
-//criação de uma caixa para adicionar uma novo amigurumi principal
+//Requsição para acionamento do código de adição de um novo amigurumi
 function addNewAmigurumi() {
     const relationship = null
     API.addNewAmigurumiFoundation(relationship)
 }
 
-//criação de cards de todos os amigurumis principais
+//Requsição para acionamento do código de criação de card dos amigurumis principais
 function allAmigurumiAvailable() {
     API.APIGet_FoundationList()
         .then(data => {
@@ -19,7 +19,7 @@ function allAmigurumiAvailable() {
         })
 }
 
-//filtro de amigurumi, pela barra de fitro
+//filtro de amigurumi
 function filterAmigurumis() {
     const searchQuery = document.getElementById("searchInput").value.toLowerCase();
     API.APIGet_FoundationList()
@@ -39,8 +39,9 @@ function filterAmigurumis() {
                 noResultsMessage.textContent = 'Nenhum resultado encontrado. Tente outra busca ou limpe a barra de pesquisa, e clique novamente em "Pesquisar" para voltar ao início!';
                 noResultsMessage.style.textAlign = "center";
                 cardAmigurumi.appendChild(noResultsMessage);
-            }
+            }  
 
+            //Requsição para acionamento do código de criação de card dos amigurumis principais
             API.createAmigurumiImageCard(cardID, filteredData)
             
         })

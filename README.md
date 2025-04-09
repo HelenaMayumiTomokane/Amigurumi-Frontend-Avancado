@@ -4,8 +4,8 @@
 
 ## 📌 Funcionalidades
 
-- 📖 Criar, listar e buscar receitas de amigurumi.
-- 📦 Upload e exibição de imagens dos amigurumis e das receitas.
+- 📖 Criar, listar e buscar dados de amigurumis.
+- 📦 Upload e exibição de imagens e dados dos amigurumis.
 - 📊 Organização das receitas, imagens, materiais etc por ID.
 
 ## 🛠️ Tecnologias Utilizadas
@@ -25,7 +25,7 @@
 
     2.2 Ativar o Ambiente Virtual => no Windows ``` venv\Scripts\Activate ``` ou Mac/Linux ``` source venv/bin/activate ```
 
-3. Faça o dowload dos arquivos necessáros => ``` pip install -r requirements.txt ```
+3. Faça o dowload dos arquivos necessários => ``` pip install -r requirements.txt ```
 
 4. Execulte o código para rodar o Frontend => ``` node frontend\__init__.js ```
 

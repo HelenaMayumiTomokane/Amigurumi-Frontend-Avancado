@@ -19,7 +19,7 @@ function loadImagemTable(){
 
             if (filteredImages.length === 0) return;
 
-            const imageSrcArray = filteredImages.map(row => [row.image_base64, row.recipe_id]);
+            const imageSrcArray = filteredImages.map(row => [row.image_base64, row.list_id]);
 
             let currentIndex = 0;
 
@@ -59,7 +59,7 @@ function loadImagemTable(){
 
 }
 
-//criar uma caixa para alteração, edição e imputação de novas imagens
+//alteração, edição e imputação de novas imagens
 function createImageEditBox() { 
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
@@ -97,7 +97,7 @@ function createImageEditBox() {
                             <br>
                             <span>Imagem Principal: <input type="checkbox" name="main_image" ${image.main_image ? "checked" : ""}></span>
                             <br>
-                            <span>ID da Receita: <input type="number" name="recipe_id" value="${image.recipe_id}"></span>                           
+                            <span>ID da Receita: <input type="number" name="list_id" value="${image.list_id}"></span>                           
                             <br>
                             <br>
                             <button class="btn-edit" data-id="${image.image_id}">Alterar</button>
@@ -116,7 +116,7 @@ function createImageEditBox() {
             //adicionar novas imagens
             const addButton = document.getElementById("saveImageEdit")
             addButton.addEventListener("click", function () {
-                const recipe_id = document.getElementById("editImageRecipeID").value;
+                const list_id = document.getElementById("editImageRecipeID").value;
                 const main_image = document.getElementById("editImagePrincipal").checked;
                 const image_base64 = document.getElementById("editImageFile").files[0];
             
@@ -126,7 +126,7 @@ function createImageEditBox() {
                     const base64String = reader.result.split(',')[1];
                     console.log(base64String);
 
-                    API.APIPost_Image(main_image, amigurumiId, recipe_id,  base64String)
+                    API.APIPost_Image(main_image, amigurumiId, list_id,  base64String)
                         .then(data => {
                             if(data.message !== undefined){
                                 alert(data.message)
@@ -147,7 +147,7 @@ function createImageEditBox() {
                 reader.readAsDataURL(image_base64);
             });
             
-            //Cancelar operação
+            //cancelar operação
             const cancelButon = document.getElementById("cancelImageEdit")
             cancelButon.addEventListener("click", function () {
                 document.body.removeChild(modal);
@@ -191,12 +191,12 @@ function createImageEditBox() {
 
                     const imageId = btn.getAttribute("data-id");
                     const main_image = listItem.querySelector('input[name="main_image"]').checked;
-                    const recipe_id = parseInt(listItem.querySelector('input[name="recipe_id"]').value);
+                    const list_id = parseInt(listItem.querySelector('input[name="list_id"]').value);
                     
                     const imageSrc = listItem.querySelector("img").src;
                     const image_base64 = imageSrc.split(',')[1];
 
-                    API.APIPut_Image(imageId,main_image,amigurumiId,recipe_id,image_base64)
+                    API.APIPut_Image(imageId,main_image,amigurumiId,list_id,image_base64)
                     .then(data => {
                         if(data.message !== undefined){
                             alert(data.message)
@@ -235,17 +235,17 @@ function selectMaterialList() {
             list.innerHTML = "";
 
             let defaultOption = document.createElement("option");
-            defaultOption.textContent = "Escolha a Receita";
-            defaultOption.value = "Escolha a Receita";
+            defaultOption.textContent = "Escolha a Lista";
+            defaultOption.value = "Escolha a Lista";
             list.appendChild(defaultOption);
 
-            let uniqueRecipes = Array.from(new Set(data.filter(row => parseInt(row.amigurumi_id) === amigurumiId).map(row => row.recipe_id)))
-                                     .map(id => data.find(row => row.recipe_id === id));
+            let uniqueRecipes = Array.from(new Set(data.filter(row => parseInt(row.amigurumi_id) === amigurumiId).map(row => row.list_id)))
+                                     .map(id => data.find(row => row.list_id === id));
 
             uniqueRecipes.forEach(row => {
                 let option = document.createElement("option");
-                option.value = row.recipe_id;
-                option.textContent = `Receita ${row.recipe_id}`;
+                option.value = row.list_id;
+                option.textContent = `Lista ${row.list_id}`;
                 list.appendChild(option);
             });
 
@@ -278,27 +278,27 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
 
             var urlParams = new URLSearchParams(window.location.search);
             var amigurumiId = parseInt(urlParams.get("id").split("?")[0]);
-            let filteredData = data.filter(row => parseInt(row.amigurumi_id) === amigurumiId && parseInt(selectedRecipeId) == parseInt(row.recipe_id))
+            let filteredData = data.filter(row => parseInt(row.amigurumi_id) === amigurumiId && parseInt(selectedRecipeId) == parseInt(row.list_id))
 
             lastFilterMaterialList = filteredData;
             loadStitchbookTable(lastFilterMaterialList)
 
             tbody.innerHTML = `
                 ${filteredData.map(row => `
-                    <tr data-id="${row.material_list_id}">
-                        <td name="recipe_id">${row.recipe_id || ""}</td>
+                    <tr data-id="${row.material_id}">
+                        <td name="list_id">${row.list_id || ""}</td>
                         <td name="colour_id">${row.colour_id || ""}</td>
                         <td name="material_name">${row.material_name || ""}</td>
                         <td name="quantity">${row.quantity || ""}</td>
                         <td name="action">
-                            <button class="btn-edit" data-id="${row.material_list_id}">Alterar</button>
-                            <button class="btn-remove" data-id="${row.material_list_id}">Deletar</button>
+                            <button class="btn-edit" data-id="${row.material_id}">Alterar</button>
+                            <button class="btn-remove" data-id="${row.material_id}">Deletar</button>
                         </td>
                     </tr>
                 `).join("")}
             `;
             
-            //Deletar materiais
+            //deletar materiais
             const deleteButton = table.querySelectorAll(".btn-remove")
             deleteButton.forEach(button => { 
                 button.addEventListener("click", function () {
@@ -324,7 +324,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                 });
             })
 
-            //Editar materiais
+            //editar materiais
             const editButton = table.querySelectorAll(".btn-edit")
             editButton.forEach(button => {
                 button.addEventListener("click", function () {
@@ -336,7 +336,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                     const alterButton = tr.querySelector(".btn-edit");
                 
 
-                    ["recipe_id","colour_id","material_name", "quantity"].forEach(name => {
+                    ["list_id","colour_id","material_name", "quantity"].forEach(name => {
                         let cell = tr.querySelector(`[name="${name}"]`);
                         originalValues[name] = cell.textContent.trim();
                         cell.innerHTML = `<input type="text" name="${name}" value="${originalValues[name]}">`;
@@ -360,7 +360,7 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                         cancelButton.remove();
                         saveButton.remove();
 
-                        ["recipe_id","colour_id","material_name", "quantity"].forEach(name => {
+                        ["list_id","colour_id","material_name", "quantity"].forEach(name => {
                             let cell = tr.querySelector(`[name="${name}"]`);
                             cell.innerHTML = originalValues[name];
                         });
@@ -372,11 +372,11 @@ function loadMaterialTable(selectedRecipeId = lastSelectedRecipeId) {
                     //salvar alteração
                     saveButton.addEventListener("click", function () {
                         const colour_id = tr.querySelector('input[name="colour_id"]').value;
-                        const recipe_id = tr.querySelector('input[name="recipe_id"]').value;
+                        const list_id = tr.querySelector('input[name="list_id"]').value;
                         const material_name = tr.querySelector('input[name="material_name"]').value;
                         const quantity = tr.querySelector('input[name="quantity"]').value;
 
-                        API.APIPut_MaterialList(materialId, material_name, quantity,recipe_id,colour_id,amigurumiId)
+                        API.APIPut_MaterialList(materialId, material_name, quantity,list_id,colour_id,amigurumiId)
                             .then(data => {
                                 if(data.message !== undefined){
                                     alert(data.message)
@@ -408,7 +408,7 @@ function addRowMaterialTable() {
     const newRow = table.insertRow();
 
     newRow.innerHTML = `
-        <td><input type="number" name="recipe_id" required min="0"></td>
+        <td><input type="number" name="list_id" required min="0"></td>
         <td><input type="number" name="colour_id" required min="0"></td>
         <td><input type="text" name="material_name" required></td>
         <td><input type="text" name="quantity" required></td>
@@ -422,11 +422,11 @@ function addRowMaterialTable() {
     const addButton = newRow.querySelector(".addMaterial-btn");
     addButton.addEventListener("click", function() {
         const colour_id = newRow.querySelector('input[name="colour_id"]').value;
-        const recipe_id = newRow.querySelector('input[name="recipe_id"]').value;
+        const list_id = newRow.querySelector('input[name="list_id"]').value;
         const material_name = newRow.querySelector('input[name="material_name"]').value;
         const quantity = newRow.querySelector('input[name="quantity"]').value;
 
-        API.APIPost_MaterialList(amigurumiId, material_name, quantity, recipe_id, colour_id)
+        API.APIPost_MaterialList(amigurumiId, material_name, quantity, list_id, colour_id)
         .then(data => {
             if(data.message !== undefined){
                 alert(data.message)
@@ -454,7 +454,7 @@ function addRowMaterialTable() {
 
 
 // ------------------ Dados da Tabela Stitchbook -------------------------- \\
-//editar e deletar as carreiras dos pontos do amigurumi, sofrendo alteração da função loadMaterialTable, apenas na coluna Cor (para trazer o nome da linha)
+//editar e deletar as carreiras dos pontos do amigurumi, sofrendo alteração da função loadMaterialTable, apenas na coluna Cor (para trazer o nome da linha de amigurumi)
 function loadStitchbookTable(filterMaterialList = lastFilterMaterialList) {
     API.APIGet_Stitchbook()
         .then(data => {
@@ -603,7 +603,7 @@ function loadStitchbookTable(filterMaterialList = lastFilterMaterialList) {
                             alterButton.style.display = "inline-block";
                         });
 
-                        //alterar carreira
+                        //salvar alteração da carreira
                         saveButton.addEventListener("click", function () {
                             const number_row = parseInt(tr.querySelector('input[name="number_row"]').value);
                             const colour_id = parseInt(tr.querySelector('input[name="colour_id"]').value);
@@ -740,6 +740,7 @@ function loadStitchbookSequenceTable() {
                 });
             });
 
+            //editar elementos
             const editButton = table.querySelectorAll(".btn-edit")
             editButton.forEach(button => {
                 button.addEventListener("click", function () {
@@ -880,6 +881,12 @@ function loadFoundationInformation(){
 
                 const amigumi_autor = document.getElementById("amigurmi_name_autor")
                 amigumi_autor.textContent = "Criador: " + foundation_list.autor;
+
+                if(foundation_list.link !=="" && foundation_list.link !==null){
+                    const amigumi_link = document.getElementById("amigurmi_name_link")
+                    amigumi_link.innerHTML = `Para acessar a receita original: <a href="${foundation_list.link}" target="_blank"> Clique Aqui </a>`;
+                }
+                
             });
     })
 
@@ -984,7 +991,7 @@ function deleteAmigurumiFoundation(){
 
 
 // ------------------ Criação dos Cards das Receitas Relacionadas a Receita Principal -------------------------- \\
-//Adicição de um novo amigurumi relacionado ao amigurumi principal
+//adicição de um novo amigurumi relacionado ao amigurumi principal
 function addNewAmigurumiFoundationRelationship() {
     var urlParams = new URLSearchParams(window.location.search);
     var amigurumiID = parseInt(urlParams.get("id").split("?")[0]);
@@ -992,7 +999,8 @@ function addNewAmigurumiFoundationRelationship() {
     API.addNewAmigurumiFoundation(amigurumiID)
 }
 
-//criação de cards dos amigurumis relacionadas
+
+//Requsição para acionamento do código de criação de card dos amigurumis relacionados ao amigurumi principal
 function loadCardsRelationshipAmigurumi(){
     API.APIGet_FoundationList()
         .then(data => {

@@ -2,7 +2,7 @@
 
 const baseURL = "http://127.0.0.1:5000"
 
-/*------------------- Stitchbook ---------------------------*/
+/*------------------- API com a tabela Stitchbook ---------------------------*/
 export function APIGet_Stitchbook(){
     return fetch(`${baseURL}/stitchbook`)
         .then(response => response.json())
@@ -64,7 +64,7 @@ export function APIDelete_Stitchbook(stitchbookIdDelete){
 
 
 
-/*------------------- Stitchbook Sequence ---------------------------*/
+/*------------------- API com a tabela Stitchbook Sequence ---------------------------*/
 export function APIGet_Stitchbook_Sequence(){
     return fetch(`${baseURL}/stitchbook_sequence`)
     .then(response => response.json())
@@ -122,15 +122,15 @@ export function APIDelete_Stitchbook_Sequence(element_id){
 
 
 
-/*------------------- Image ---------------------------*/
-export function APIPost_Image(main_image,amigurumi_id,recipe_id,image_base64){
+/*------------------- API com a tabela Image ---------------------------*/
+export function APIPost_Image(main_image,amigurumi_id,list_id,image_base64){
     return fetch(`${baseURL}/image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             "main_image": Boolean(main_image),
             "amigurumi_id": parseInt(amigurumi_id),
-            "recipe_id":parseInt(recipe_id),
+            "list_id":parseInt(list_id),
             "image_base64": String(image_base64)
         })
     })
@@ -148,7 +148,7 @@ export function APIGet_Image(){
 
 
 
-export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id,image_base64){
+export function APIPut_Image(image_id,main_image,amigurumi_id,list_id,image_base64){
     return fetch(`${baseURL}/image/image_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -156,7 +156,7 @@ export function APIPut_Image(image_id,main_image,amigurumi_id,recipe_id,image_ba
             "image_id": parseInt(image_id),
             "main_image": Boolean(main_image),
             "amigurumi_id": parseInt(amigurumi_id),
-            "recipe_id":parseInt(recipe_id),
+            "list_id":parseInt(list_id),
             "image_base64": String(image_base64)
         })
     })
@@ -180,7 +180,7 @@ export function APIDelete_Image(imageId){
 
 
 
-/*------------------- Material ---------------------------*/
+/*------------------- API com a tabela Material ---------------------------*/
 export function APIGet_MaterialList(){
     return fetch(`${baseURL}/material_list`)
     .then(response => response.json())
@@ -189,7 +189,7 @@ export function APIGet_MaterialList(){
 
 
 
-export function APIPost_MaterialList(amigurumi_id,material_name,quantity,recipe_id,colour_id){
+export function APIPost_MaterialList(amigurumi_id,material_name,quantity,list_id,colour_id){
     return fetch(`${baseURL}/material_list`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -197,7 +197,7 @@ export function APIPost_MaterialList(amigurumi_id,material_name,quantity,recipe_
             "amigurumi_id": parseInt(amigurumi_id),
             "material_name": String(material_name),
             "quantity": String(quantity),
-            "recipe_id": parseInt(recipe_id),
+            "list_id": parseInt(list_id),
             "colour_id": parseInt(colour_id),
         })
     })
@@ -207,15 +207,15 @@ export function APIPost_MaterialList(amigurumi_id,material_name,quantity,recipe_
 
 
 
-export function APIPut_MaterialList(materialId, material_name, quantity,recipe_id,colour_id,amigurumi_id){
-    return fetch(`${baseURL}/material_list/material_list_id`, {
+export function APIPut_MaterialList(materialId, material_name, quantity,list_id,colour_id,amigurumi_id){
+    return fetch(`${baseURL}/material_list/material_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "material_list_id":parseInt(materialId),
+            "material_id":parseInt(materialId),
             "material_name": String(material_name),
             "quantity": String(quantity),
-            "recipe_id": parseInt(recipe_id),
+            "list_id": parseInt(list_id),
             "colour_id": parseInt(colour_id),
             "amigurumi_id": parseInt(amigurumi_id),
         })
@@ -227,11 +227,11 @@ export function APIPut_MaterialList(materialId, material_name, quantity,recipe_i
 
 
 export function APIDelete_MaterialList(materialId){
-    return fetch(`${baseURL}/material_list/material_list_id`, {
+    return fetch(`${baseURL}/material_list/material_id`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            "material_list_id": parseInt(materialId)
+            "material_id": parseInt(materialId)
         })
     })
     .then(response => response.json())
@@ -240,7 +240,7 @@ export function APIDelete_MaterialList(materialId){
 
 
 
-/*------------------- Foundation ---------------------------*/
+/*------------------- API com a tabela Foundation ---------------------------*/
 export function APIGet_FoundationList(){
     return fetch(`${baseURL}/foundation_list`)
         .then(response => response.json())
@@ -301,7 +301,7 @@ export function APIDelete_FoundationList(amigurumi_id){
 
 
 
-/*------------------- Codes ---------------------------*/
+/*------------------- Código para criação de cards dos amigurumis, que levam para a página de Receitas ---------------------------*/
 export function createAmigurumiImageCard(cardID, filteredData){
     const cardAmigurumi = document.getElementById(cardID);
     cardAmigurumi.innerHTML = "";
@@ -368,7 +368,7 @@ export function createAmigurumiImageCard(cardID, filteredData){
 }
 
 
-
+/*------------------- Código para adicição de um novo amigurumi ---------------------------*/
 export function addNewAmigurumiFoundation(relationship) {
     let overlay = document.createElement("div");
     overlay.id = "modalOverlayAmigurumi";
