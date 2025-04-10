@@ -244,7 +244,7 @@ button_next_previous {
     list-style: none;
 }
 
-#table_amigurumi_material [name="recipe_id"] {
+#table_amigurumi_material [name="list_id"] {
     width: 10%;
 }
 
@@ -264,7 +264,7 @@ button_next_previous {
     width: 18%;
 }
 
-#table_amigurumi_material input[name="recipe_id"], 
+#table_amigurumi_material input[name="list_id"], 
 #table_amigurumi_material input[name="quantity"], #table_amigurumi_material input[name="material_name"],
 #table_amigurumi_material input[name="colour_id"]{
     width: 100%;
