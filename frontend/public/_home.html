@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=2.0">
+        <title>Home</title>
+        <link rel="stylesheet" href="^style.css">
+        <link rel="stylesheet" href="^home.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+
+    <body>
+        <!-- Cabeçalho carregado dinamicamente -->
+        <header id="header_container"></header>
+
+        <main>
+            <br>
+            <br>
+            <br>
+            <div class="carousel-container">
+                <div class="carousel-slide">
+                    <img src="image_id_logo.png" alt="Banner 1" />
+                    <img src="image_id_back_index.png" alt="Banner 2" />
+                </div>
+                <button class="prev">&#10094;</button>
+                <button class="next">&#10095;</button>
+            </div>
+
+            <br><br>
+
+            <!-- Seção de busca -->
+            <section id="search_bar">
+                <input type="text" id="searchInput" placeholder="Pesquisar amigurumi..." oninput="filterAmigurumis()">
+                <button id="botton_search"><i class="fas fa-search"></i> Pesquisar</button>
+            </section>
+
+            <br>
+
+            <!-- Lista de todos os amigurumis -->
+            <section id="new_recipies">
+                <h1>Novas Receitas</h1>
+                <div id="cardNewAmigurumi"></div> 
+            </section>
+
+
+            <!-- Lista de todos os amigurumis -->
+            <section id="all_recipies">
+                <h1>Todas as Receitas</h1>
+                <div id="cardAmigurumi"></div> 
+            </section>
+                
+            <br><br>
+        </main>
+
+        <!-- Rodapé carregado dinamicamente -->
+        <footer id="footer"></footer>
+
+        <!-- Scripts -->
+        <script src="--header_footer.js" defer></script>
+        <script type="module" src="-home.js" defer></script>
+    </body> 
+</html>

@@ -3,8 +3,10 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=2.0">
-        <title>Amigurumi Principal</title>
-        <link rel="stylesheet" href="style.css">
+        <title>Nova Receita</title>
+        <link rel="stylesheet" href="^style.css">
+        <link rel="stylesheet" href="^nova_receita.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
 
     <body>
@@ -12,27 +14,18 @@
         <header id="header_container"></header>
 
         <main>
-            <br><br>
-
-            <!-- Seção de busca -->
-            <section> 
-                <input type="text" id="searchInput" placeholder="Pesquisar amigurumi..." oninput="filterAmigurumis()">
-                <button id="search_amigurumi"> Pesquisar</button>
-            </section>
-
-            <br>
-
             <!-- Ação: Adicionar novo amigurumi -->
             <section> 
                 <button id="add_new_amigurumi">Novo Amigurumi</button>
             </section>
 
+            <h1>Descrição</h1>
+            <h1>Imagem</h1>
+            <h1>Material</h1>
+            <h1>Elemento</h1>
+
             <br><br><br><br><br>
-
-            <!-- Lista de amigurumis -->
-            <section id="cardAmigurumi"></section> 
-
-            <br><br>
+            
         </main>
 
         <!-- Rodapé carregado dinamicamente -->
@@ -40,6 +33,6 @@
 
         <!-- Scripts -->
         <script src="--header_footer.js" defer></script>
-        <script type="module" src="-amigurumi.js" defer></script>
+        <script type="module" src="-nova_receita.js" defer></script>
     </body> 
 </html>
