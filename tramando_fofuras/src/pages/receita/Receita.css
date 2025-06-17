@@ -113,7 +113,6 @@
 
 
 #stitchbook_sequence_data{
-  display: flex;
   flex-direction: column;
 }
 

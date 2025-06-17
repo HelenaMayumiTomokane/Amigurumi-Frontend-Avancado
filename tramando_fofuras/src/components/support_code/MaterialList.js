@@ -148,7 +148,14 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
           <>
             <button onClick={createNewList}>Nova Lista</button>
             <button 
-              onClick={deleteList} 
+              onClick={() => {
+                if (selectedListId) {
+                  const confirmed = window.confirm("Tem certeza que deseja excluir a lista selecionada?");
+                  if (confirmed) {
+                    deleteList();
+                  }
+                }
+              }} 
               disabled={!selectedListId} 
               title="Excluir lista selecionada"
             >
@@ -210,7 +217,16 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
                   </td>
                   {editable && (
                     <td>
-                      <button onClick={() => deleteRow(globalIndex)}>Excluir</button>
+                      <button 
+                        onClick={() => {
+                          const confirmed = window.confirm("Tem certeza que deseja excluir esta linha?");
+                          if (confirmed) {
+                            deleteRow(globalIndex);
+                          }
+                        }}
+                      >
+                        Excluir
+                      </button>
                     </td>
                   )}
                 </tr>

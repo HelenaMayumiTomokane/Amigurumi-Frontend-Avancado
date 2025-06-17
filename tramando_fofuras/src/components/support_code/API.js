@@ -1,7 +1,12 @@
 const baseURL = "http://127.0.0.1:5000"
 
 /*------------------- API com a tabela Stitchbook ---------------------------*/
-/*
+export function APIGet_Stitchbook(){
+    return fetch(`${baseURL}/stitchbook`)
+        .then(response => response.json())
+        .then(data => data)
+}
+
 export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour_id,stich_sequence,observation){
     return fetch(`${baseURL}/stitchbook`, {
         method: "POST",
@@ -53,10 +58,10 @@ export function APIDelete_Stitchbook(stitchbookIdDelete){
         .then(data => data)
 }
 
-*/
+
 
 /*------------------- API com a tabela Stitchbook Sequence ---------------------------*/
-/*export function APIGet_Stitchbook_Sequence(){
+export function APIGet_Stitchbook_Sequence(){
     return fetch(`${baseURL}/stitchbook_sequence`)
     .then(response => response.json())
     .then(data => data)
@@ -105,70 +110,6 @@ export function APIDelete_Stitchbook_Sequence(element_id){
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             "element_id": parseInt(element_id),
-        })
-    })
-    .then(response => response.json())
-    .then(data => data)
-}
-
-
-
-*/
-
-
-
-
-/*------------------- API com a tabela Stitchbook Full ---------------------------*/
-export function APIGet_StitchbookFull(){
-    return fetch(`${baseURL}/stitchbook_full`)
-        .then(response => response.json())
-        .then(data => data)
-}
-
-
-export function APIPost_StitchbookFull(amigurumi_id,element_id,element_name,element_order,repetition,lines){
-    return fetch(`${baseURL}/stitchbook_full`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            "amigurumi_id": parseInt(amigurumi_id) ,
-            "element_id": parseInt(element_id) ,
-            "element_name": String(element_name),
-            "element_order": parseInt(element_order),
-            "repetition": parseInt(repetition),
-            "lines": lines //{number_row, stich_sequence, observation, colour_id}
-        })
-    })
-    .then(response => response.json())
-    .then(data => data)
-}
-
-
-export function APIDelete_StitchbookFull(element_id,lines){
-    return fetch(`${baseURL}/stitchbook_full`, {
-        method: "DELETE",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            "element_id": parseInt(element_id) ,
-            "lines": lines //{line_id}
-        })
-    })
-    .then(response => response.json())
-    .then(data => data)
-}
-
-
-export function APIPut_StitchbookFull(amigurumi_id,element_id,element_name,element_order,repetition,lines){
-    return fetch(`${baseURL}/stitchbook_full`, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            "amigurumi_id": parseInt(amigurumi_id) ,
-            "element_id": parseInt(element_id) ,
-            "element_name": String(element_name),
-            "element_order": parseInt(element_order),
-            "repetition": parseInt(repetition),
-            "lines": lines //{line_id, number_row, stich_sequence, observation, colour_id}
         })
     })
     .then(response => response.json())
