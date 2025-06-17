@@ -1,0 +1,46 @@
+/* ------------ Rodapé -------------- */
+#logo_company_footer {
+  margin-top: 25px; 
+  margin-left: 20px;
+  width: 150px;
+  height: auto;
+  display: block;
+  margin-right: 20px;
+  border: 2px solid #69402F;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+
+#footer_data{
+    gap:50px;
+    color: black;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 9999;
+    writing-mode: horizontal-tb;
+    display: flex;
+    align-items: top;
+    justify-content: flex-start; 
+
+}
+
+
+#footer {
+    position: relative;
+    width: 100%;
+    gap:20px;
+    background-color: #C1A282;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 9999;
+    border-block: solid #69402F;
+    writing-mode: horizontal-tb;
+    overflow: hidden; 
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}

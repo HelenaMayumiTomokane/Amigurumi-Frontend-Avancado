@@ -1,0 +1,132 @@
+#full_amigurumi_data {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 100%;
+    min-width: 0;
+    padding: 10px;
+}
+
+
+/*----------------------------------------------Imagens------------------------------------------------------*/
+#amigurumi_imagem{
+    width: 25%;
+    color: #8c522d;
+}
+
+#receita_relacionada{
+  color: #8c522d;
+  width: 100%;
+}
+
+/*----------------------------------------------Informações Gerais------------------------------------------------------*/
+#amigurumi_information{
+    width: 20%;
+    color: #8c522d;
+}
+
+/*----------------------------------------------Lista de Materiais------------------------------------------------------*/
+#table_amigurumi_material{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    color: white;
+}
+
+#lista_suspensa_material{
+    width: 25%;
+}
+
+#group_lista_suspensa_material{
+    color: #8c522d;
+}
+
+
+#table_amigurumi_material th{
+  border: 1px solid #8c522d;
+  background-color: #8c522d;
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word;
+  border: 1px solid #b6b4b4;
+}
+
+#table_amigurumi_material td {
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word; /* Quebra texto longo */
+  border: 1px solid #b6b4b4;
+}
+
+/* Define larguras específicas para cada coluna */
+#table_amigurumi_material th:nth-child(1),
+#table_amigurumi_material td:nth-child(1) {
+  width: 50%; /* Material */
+}
+
+#table_amigurumi_material th:nth-child(2),
+#table_amigurumi_material td:nth-child(2) {
+  width: 15%; /* Qtde */
+}
+
+#table_amigurumi_material th:nth-child(3),
+#table_amigurumi_material td:nth-child(3) {
+  width: 20%; /* ID Cor */
+}
+
+#table_amigurumi_material th:nth-child(4),
+#table_amigurumi_material td:nth-child(4) {
+  width: 15%; /* Excluir (opcional) */
+}
+
+
+
+
+/*----------------------------------------------Tabela de Pontos------------------------------------------------------*/
+#div_stitchbookList{
+    width: 100%;
+}
+
+#stitchbook_table{
+    width: 100%; 
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+
+#stitchbook_table th{
+    background-color: #8c522d;
+    color: white;
+    position: sticky;
+    top: 0; 
+    z-index: 1;
+    height: 40px;
+    border: 1px solid #b6b4b4;
+}
+
+#stitchbook_table td {
+    border: 1px solid #b6b4b4;
+}
+
+
+
+
+#stitchbook_sequence_data{
+  display: flex;
+  flex-direction: column;
+}
+
+#input_sequence_name {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  width: 30%; /* largura da "linha" */
+}
+
+#input_sequence_qtde, #input_sequence_order {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  width: 10%; /* largura da "linha" */
+}

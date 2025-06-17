@@ -1,16 +1,7 @@
-//aba destinada para códigos reutilizáveis
-
 const baseURL = "http://127.0.0.1:5000"
 
 /*------------------- API com a tabela Stitchbook ---------------------------*/
-export function APIGet_Stitchbook(){
-    return fetch(`${baseURL}/stitchbook`)
-        .then(response => response.json())
-        .then(data => data)
-}
-
-
-
+/*
 export function APIPost_Stitchbook(amigurumi_id,element_id,number_row,colour_id,stich_sequence,observation){
     return fetch(`${baseURL}/stitchbook`, {
         method: "POST",
@@ -62,10 +53,10 @@ export function APIDelete_Stitchbook(stitchbookIdDelete){
         .then(data => data)
 }
 
-
+*/
 
 /*------------------- API com a tabela Stitchbook Sequence ---------------------------*/
-export function APIGet_Stitchbook_Sequence(){
+/*export function APIGet_Stitchbook_Sequence(){
     return fetch(`${baseURL}/stitchbook_sequence`)
     .then(response => response.json())
     .then(data => data)
@@ -122,7 +113,79 @@ export function APIDelete_Stitchbook_Sequence(element_id){
 
 
 
+*/
+
+
+
+
+/*------------------- API com a tabela Stitchbook Full ---------------------------*/
+export function APIGet_StitchbookFull(){
+    return fetch(`${baseURL}/stitchbook_full`)
+        .then(response => response.json())
+        .then(data => data)
+}
+
+
+export function APIPost_StitchbookFull(amigurumi_id,element_id,element_name,element_order,repetition,lines){
+    return fetch(`${baseURL}/stitchbook_full`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            "amigurumi_id": parseInt(amigurumi_id) ,
+            "element_id": parseInt(element_id) ,
+            "element_name": String(element_name),
+            "element_order": parseInt(element_order),
+            "repetition": parseInt(repetition),
+            "lines": lines //{number_row, stich_sequence, observation, colour_id}
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+
+
+export function APIDelete_StitchbookFull(element_id,lines){
+    return fetch(`${baseURL}/stitchbook_full`, {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            "element_id": parseInt(element_id) ,
+            "lines": lines //{line_id}
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+
+
+export function APIPut_StitchbookFull(amigurumi_id,element_id,element_name,element_order,repetition,lines){
+    return fetch(`${baseURL}/stitchbook_full`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            "amigurumi_id": parseInt(amigurumi_id) ,
+            "element_id": parseInt(element_id) ,
+            "element_name": String(element_name),
+            "element_order": parseInt(element_order),
+            "repetition": parseInt(repetition),
+            "lines": lines //{line_id, number_row, stich_sequence, observation, colour_id}
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+
+
+
 /*------------------- API com a tabela Image ---------------------------*/
+export function APIGet_Image(){
+    return fetch(`${baseURL}/image`)
+        .then(response => response.json())
+        .then(data => data)
+}
+
+
+
 export function APIPost_Image(main_image,amigurumi_id,list_id,image_base64){
     return fetch(`${baseURL}/image`, {
         method: "POST",
@@ -136,14 +199,6 @@ export function APIPost_Image(main_image,amigurumi_id,list_id,image_base64){
     })
     .then(response => response.json())
     .then(data => data)
-}
-
-
-
-export function APIGet_Image(){
-    return fetch(`${baseURL}/image`)
-        .then(response => response.json())
-        .then(data => data)
 }
 
 
@@ -262,7 +317,12 @@ export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurum
         })
     })
     .then(response => response.json())
-    .then(data => data)
+    .then(data => {
+        console.log('Resposta da API:', data);  // <-- aqui
+        return data;
+    });
+
+    
 }
 
 
@@ -297,126 +357,4 @@ export function APIDelete_FoundationList(amigurumi_id){
     })
     .then(response => response.json())
     .then(data => data)
-}
-
-
-
-/*------------------- Código para criação de cards dos amigurumis, que levam para a página de Receitas ---------------------------*/
-export function createAmigurumiImageCard(cardID, filteredData){
-    const cardAmigurumi = document.getElementById(cardID);
-    cardAmigurumi.innerHTML = "";
-
-    const uniqueIds = new Set();
-
-    filteredData.forEach(amigurumi => {
-        if (!uniqueIds.has(amigurumi.amigurumi_id)) {
-            uniqueIds.add(amigurumi.amigurumi_id);
-            
-            const card = document.createElement("div");
-            card.className = "cardAmigurumi";
-
-            APIGet_Image()
-                .then(imageData => {
-                    const imageSrcArray = imageData
-                        .filter(row => parseInt(row.amigurumi_id) == parseInt(amigurumi.amigurumi_id))
-                        .map(row => row.image_base64); 
-
-                    let currentIndex = 0;
-
-                    const imageElement = document.createElement('img');
-                    imageElement.src = `data:image/jpeg;base64,${imageSrcArray[currentIndex]}`
-                    imageElement.alt = amigurumi.name;
-                    imageElement.id = "cardAmigurumiImage";
-
-                    function showPreviousImage() {
-                        currentIndex = (currentIndex - 1 + imageSrcArray.length) % imageSrcArray.length;
-                        imageElement.src = `data:image/jpeg;base64,${imageSrcArray[currentIndex]}`;
-                    }
-                    
-                    function showNextImage() {
-                        currentIndex = (currentIndex + 1) % imageSrcArray.length;
-                        imageElement.src = `data:image/jpeg;base64,${imageSrcArray[currentIndex]}`;
-                    }
-
-                    const nextButton = document.createElement('button_next_previous');
-                    nextButton.innerText = ">";
-                    nextButton.addEventListener('click', showNextImage); 
-
-                    const prevButton = document.createElement('button_next_previous');
-                    prevButton.innerText = "<";
-                    prevButton.addEventListener('click', showPreviousImage);
-
-                    const titleElement = document.createElement('h3');
-                    titleElement.textContent = amigurumi.name;
-
-                    const link = document.createElement('a');
-                    link.href = `_receita.html?id=${amigurumi.amigurumi_id}`;
-                    link.textContent = 'Ver Mais';
-                    
-
-                    card.appendChild(titleElement);
-                    card.appendChild(imageElement);
-                    card.appendChild(prevButton);
-                    card.appendChild(nextButton);
-                    card.appendChild(link);
-                    
-
-                    cardAmigurumi.appendChild(card);
-                })
-        }
-    });
-}
-
-
-/*------------------- Código para adicição de um novo amigurumi ---------------------------*/
-export function addNewAmigurumiFoundation(relationship) {
-    let overlay = document.createElement("div");
-    overlay.id = "modalOverlayAmigurumi";
-    document.body.appendChild(overlay);
-
-    let modal = document.createElement("div");
-    modal.id = "addNewAmigurumiBox";
-    modal.innerHTML = `
-        <h3>Adicionar um Novo Amigurumi</h3>
-        <label>Nome*: <input type="text" id="editName" required></label><br><br>
-        <label>Autor*: <input type="text" id="editAuthor" required></label><br><br>
-        <label>Tamanho (cm)*: <input type="number" id="editSize" required></label><br><br>
-        <label>Link: <input type="url" id="editLink" required></label><br><br>
-        <button id="saveEdit">Salvar</button>
-        <button id="cancelEdit">Cancelar</button>
-    `;
-
-    document.body.appendChild(modal);
-
-    document.getElementById("saveEdit").addEventListener("click", function () {
-
-        const nameAmigurumi = document.getElementById("editName").value
-        const autorAmigurumi =  document.getElementById("editAuthor").value
-        const sizeAmigurumi = parseFloat(document.getElementById("editSize").value)
-        const linkAmigurumi =  document.getElementById("editLink").value       
-
-        APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,relationship)
-        .then(data => {
-            if(data.message !== undefined){
-                alert(data.message)
-                window.location.href = `_receita.html?id=${data.amigurumi_id}`
-            }else{
-                const errorMessage = data.map(err => {
-                    const field = err.loc?.join('.') || 'campo desconhecido';
-                    return `Error in field "${field}": ${err.msg} (${err.type})`;
-                }).join('\n');
-
-                alert(errorMessage);
-            }           
-        })
-
-        document.body.removeChild(modal);
-        document.body.removeChild(overlay);
-    });
-
-    document.getElementById("cancelEdit").addEventListener("click", function () {
-        document.body.removeChild(modal);
-        document.body.removeChild(overlay);
-    })
-
 }
