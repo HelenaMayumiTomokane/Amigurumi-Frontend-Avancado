@@ -155,10 +155,11 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
           <table id="stitchbook_table">
             <thead>
               <tr>
-                <th>Row</th>
-                <th>Sequência</th>
-                <th>Observação</th>
+                <th>Carreira</th>
                 <th>Cor</th>
+                <th>Pontos</th>
+                <th>Observação</th>
+                
                 {editable && <th>Ações</th>}
               </tr>
             </thead>
@@ -170,6 +171,14 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
                       type="number"
                       value={line.number_row}
                       onChange={(e) => updateLine(el.element_id, line.line_id, "number_row", parseInt(e.target.value))}
+                      disabled={!editable}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={line.colour_id}
+                      onChange={(e) => updateLine(el.element_id, line.line_id, "colour_id", parseInt(e.target.value))}
                       disabled={!editable}
                     />
                   </td>
@@ -189,14 +198,7 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
                       disabled={!editable}
                     />
                   </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={line.colour_id}
-                      onChange={(e) => updateLine(el.element_id, line.line_id, "colour_id", parseInt(e.target.value))}
-                      disabled={!editable}
-                    />
-                  </td>
+                  
                   {editable && (
                     <td>
                       <button

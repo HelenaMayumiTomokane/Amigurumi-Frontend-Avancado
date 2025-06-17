@@ -61,7 +61,6 @@ export default function AmigurumiCarousel() {
             className="carousel-slide"
             key={index}
             onClick={() => window.location.href = `/receita?id=${img.amigurumi_id}`}
-            style={{ cursor: 'pointer' }}
             title="Clique para ver a receita"
           >
             <img

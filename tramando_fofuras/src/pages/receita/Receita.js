@@ -20,7 +20,6 @@ export default function Receita() {
   const [editable, setEditable] = useState(false);
 
   const foundationRef = useRef();
-  const sequenceRef = useRef();
   const materialRef = useRef();
   const stitchbookRef = useRef();
 
@@ -64,9 +63,6 @@ export default function Receita() {
     // Montagem (Stitchbook)
     const stitchbookOriginal = stitchbookRef.current?.getOriginalList();
     const stitchbookCurrent = stitchbookRef.current?.getCurrentList();
-
-    console.log(stitchbookOriginal)
-    console.log(stitchbookCurrent)
 
     if (stitchbookOriginal && stitchbookCurrent) {
       await saveStitchbookChanges(stitchbookOriginal, stitchbookCurrent);

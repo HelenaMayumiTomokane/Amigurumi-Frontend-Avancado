@@ -110,22 +110,50 @@
 }
 
 
+#stitchbook_table th:nth-child(1),
+#stitchbook_table td:nth-child(1) {
+  width: 5%; /* Material */
+}
+
+#stitchbook_table th:nth-child(2),
+#stitchbook_table td:nth-child(2) {
+  width: 10%; /* Qtde */
+}
+
+#stitchbook_table th:nth-child(3),
+#stitchbook_table td:nth-child(3) {
+  width: 35%; /* ID Cor */
+}
+
+#stitchbook_table th:nth-child(4),
+#stitchbook_table td:nth-child(4) {
+  width: 35%; /* Excluir (opcional) */
+}
+
+#stitchbook_table th:nth-child(5),
+#stitchbook_table td:nth-child(5) {
+  width: 15%; /* Excluir (opcional) */
+}
+
 
 
 #stitchbook_sequence_data{
-  flex-direction: column;
+  width: 100%; 
+  border-collapse: collapse;
+  font-size: 16px;
 }
 
-#input_sequence_name {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 12px;
-  width: 30%; /* largura da "linha" */
+#stitchbook_sequence_data th:nth-child(1),
+#stitchbook_sequence_data td:nth-child(1) {
+  width: 25%; /* Material */
 }
 
-#input_sequence_qtde, #input_sequence_order {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 12px;
-  width: 10%; /* largura da "linha" */
+#stitchbook_sequence_data th:nth-child(2),
+#stitchbook_sequence_data td:nth-child(2) {
+  width: 10%; /* Qtde */
+}
+
+#stitchbook_sequence_data th:nth-child(3),
+#stitchbook_sequence_data td:nth-child(3) {
+  width: 10%; /* ID Cor */
 }
