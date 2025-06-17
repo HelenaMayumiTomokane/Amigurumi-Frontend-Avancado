@@ -22,10 +22,11 @@ export default function Footer() {
 
         <div id="site_map">
           <h1>Mapa do Site</h1>
-          <a href="/">Home</a> <br></br>
+          <a href="/">🏠 Home</a> <br></br>
           <br></br>
-          <a href="receita">Receita</a>
+          <a href="favoritos">❤️ Favorito</a>
         </div>
+
       </div>
 
       <div id="legal_section">

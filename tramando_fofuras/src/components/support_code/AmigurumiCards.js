@@ -6,6 +6,23 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
   const [currentIndexMap, setCurrentIndexMap] = useState({});
   const [showModalFor, setShowModalFor] = useState(null);
 
+  // Favoritos
+  const [favorites, setFavorites] = useState(() => {
+    const stored = localStorage.getItem('favoriteAmigurumis');
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  const toggleFavorite = (amigurumiId) => {
+    setFavorites(prev => {
+      const isFavorite = prev.includes(amigurumiId);
+      const updated = isFavorite
+        ? prev.filter(id => id !== amigurumiId)
+        : [...prev, amigurumiId];
+      localStorage.setItem('favoriteAmigurumis', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   useEffect(() => {
     async function fetchImages() {
       if (!filteredData || filteredData.length === 0) return;
@@ -34,33 +51,43 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
   }
 
   return (
-    <div class = "card_conterner">
+    <div className="card_conterner">
       {filteredData.map(amig => {
         const imgs = imagesMap[amig.amigurumi_id] || [];
         const idx = currentIndexMap[amig.amigurumi_id] || 0;
         const current = imgs[idx];
 
         return (
-          <div key={amig.amigurumi_id} class="cardAmigurumi">
+          <div key={amig.amigurumi_id} className="cardAmigurumi">
+            {/* Ícone de favorito */}
+            <button
+              className={`favorite-button ${favorites.includes(amig.amigurumi_id) ? 'favorited' : ''}`}
+              onClick={() => toggleFavorite(amig.amigurumi_id)}
+            >
+              {favorites.includes(amig.amigurumi_id) ? '❤️' : '♡'}
+            </button>
+
             <h3>{amig.name}</h3>
             {current ? (
-              <img src={`data:image/jpeg;base64,${current.image_base64}`} alt={amig.name} class="image_Amigurumi"/>
+              <img
+                src={`data:image/jpeg;base64,${current.image_base64}`}
+                alt={amig.name}
+                className="image_Amigurumi"
+              />
             ) : (
               <p>Sem imagem</p>
             )}
 
-            <br></br>
-
             {imgs.length > 1 && (
-              <div class ="container_next_previous">
-                <button class="next_previous" onClick={() =>
+              <div className="container_next_previous">
+                <button className="next_previous" onClick={() =>
                   setCurrentIndexMap(prev => ({
                     ...prev,
                     [amig.amigurumi_id]: (idx - 1 + imgs.length) % imgs.length
                   }))
                 }>{'<'}</button>
                 <span>{idx + 1} / {imgs.length}</span>
-                <button class="next_previous" onClick={() =>
+                <button className="next_previous" onClick={() =>
                   setCurrentIndexMap(prev => ({
                     ...prev,
                     [amig.amigurumi_id]: (idx + 1) % imgs.length
@@ -74,7 +101,9 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
             )}
 
             {redirection && (
-              <button class="see_more" onClick={() => window.location.href = `/receita?id=${amig.amigurumi_id}`}>Ver Mais</button>
+              <button className="see_more" onClick={() => window.location.href = `/receita?id=${amig.amigurumi_id}`}>
+                Ver Mais
+              </button>
             )}
           </div>
         );
@@ -94,16 +123,6 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
   );
 }
 
-
-
-
-
-
-
-
-
-
-
 export function ImageManagerModal({ amigurumiId, onClose, onSaved }) {
   const [images, setImages] = useState([]);
   const [file, setFile] = useState(null);
@@ -122,7 +141,7 @@ export function ImageManagerModal({ amigurumiId, onClose, onSaved }) {
     const reader = new FileReader();
     reader.onloadend = async () => {
       const base64 = reader.result.split(',')[1];
-      await API.APIPost_Image(false, amigurumiId, 1, base64); // list_id fixo como 1 por enquanto
+      await API.APIPost_Image(false, amigurumiId, 1, base64); // list_id fixo como 1
       onSaved();
     };
     reader.readAsDataURL(file);

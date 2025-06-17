@@ -4,7 +4,6 @@ import './Header.css';
 export default function Header() {
   return (
     <div id="master_head">
-      {/* Link para fonte Google Fonts - ideal colocar no index.html, mas pode deixar aqui */}
       <link
         href="https://fonts.googleapis.com/css2?family=Princess+Sofia&display=swap"
         rel="stylesheet"
@@ -19,19 +18,18 @@ export default function Header() {
       </a>
 
       <h1 id="header_botton">
-        {/* Em React não use onclick inline, use onClick com função */}
         <button
           className="button_title"
           onClick={() => (window.location.href = '/')}
         >
-          Home
+          🏠 Home
         </button>
 
         <button
           className="button_title"
-          onClick={() => (window.location.href = 'receita')}
+          onClick={() => (window.location.href = '/favoritos')}
         >
-          Receita
+          ❤️ Favoritos
         </button>
       </h1>
     </div>
