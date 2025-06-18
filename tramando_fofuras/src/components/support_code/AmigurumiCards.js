@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import * as API from './API';
-import SaveImageChanges from './SaveImageChanges'
+
 
 export default function AmigurumiCards({ filteredData, trigger, setTrigger, editable, redirection }) {
   const [imagesMap, setImagesMap] = useState({});
   const [currentIndexMap, setCurrentIndexMap] = useState({});
-  const [showModalFor, setShowModalFor] = useState(null);
+  
 
   // Favoritos
   const [favorites, setFavorites] = useState(() => {
@@ -97,10 +97,6 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
               </div>
             )}
 
-            {editable && (
-              <button onClick={() => setShowModalFor(amig.amigurumi_id)}>Gerenciar Imagens</button>
-            )}
-
             {redirection && (
               <button className="see_more" onClick={() => window.location.href = `/receita?id=${amig.amigurumi_id}`}>
                 Ver Mais
@@ -109,17 +105,6 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
           </div>
         );
       })}
-
-      {showModalFor && (
-        <SaveImageChanges
-          amigurumiId={showModalFor}
-          onClose={() => setShowModalFor(null)}
-          onSaved={() => {
-            setShowModalFor(null);
-            setTrigger(t => !t);
-          }}
-        />
-      )}
     </div>
   );
 }

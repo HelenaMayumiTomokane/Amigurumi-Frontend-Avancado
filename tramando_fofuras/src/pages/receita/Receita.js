@@ -10,6 +10,7 @@ import saveMaterialChanges from '../../components/support_code/SaveMaterialChang
 import saveStitchbookChanges from '../../components/support_code/SaveStitchbookChanges';
 import { BotaoDeleteAmigurumi } from '../../components/support_code/SaveFoundationList';
 import  Relationship  from '../../components/support_code/Relationship';
+import SaveImageChanges from '../../components/support_code/SaveImageChanges';
 
 
 import './Receita.css';
@@ -18,6 +19,7 @@ export default function Receita() {
   const [triggerLoad, setTriggerLoad] = useState(0);
   const [amigurumiId, setAmigurumiId] = useState(null);
   const [editable, setEditable] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   const foundationRef = useRef();
   const materialRef = useRef();
@@ -69,6 +71,9 @@ export default function Receita() {
       setTriggerLoad(prev => prev + 1);
     }
 
+
+    
+
     setEditable(false);
   };
 
@@ -101,6 +106,15 @@ export default function Receita() {
         <br /><br />
 
         <>
+        {editable && (
+          <button onClick={() => setShowImageModal(true)}>
+            Gerenciar Imagens
+          </button>
+        )}
+
+        {showImageModal && (
+          <SaveImageChanges amigurumiId={amigurumiId} onClose={() => setShowImageModal(false)} />
+        )}
         <div id="full_amigurumi_data">
           <AmigurumiCards filteredData={filteredData} trigger={triggerLoad} editable={editable} redirection={false} />
           <div id="amigurumi_information"><h2>Dados</h2><FoundationList ref={foundationRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} /></div>
