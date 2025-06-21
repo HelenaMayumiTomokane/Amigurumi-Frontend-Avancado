@@ -17,7 +17,7 @@ export async function saveFoundationChanges(originalList, currentList) {
       const original = originalById[id];
       const current = currentById[id];
 
-      const hasChanged = ['name', 'autor', 'size', 'link', 'relationship', 'date'].some(
+      const hasChanged = ['name', 'autor', 'size', 'link', 'relationship', 'date','category'].some(
         key => original[key] !== current[key]
       );
 
@@ -36,7 +36,8 @@ export async function saveFoundationChanges(originalList, currentList) {
       item.size,
       item.link,
       item.relationship,
-      item.date
+      item.date,
+      item.category
     );
     updatedResults.push(res);
   }

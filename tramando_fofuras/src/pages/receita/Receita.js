@@ -82,6 +82,8 @@ export default function Receita() {
       <Header />
       <br />
 
+      
+
       <div className="data_body">
         <br />
         <p>

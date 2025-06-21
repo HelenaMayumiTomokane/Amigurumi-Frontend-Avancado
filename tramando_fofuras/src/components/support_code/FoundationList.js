@@ -106,6 +106,16 @@ const FoundationList = forwardRef(({ amigurumiId, editable = false, trigger = nu
               readOnly={!editable}
             />
           </div>
+
+          <div>
+            <strong>Categoria:</strong>{' '}<br />
+            <input
+              type="string"
+              value={item.category ?? ''}
+              onChange={e => handleInputChange(index, 'category', e.target.value)}
+              readOnly={!editable}
+            />
+          </div>
         </div>
       ))}
     </div>

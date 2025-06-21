@@ -245,7 +245,7 @@ export function APIGet_FoundationList(){
 
 
 
-export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,relationship){
+export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurumi,linkAmigurumi,relationship,category){
     return fetch(`${baseURL}/foundation_list`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -255,6 +255,7 @@ export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurum
             "size": parseFloat(sizeAmigurumi),
             "link": String(linkAmigurumi),
             "relationship": parseInt(relationship),
+            "category": String(category),
         })
     })
     .then(response => response.json())
@@ -268,7 +269,7 @@ export function APIPost_FoundationList(nameAmigurumi,autorAmigurumi,sizeAmigurum
 
 
 
-export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,relationship,date){
+export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,relationship,date,category){
     return fetch(`${baseURL}/foundation_list/amigurumi_id`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -279,7 +280,8 @@ export function APIPut_FoundationList(amigurumi_id,name,autor,size,link,relation
             "size": parseFloat(size),
             "link": String(link),
             "relationship": parseInt(relationship),
-            "date": new Date(date)
+            "date": new Date(date),
+            "category": String(category),
         })
     })
     .then(response => response.json())

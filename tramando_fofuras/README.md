@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# 🧵 Frontend: Amigurumi
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🚀 Código para construção do frontend de um local host, para interação com as APIs desenvolvias no backend, e alimentação e ajuste dos dados no banco de dados
 
-## Available Scripts
+## 📌 Funcionalidades
 
-In the project directory, you can run:
+- 📖 Criar, listar e buscar dados de amigurumis.
+- 📦 Upload e exibição de imagens e dados dos amigurumis.
+- 📊 Organização das receitas, imagens, materiais etc por ID.
 
-### `npm start`
+## 🛠️ Tecnologias Utilizadas
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- ⚡ **JavaScript** para consumo da API.
+- 🖼️ **HTML/CSS** para interface web.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 📥 Instalação e Execução
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone o repositório com o git => ``` clone https://github.com/HelenaMayumiTomokane/Amigurumi-Frontend ```
 
-### `npm run build`
+2. Se desejar, faça o dowload e Ative o Ambiente Virtual
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    2.1 Criar um Ambiente Virtual => ``` py -m venv venv ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    2.2 Ativar o Ambiente Virtual => no Windows ``` venv\Scripts\Activate ``` ou Mac/Linux ``` source venv/bin/activate ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Faça o dowload dos arquivos necessários => ``` pip install -r requirements.txt ```
 
-### `npm run eject`
+4. Execulte o código para rodar o Frontend => ``` node frontend\__init__.js ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. Acesse a página no browser => ```http://localhost:5000```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+6. Para parar a execução pressione => ``` Ctrl + C ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+💡 Caso tenha dúvidas ou encontre problemas, consulte a documentação ou abra uma issue no repositório! 🚀

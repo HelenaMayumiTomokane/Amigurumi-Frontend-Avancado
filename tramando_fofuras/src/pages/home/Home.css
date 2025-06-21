@@ -1,5 +1,5 @@
 /* ------------ Banner Carrocel -------------- */
-.carousel-container {
+/*.carousel-container {
   overflow-x: auto;
   white-space: nowrap;
   width: 100%;
@@ -30,7 +30,7 @@
   object-fit: cover;
 }
 
-
+*/
 
 /* ------------ barra de pesquisa -------------- */
 #searchInput { /* Campo de pesquisa */
@@ -81,4 +81,16 @@
 /* ------------ Título das Categorias -------------- */
 #all_recipies h1{
     color: #69402F;
+}
+
+
+#image_id_backfront{
+  width: 100%;
+}
+
+#div_image_id_backfront{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
 }
