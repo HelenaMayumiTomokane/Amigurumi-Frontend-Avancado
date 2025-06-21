@@ -9,9 +9,8 @@ import { saveFoundationChanges } from '../../components/support_code/SaveFoundat
 import saveMaterialChanges from '../../components/support_code/SaveMaterialChanges';
 import saveStitchbookChanges from '../../components/support_code/SaveStitchbookChanges';
 import { BotaoDeleteAmigurumi } from '../../components/support_code/SaveFoundationList';
-import  Relationship  from '../../components/support_code/Relationship';
+import Relationship from '../../components/support_code/Relationship';
 import SaveImageChanges from '../../components/support_code/SaveImageChanges';
-
 
 import './Receita.css';
 
@@ -20,6 +19,7 @@ export default function Receita() {
   const [amigurumiId, setAmigurumiId] = useState(null);
   const [editable, setEditable] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
   const foundationRef = useRef();
   const materialRef = useRef();
@@ -32,6 +32,12 @@ export default function Receita() {
       setAmigurumiId(parseInt(idFromURL));
       setTriggerLoad(prev => prev + 1);
     }
+
+    // Ler info do usuário do localStorage
+    const storedUser = localStorage.getItem('userInfo');
+    if (storedUser) {
+      setUserInfo(JSON.parse(storedUser));
+    }
   }, []);
 
   const handleDeleted = () => {
@@ -43,7 +49,6 @@ export default function Receita() {
   const handleSave = async () => {
     console.log('🔒 Salvando alterações...');
 
-    // Fundamentos
     const foundationOriginal = foundationRef.current?.getOriginalList();
     const foundationCurrent = foundationRef.current?.getCurrentList();
 
@@ -52,7 +57,6 @@ export default function Receita() {
       foundationRef.current.updateOriginalList();
     }
 
-    // Materiais
     const materialOriginal = materialRef.current?.getOriginalList();
     const materialCurrent = materialRef.current?.getCurrentList();
 
@@ -61,8 +65,6 @@ export default function Receita() {
       setTriggerLoad(prev => prev + 1);
     }
 
-
-    // Montagem (Stitchbook)
     const stitchbookOriginal = stitchbookRef.current?.getOriginalList();
     const stitchbookCurrent = stitchbookRef.current?.getCurrentList();
 
@@ -71,64 +73,88 @@ export default function Receita() {
       setTriggerLoad(prev => prev + 1);
     }
 
-
-    
-
     setEditable(false);
   };
+
+  // Só permite editar se usuário for admin
+  const canEdit = userInfo?.role === 'Administrador';
 
   return (
     <div>
       <Header />
       <br />
 
-      
-
       <div className="data_body">
         <br />
-        <p>
-          <button className="button_title" onClick={() => (window.location.href = '/')}> Home </button>{" > "}
-          <button className="button_title" onClick={() => (window.location.href = `/receita?id=${amigurumiId}`)}> Receita </button>
-        </p>
-
-        <button onClick={() => setEditable(prev => !prev)}>
-          {editable ? 'Desligar Edição' : 'Ligar Edição'}
-        </button>
-
-        {editable && (
-          <button onClick={handleSave}>
-            Salvar
+        <div className="breadcrumbs_container">
+          <button
+            className="button_title_transparent"
+            onClick={() => (window.location.href = '/')}
+            title="Home"
+          >
+            <span className="button_icon">🏠</span> Home
           </button>
-        )}
-
-        {editable && (
-          <BotaoDeleteAmigurumi amigurumiId={amigurumiId} onDeleted={handleDeleted} />
-        )}
-
-        <br /><br />
-
-        <>
-        {editable && (
-          <button onClick={() => setShowImageModal(true)}>
-            Gerenciar Imagens
+          <span className="separator">{'>'}</span>
+          <button
+            className="button_title_transparent"
+            onClick={() => (window.location.href = `/receita?id=${amigurumiId}`)}
+            title="Receita"
+          >
+            <span className="button_icon">📖</span> Receita
           </button>
+        </div>
+        
+        <br/>
+
+        {canEdit && (
+          <>
+            <button onClick={() => setEditable(prev => !prev)}>
+              {editable ? 'Desligar Edição' : 'Ligar Edição'}
+            </button>
+
+            {editable && (
+              <>
+                <button onClick={handleSave}>
+                  Salvar
+                </button>
+
+                <BotaoDeleteAmigurumi amigurumiId={amigurumiId} onDeleted={handleDeleted} />
+
+                <button onClick={() => setShowImageModal(true)}>
+                  Gerenciar Imagens
+                </button>
+              </>
+            )}
+          </>
         )}
 
         {showImageModal && (
           <SaveImageChanges amigurumiId={amigurumiId} onClose={() => setShowImageModal(false)} />
         )}
-        <div id="full_amigurumi_data">
-          <AmigurumiCards filteredData={filteredData} trigger={triggerLoad} editable={editable} redirection={false} />
-          <div id="amigurumi_information"><h2>Dados</h2><FoundationList ref={foundationRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} /></div>
-        </div>
-        <br /><br /><br />
-        <MaterialList ref={materialRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
-        <br /><br /><br />
-        <div id="div_stitchbookList"><h2>Montagem</h2><Stitchbook ref={stitchbookRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} /></div>
-        
-        <Relationship amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
-      </>
 
+        <div id="full_amigurumi_data">
+          <div id="card_amigurumi_recipe"></div>
+          <AmigurumiCards filteredData={filteredData} trigger={triggerLoad} editable={editable} redirection={false} />
+          <FoundationList ref={foundationRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+        </div>
+        
+
+        <br /><br /><br />
+        
+        <MaterialList ref={materialRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+
+        <br /><br /><br />
+
+        <div id="div_stitchbookList">
+          <h2>Montagem</h2>
+          <Stitchbook ref={stitchbookRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+        </div>
+
+        <div id="card_relationship_backgroud">
+          <div id="card_relationship">
+            <Relationship amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+          </div>
+        </div>
 
         <br /><br />
       </div>

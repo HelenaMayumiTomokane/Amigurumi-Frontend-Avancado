@@ -120,131 +120,133 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
   );
 
   return (
-    <div>
-      {error && <p>{error}</p>}
+    <div id ="group_table_list_material_backgroud">
+      <div id ="group_table_list_material">
+        {error && <p>{error}</p>}
 
-      <div id="group_lista_suspensa_material">
-        <h2>Materiais</h2>
-        <strong>Lista: </strong>
-        <select
-          id="lista_suspensa_material"
-          value={selectedListId}
-          onChange={e => setSelectedListId(e.target.value)}
-        >
-          {availableListIds.length > 0 ? (
-            availableListIds.map(listId => (
-              <option key={listId} value={listId}>
-                Lista {listId}
+        <div id="group_lista_suspensa_material">
+          <h2>Materiais</h2>
+          <strong>Lista: </strong>
+          <select
+            id="lista_suspensa_material"
+            value={selectedListId}
+            onChange={e => setSelectedListId(e.target.value)}
+          >
+            {availableListIds.length > 0 ? (
+              availableListIds.map(listId => (
+                <option key={listId} value={listId}>
+                  Lista {listId}
+                </option>
+              ))
+            ) : (
+              <option value="" disabled>
+                Nenhuma lista disponível
               </option>
-            ))
-          ) : (
-            <option value="" disabled>
-              Nenhuma lista disponível
-            </option>
+            )}
+          </select>
+
+          {editable && (
+            <>
+              <button onClick={createNewList}>Nova Lista</button>
+              <button 
+                onClick={() => {
+                  if (selectedListId) {
+                    const confirmed = window.confirm("Tem certeza que deseja excluir a lista selecionada?");
+                    if (confirmed) {
+                      deleteList();
+                    }
+                  }
+                }} 
+                disabled={!selectedListId} 
+                title="Excluir lista selecionada"
+              >
+                Excluir Lista
+              </button>
+            </>
           )}
-        </select>
+        </div>
+
+        <br />
+
+        <table id="table_amigurumi_material">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Qtde</th>
+              <th>ID Cor</th>
+              {editable && <th>Excluir</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {filteredMaterials.length > 0 ? (
+              filteredMaterials.map((mat, idx) => {
+                const globalIndex = materialList.findIndex(item => item === mat);
+                return (
+                  <tr key={globalIndex}>
+                    <td>
+                      <input
+                        type="text"
+                        value={mat.material_name || ''}
+                        onChange={e =>
+                          handleInputChange(globalIndex, 'material_name', e.target.value)
+                        }
+                        readOnly={!editable}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        min="0"
+                        value={mat.quantity || ''}
+                        onChange={e =>
+                          handleInputChange(globalIndex, 'quantity', e.target.value)
+                        }
+                        readOnly={!editable}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        value={mat.colour_id || ''}
+                        onChange={e =>
+                          handleInputChange(globalIndex, 'colour_id', e.target.value)
+                        }
+                        readOnly={!editable}
+                      />
+                    </td>
+                    {editable && (
+                      <td>
+                        <button 
+                          onClick={() => {
+                            const confirmed = window.confirm("Tem certeza que deseja excluir esta linha?");
+                            if (confirmed) {
+                              deleteRow(globalIndex);
+                            }
+                          }}
+                        >
+                          Excluir
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={editable ? 4 : 3}>Nenhum material nessa lista.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
 
         {editable && (
-          <>
-            <button onClick={createNewList}>Nova Lista</button>
-            <button 
-              onClick={() => {
-                if (selectedListId) {
-                  const confirmed = window.confirm("Tem certeza que deseja excluir a lista selecionada?");
-                  if (confirmed) {
-                    deleteList();
-                  }
-                }
-              }} 
-              disabled={!selectedListId} 
-              title="Excluir lista selecionada"
-            >
-              Excluir Lista
-            </button>
-          </>
+          <button onClick={addNewLine} style={{ marginTop: '8px' }}>
+            Adicionar Linha
+          </button>
         )}
       </div>
-
-      <br />
-
-      <table id="table_amigurumi_material">
-        <thead>
-          <tr>
-            <th>Material</th>
-            <th>Qtde</th>
-            <th>ID Cor</th>
-            {editable && <th>Excluir</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {filteredMaterials.length > 0 ? (
-            filteredMaterials.map((mat, idx) => {
-              const globalIndex = materialList.findIndex(item => item === mat);
-              return (
-                <tr key={globalIndex}>
-                  <td>
-                    <input
-                      type="text"
-                      value={mat.material_name || ''}
-                      onChange={e =>
-                        handleInputChange(globalIndex, 'material_name', e.target.value)
-                      }
-                      readOnly={!editable}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      min="0"
-                      value={mat.quantity || ''}
-                      onChange={e =>
-                        handleInputChange(globalIndex, 'quantity', e.target.value)
-                      }
-                      readOnly={!editable}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={mat.colour_id || ''}
-                      onChange={e =>
-                        handleInputChange(globalIndex, 'colour_id', e.target.value)
-                      }
-                      readOnly={!editable}
-                    />
-                  </td>
-                  {editable && (
-                    <td>
-                      <button 
-                        onClick={() => {
-                          const confirmed = window.confirm("Tem certeza que deseja excluir esta linha?");
-                          if (confirmed) {
-                            deleteRow(globalIndex);
-                          }
-                        }}
-                      >
-                        Excluir
-                      </button>
-                    </td>
-                  )}
-                </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td colSpan={editable ? 4 : 3}>Nenhum material nessa lista.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      {editable && (
-        <button onClick={addNewLine} style={{ marginTop: '8px' }}>
-          Adicionar Linha
-        </button>
-      )}
     </div>
   );
 });

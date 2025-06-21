@@ -1,5 +1,5 @@
 /* ------------ Corpo -------------- */
-body{ /*Controla o corpo de toda a página*/
+html,body{ /*Controla o corpo de toda a página*/
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
     background-color: #FBF3E8;
@@ -7,6 +7,8 @@ body{ /*Controla o corpo de toda a página*/
     margin: 0;
     padding: 0;
     max-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 
@@ -35,6 +37,10 @@ input {
   box-sizing: border-box;
 }
 
+input[readonly] {
+  background-color: transparent;
+  cursor: default;
+}
 
 
 

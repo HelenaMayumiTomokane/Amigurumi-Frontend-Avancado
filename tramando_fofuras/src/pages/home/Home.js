@@ -15,8 +15,9 @@ export default function AmigurumiPrincipal() {
   const [activeFilter, setActiveFilter] = useState("Todos");
   const [favoriteIds, setFavoriteIds] = useState([]);
   const [trigger, setTrigger] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
-  // Carrega dados e favoritos
+  // Carrega dados e favoritos e papel do usuário
   useEffect(() => {
     async function fetchData() {
       try {
@@ -31,8 +32,15 @@ export default function AmigurumiPrincipal() {
     fetchData();
 
     // Carrega favoritos do localStorage
-    const stored = localStorage.getItem("favoriteAmigurumis");
-    setFavoriteIds(stored ? JSON.parse(stored) : []);
+    const storedFavorites = localStorage.getItem("favoriteAmigurumis");
+    setFavoriteIds(storedFavorites ? JSON.parse(storedFavorites) : []);
+
+    // Carrega papel do usuário do localStorage (exemplo)
+    const storedUser = localStorage.getItem("userInfo");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserRole(user.role || null);
+    }
   }, [trigger]);
 
   // Aplica filtros (Todos, Favoritos, Mais Recentes, Categoria) + busca + filtro relationship apenas no Todos
@@ -40,7 +48,6 @@ export default function AmigurumiPrincipal() {
     let data = amigurumis;
 
     if (activeFilter === "Todos") {
-      // Aplica filtro !relationship só no "Todos"
       data = data.filter((row) => !row.relationship);
     } else if (activeFilter === "Favoritos") {
       data = data.filter((item) => favoriteIds.includes(item.amigurumi_id));
@@ -54,7 +61,6 @@ export default function AmigurumiPrincipal() {
       activeFilter !== "Favoritos" &&
       activeFilter !== "Mais Recentes"
     ) {
-      // Categoria selecionada
       data = data.filter((item) => item.category === activeFilter);
     }
 
@@ -94,12 +100,11 @@ export default function AmigurumiPrincipal() {
       </div>
 
       <div className="data_body">
-        <br></br>
-        <br></br>
+        <br />
+        <br />
         <CategoryButtons onFilterChange={onFilterChange} />
-        <br></br>
-        <br></br>
-
+        <br />
+        <br />
 
         <section id="searchbar_section">
           <SearchBar
@@ -109,15 +114,13 @@ export default function AmigurumiPrincipal() {
             setFilteredAmigurumis={setFilteredAmigurumis}
           />
 
-          
-
-          <BotaoNovoAmigurumi />
+          {/* Renderiza botão somente se for administrador */}
+          {userRole === "Administrador" && <BotaoNovoAmigurumi />}
         </section>
 
         <br />
         <br />
 
-        <h2>Todas as Receitas</h2>
         <AmigurumiCards
           filteredData={filteredAmigurumis}
           trigger={trigger}

@@ -3,12 +3,12 @@ import { APIGet_FoundationList } from "./API";
 
 export default function CategoryButtons({ onFilterChange }) {
   const [categories, setCategories] = useState([]);
-  const [activeFilter, setActiveFilter] = useState("Todos"); // pode ser 'Todos', 'Favoritos', 'Mais Recentes' ou categoria
+  const [activeFilter, setActiveFilter] = useState("Todos");
   const [favoriteIds, setFavoriteIds] = useState([]);
 
   useEffect(() => {
     APIGet_FoundationList().then((data) => {
-      const uniqueCategories = [...new Set(data.map(item => item.category))];
+      const uniqueCategories = [...new Set(data.map((item) => item.category))];
       setCategories(uniqueCategories);
     });
 
@@ -30,41 +30,45 @@ export default function CategoryButtons({ onFilterChange }) {
     }
   }
 
+  const capitalizeAll = (text) =>
+    text
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+  const iconMap = {
+    "Todos": "🧸",
+    "Favoritos": "❤️",
+    "Mais Recentes": "🕒",
+    "terrestre": "🐾",
+    "aquático": "🐠",
+    "boneca": "👸",
+    "roupa": "👗",
+    "cabelo": "💇‍♀️",
+    "acessório": "🎀",
+    "outros": "🎨"
+  };
+
+
+  const renderButton = (label) => (
+    <button
+      key={label}
+      onClick={() => handleClick(label)}
+      className={`category-button ${activeFilter === label ? "active" : ""}`}
+    >
+      <div className="circle">
+        {iconMap[label] || "🔘"}
+      </div>
+      <span className="label">{capitalizeAll(label)}</span>
+    </button>
+  );
+
   return (
     <div className="category-buttons-container">
-      <button
-        key="Todos"
-        onClick={() => handleClick("Todos")}
-        className={activeFilter === "Todos" ? "active" : ""}
-      >
-        Todos
-      </button>
-
-      {categories.map((cat) => (
-        <button
-          key={cat}
-          onClick={() => handleClick(cat)}
-          className={activeFilter === cat ? "active" : ""}
-        >
-          {cat}
-        </button>
-      ))}
-
-      <button
-        key="Favoritos"
-        onClick={() => handleClick("Favoritos")}
-        className={activeFilter === "Favoritos" ? "active" : ""}
-      >
-        Favoritos ❤️
-      </button>
-
-      <button
-        key="Mais Recentes"
-        onClick={() => handleClick("Mais Recentes")}
-        className={activeFilter === "Mais Recentes" ? "active" : ""}
-      >
-        Mais Recentes
-      </button>
+      {renderButton("Todos")}
+      {renderButton("Favoritos")}
+      {renderButton("Mais Recentes")}
+      {categories.map((cat) => renderButton(cat))}
     </div>
   );
 }

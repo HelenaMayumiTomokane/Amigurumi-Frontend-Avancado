@@ -1,4 +1,3 @@
-// FoundationList.js
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import * as API from './API';
 
@@ -39,21 +38,22 @@ const FoundationList = forwardRef(({ amigurumiId, editable = false, trigger = nu
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <div id ="amigurumi_information">
       {currentList.map((item, index) => (
-        <div key={item.amigurumi_id}>
-          <div>
-            <strong>Nome:</strong>{' '}<br />
-            <input
-              type="text"
-              value={item.name || ''}
-              onChange={e => handleInputChange(index, 'name', e.target.value)}
-              readOnly={!editable}
-            />
-          </div>
-          <br />
-          <div>
-            <strong>Tamanho (cm):</strong>{' '}<br />
+        <div key={item.amigurumi_id} className="foundation-item">
+        <input
+          type="text"
+          value={item.name || ''}
+          onChange={e => handleInputChange(index, 'name', e.target.value)}
+          readOnly={!editable}
+          className="input_name"
+          placeholder="Nome"
+        />
+
+        <br /><br />
+        <div className="input-grid">
+          <div className="input-item">
+            <strong>Tamanho (cm):</strong>
             <input
               type="number"
               value={item.size || ''}
@@ -61,29 +61,9 @@ const FoundationList = forwardRef(({ amigurumiId, editable = false, trigger = nu
               readOnly={!editable}
             />
           </div>
-          <br />
-          <div>
-            <strong>Autor:</strong>{' '}<br />
-            <input
-              type="text"
-              value={item.autor || ''}
-              onChange={e => handleInputChange(index, 'autor', e.target.value)}
-              readOnly={!editable}
-            />
-          </div>
-          <br />
-          <div>
-            <strong>Link:</strong>{' '}<br />
-            <input
-              type="text"
-              value={item.link || ''}
-              onChange={e => handleInputChange(index, 'link', e.target.value)}
-              readOnly={!editable}
-            />
-          </div>
-          <br />
-          <div>
-            <strong>Relacionamento:</strong>{' '}<br />
+
+          <div className="input-item">
+            <strong>Relacionamento:</strong>
             <input
               type="number"
               min="0"
@@ -96,9 +76,19 @@ const FoundationList = forwardRef(({ amigurumiId, editable = false, trigger = nu
               readOnly={!editable}
             />
           </div>
-          <br />
-          <div>
-            <strong>Data:</strong>{' '}<br />
+
+          <div className="input-item">
+            <strong>Categoria:</strong>
+            <input
+              type="text"
+              value={item.category ?? ''}
+              onChange={e => handleInputChange(index, 'category', e.target.value)}
+              readOnly={!editable}
+            />
+          </div>
+
+          <div className="input-item">
+            <strong>Data:</strong>
             <input
               type="date"
               value={item.date ? item.date.slice(0, 10) : ''}
@@ -107,15 +97,30 @@ const FoundationList = forwardRef(({ amigurumiId, editable = false, trigger = nu
             />
           </div>
 
-          <div>
-            <strong>Categoria:</strong>{' '}<br />
+          <div className="input-item">
+            <strong>Autor:</strong>
             <input
-              type="string"
-              value={item.category ?? ''}
-              onChange={e => handleInputChange(index, 'category', e.target.value)}
+              type="text"
+              value={item.autor || ''}
+              onChange={e => handleInputChange(index, 'autor', e.target.value)}
               readOnly={!editable}
             />
           </div>
+
+          <div className="input-item">
+            <strong>Link:</strong>
+            <input
+              type="text"
+              value={item.link || ''}
+              onChange={e => handleInputChange(index, 'link', e.target.value)}
+              readOnly={!editable}
+            />
+          </div>
+
+          
+        </div>
+
+
         </div>
       ))}
     </div>

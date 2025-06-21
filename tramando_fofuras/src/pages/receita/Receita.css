@@ -1,11 +1,9 @@
 #full_amigurumi_data {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 20px;
-    width: 100%;
-    min-width: 0;
-    padding: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
 }
 
 
@@ -20,13 +18,19 @@
   width: 100%;
 }
 
-/*----------------------------------------------Informações Gerais------------------------------------------------------*/
-#amigurumi_information{
-    width: 20%;
-    color: #8c522d;
+/*----------------------------------------------Lista de Materiais------------------------------------------------------*/
+#group_table_list_material_backgroud {
+  background-color: #b6b4b4;
+  width: calc(100% + 200px);
+  margin-left: -100px; 
+  padding: 20px 0;
 }
 
-/*----------------------------------------------Lista de Materiais------------------------------------------------------*/
+#group_table_list_material{
+  margin: 0 auto;
+  padding: 0 100px;
+}
+
 #table_amigurumi_material{
     width: 100%;
     border-collapse: collapse;
@@ -82,10 +86,9 @@
 
 
 
-
 /*----------------------------------------------Tabela de Pontos------------------------------------------------------*/
 #div_stitchbookList{
-    width: 100%;
+  width: 100%;
 }
 
 #stitchbook_table{
@@ -156,4 +159,133 @@
 #stitchbook_sequence_data th:nth-child(3),
 #stitchbook_sequence_data td:nth-child(3) {
   width: 10%; /* ID Cor */
+}
+
+
+
+/*----------------------------------------------Informações Básicas------------------------------------------------------*/
+#card_amigurumi_recipe{
+  width: 30%;
+  margin: 0 auto; 
+  display: block;
+}
+
+
+#amigurumi_information{
+  width: 70%;
+}
+
+.input_name {
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  border-left: none;
+  border-right: none;
+
+  padding: 12px 8px;
+  font-size: 2em;
+  font-weight: bold;
+  width: 100%;
+  outline: none;
+  box-sizing: border-box;
+  background: transparent;
+  text-align: center;
+  margin: 24px 0;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* espaço entre o título e o input */
+  margin-bottom: 12px;
+}
+
+.input-row strong {
+  min-width: 120px; /* ajusta largura fixa do label */
+}
+
+.input-row input {
+  flex: 1; /* o input ocupa o restante da linha */
+  padding: 6px;
+  font-size: 1em;
+}
+
+
+.input-grid {
+  display: flex;
+  flex-wrap: wrap;         /* permite que os itens quebrem para a linha de baixo */
+  gap: 16px;               /* espaçamento entre os pares */
+  margin-bottom: 20px;
+}
+
+.input-item {
+  display: flex;
+  flex-direction: column;
+  width: 250px;            /* largura fixa para cada campo */
+}
+
+.input-item strong {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.input-item input {
+  padding: 6px 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
+
+
+
+/*----------------------------------------------Cards Relacionados------------------------------------------------------*/
+#card_relationship_backgroud {
+  background-color: #b6b4b4;
+  width: calc(100% + 200px);
+  margin-left: -100px; 
+  padding: 20px 0;
+}
+
+#card_relationship{
+  margin: 0 auto;
+  padding: 0 100px;
+}
+
+
+
+/*-------------------------Botão de Rota----------------------------*/
+.breadcrumbs_container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: Arial, sans-serif;
+}
+
+.button_title_transparent {
+  background: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.button_title_transparent:hover {
+  color: #007bff;
+}
+
+.button_icon {
+  margin-right: 6px;
+  font-size: 18px;
+}
+
+.separator {
+  user-select: none;
+  color: #666;
+  font-weight: bold;
 }
