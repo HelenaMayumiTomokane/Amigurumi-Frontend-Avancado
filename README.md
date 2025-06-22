@@ -17,7 +17,7 @@
 
 ## 📥 Instalação e Execução
 
-1. Clone o repositório com o git => ``` clone https://github.com/HelenaMayumiTomokane/Amigurumi-Frontend ```
+1. Clone o repositório com o git => ``` clone https://github.com/HelenaMayumiTomokane/Amigurumi-Frontend-Avancado ```
 
 2. Se desejar, faça o dowload e Ative o Ambiente Virtual
 
@@ -27,9 +27,11 @@
 
 3. Faça o dowload dos arquivos necessários => ``` pip install -r requirements.txt ```
 
-4. Execulte o código para rodar o Frontend => ``` node frontend\__init__.js ```
+4. Entre na pasta => ``` cd tramando_fofuras ```
 
-5. Acesse a página no browser => ```http://localhost:5000```
+5. Execulte o código para rodar o Frontend => ``` npm start ```
+
+6. Caso uma página não se abra em seu navegador, acesse a página no browser=> ``` http://localhost:3000/ ```
 
 6. Para parar a execução pressione => ``` Ctrl + C ```
 
