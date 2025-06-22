@@ -40,7 +40,7 @@ const FoundationList = forwardRef(({ amigurumiId, editable = false, trigger = nu
   return (
     <div id ="amigurumi_information">
       {currentList.map((item, index) => (
-        <div key={item.amigurumi_id} className="foundation-item">
+        <div key={item.amigurumi_id}>
         <input
           type="text"
           value={item.name || ''}

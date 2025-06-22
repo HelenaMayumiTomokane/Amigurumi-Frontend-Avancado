@@ -28,6 +28,7 @@ export default function Receita() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const idFromURL = params.get('id');
+    const nameFromURL = params.get('name');
     if (idFromURL) {
       setAmigurumiId(parseInt(idFromURL));
       setTriggerLoad(prev => prev + 1);
@@ -82,69 +83,78 @@ export default function Receita() {
   return (
     <div>
       <Header />
-      <br />
 
       <div className="data_body">
         <br />
-        <div className="breadcrumbs_container">
-          <button
-            className="button_title_transparent"
-            onClick={() => (window.location.href = '/')}
-            title="Home"
-          >
-            <span className="button_icon">🏠</span> Home
-          </button>
-          <span className="separator">{'>'}</span>
-          <button
-            className="button_title_transparent"
-            onClick={() => (window.location.href = `/receita?id=${amigurumiId}`)}
-            title="Receita"
-          >
-            <span className="button_icon">📖</span> Receita
-          </button>
-        </div>
-        
-        <br/>
-
-        {canEdit && (
-          <>
-            <button onClick={() => setEditable(prev => !prev)}>
-              {editable ? 'Desligar Edição' : 'Ligar Edição'}
+        <div id="button_top">
+          <div className="breadcrumbs_container">
+            <button
+              className="button_title_transparent"
+              onClick={() => (window.location.href = '/')}
+              title="Home"
+            >
+              <span className="button_icon">🏠</span> Home
             </button>
+            
+            <span className="separator">{'>'}</span>
 
-            {editable && (
-              <>
-                <button onClick={handleSave}>
-                  Salvar
-                </button>
+            <button
+              className="button_title_transparent"
+              onClick={() => (window.location.href = `/receita?id=${amigurumiId}`)}
+              title="Receita"
+            >
+              <span className="button_icon">🧸</span> Receita
+            </button>
+          </div>
 
-                <BotaoDeleteAmigurumi amigurumiId={amigurumiId} onDeleted={handleDeleted} />
+          {canEdit && (
+          <>
+            <div>
+              <button onClick={() => setEditable(prev => !prev)}>
+                {editable ? 'Desligar Edição' : 'Ligar Edição'}
+              </button>
 
-                <button onClick={() => setShowImageModal(true)}>
-                  Gerenciar Imagens
-                </button>
-              </>
-            )}
+              {editable && (
+                <>
+                  <button onClick={handleSave}>
+                    Salvar
+                  </button>
+
+                  <BotaoDeleteAmigurumi amigurumiId={amigurumiId} onDeleted={handleDeleted} />
+                </>
+              )}
+            </div>
           </>
-        )}
+          )}
+        </div>
+
 
         {showImageModal && (
           <SaveImageChanges amigurumiId={amigurumiId} onClose={() => setShowImageModal(false)} />
         )}
 
         <div id="full_amigurumi_data">
-          <div id="card_amigurumi_recipe"></div>
-          <AmigurumiCards filteredData={filteredData} trigger={triggerLoad} editable={editable} redirection={false} />
+          <div id="amigurumi_information">
           <FoundationList ref={foundationRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+          </div>
+
+          <div id="card_amigurumi_recipe">
+            <AmigurumiCards filteredData={filteredData} trigger={triggerLoad} editable={editable} redirection={false} />
+            <br></br>
+            {editable && (
+              <button onClick={() => setShowImageModal(true)}>
+                Gerenciar Imagens
+              </button>
+            )}
+          </div>
+
+          
         </div>
         
-
-        <br /><br /><br />
         
         <MaterialList ref={materialRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
 
-        <br /><br /><br />
-
+        <br /><br />
         <div id="div_stitchbookList">
           <h2>Montagem</h2>
           <Stitchbook ref={stitchbookRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
@@ -156,7 +166,6 @@ export default function Receita() {
           </div>
         </div>
 
-        <br /><br />
       </div>
 
       <Footer />

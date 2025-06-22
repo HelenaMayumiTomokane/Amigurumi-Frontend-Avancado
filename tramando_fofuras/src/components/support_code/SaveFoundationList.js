@@ -112,7 +112,7 @@ export function BotaoDeleteAmigurumi({ amigurumiId, onDeleted }) {
 
   return (
     <button onClick={handleDeletar}>
-      Excluir Amigurumi Atual
+      Excluir Amigurumi
     </button>
   );
 }

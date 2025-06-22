@@ -46,7 +46,7 @@ export default function CategoryButtons({ onFilterChange }) {
     "roupa": "👗",
     "cabelo": "💇‍♀️",
     "acessório": "🎀",
-    "outros": "🎨"
+    "outros": "🧩"
   };
 
 

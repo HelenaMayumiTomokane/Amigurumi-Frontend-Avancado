@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import * as API from "../../components/support_code/API";
-import BotaoNovoAmigurumi from "../../components/support_code/SaveFoundationList";
 import SearchBar from "../../components/support_code/Searchbar";
 import AmigurumiCards from "../../components/support_code/AmigurumiCards";
 import CategoryButtons from "../../components/support_code/CategoryButtons";
@@ -114,8 +113,6 @@ export default function AmigurumiPrincipal() {
             setFilteredAmigurumis={setFilteredAmigurumis}
           />
 
-          {/* Renderiza botão somente se for administrador */}
-          {userRole === "Administrador" && <BotaoNovoAmigurumi />}
         </section>
 
         <br />

@@ -1,14 +1,15 @@
 /* ------------ Corpo -------------- */
 html,body{ /*Controla o corpo de toda a página*/
-    font-family: Arial, Helvetica, sans-serif;
-    box-sizing: border-box;
-    background-color: #FBF3E8;
-    justify-content: space-between;
-    margin: 0;
-    padding: 0;
-    max-width: 100%;
-    width: 100%;
-    overflow-x: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  background-color: #FBF3E8;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  color: #69402F;
 }
 
 
@@ -38,7 +39,6 @@ input {
 }
 
 input[readonly] {
-  background-color: transparent;
   cursor: default;
 }
 

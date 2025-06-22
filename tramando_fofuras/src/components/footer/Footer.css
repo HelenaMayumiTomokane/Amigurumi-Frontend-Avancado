@@ -1,46 +1,83 @@
 /* ------------ Rodapé -------------- */
+
+#footer {
+  width: 100%;
+  background-color: #C1A282;
+  border-top: 2px solid #69402F;
+  border-bottom: 2px solid #69402F;
+  color: #69402F;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* conteúdo à esquerda */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#footer_data {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start; /* alinha à esquerda */
+  gap: 40px;
+  width: 100%;
+}
+
+#footer_data > * {
+  flex: 1 1 250px; /* largura mínima antes de quebrar */
+  color: #69402F;
+}
+
 #logo_company_footer {
-  margin-top: 25px; 
-  margin-left: 20px;
   width: 150px;
-  height: auto;
-  display: block;
-  margin-right: 20px;
+  height: 150px;
   border: 2px solid #69402F;
   border-radius: 50%;
   object-fit: cover;
+  margin-top: 10px;
 }
 
-
-
-#footer_data{
-    gap:50px;
-    color: black;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    z-index: 9999;
-    writing-mode: horizontal-tb;
-    display: flex;
-    align-items: top;
-    justify-content: flex-start; 
-
+#contact_section h1,
+#site_map h1 {
+  font-size: 1.3em;
+  margin-bottom: 6px;
 }
 
+#site_map a {
+  color: #69402F;
+  text-decoration: none;
+}
 
-#footer {
-    position: relative;
-    width: 100%;
-    gap:20px;
-    background-color: #C1A282;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    z-index: 9999;
-    border-block: solid #69402F;
-    writing-mode: horizontal-tb;
-    overflow: hidden; 
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+#site_map a:hover {
+  text-decoration: underline;
+}
+
+#legal_section {
+  width: 100%;
+  border-top: 1px solid #69402F;
+  margin-top: 20px;
+  padding-top: 10px;
+  text-align: center;
+  font-size: 0.9em;
+  color: #69402F;
+}
+
+#external_links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #69402F;
+}
+
+#external_links h1 {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+}
+
+#external_links a {
+  text-decoration: none;
+  color: #69402F;
+}
+
+#external_links a:hover {
+  text-decoration: underline;
 }

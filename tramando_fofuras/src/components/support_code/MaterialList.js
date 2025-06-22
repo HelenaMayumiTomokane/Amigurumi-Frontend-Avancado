@@ -242,7 +242,7 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
         </table>
 
         {editable && (
-          <button onClick={addNewLine} style={{ marginTop: '8px' }}>
+          <button onClick={addNewLine}>
             Adicionar Linha
           </button>
         )}

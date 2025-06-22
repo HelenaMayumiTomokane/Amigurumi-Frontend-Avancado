@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
+import BotaoNovoAmigurumi from "../../components/support_code/SaveFoundationList";
+import AmigurumisDoUsuario from '../../components/support_code/AmigurumisDoUsuario';
+import './Usuario.css';
 
 export default function Usuario() {
   const [userInfo, setUserInfo] = useState(null);
@@ -8,9 +11,11 @@ export default function Usuario() {
   const [roleChanged, setRoleChanged] = useState(false);
   const [updateMessage, setUpdateMessage] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [newUsername, setNewUsername] = useState('');
   const [passwordChanged, setPasswordChanged] = useState(false);
+  const [nameChanged, setNameChanged] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Carrega info do usuário no localStorage ao montar componente
   useEffect(() => {
     const stored = localStorage.getItem('userInfo');
     if (stored) {
@@ -24,13 +29,11 @@ export default function Usuario() {
     }
   }, []);
 
-  // Atualiza o papel do usuário selecionado
   const handleRoleChange = (e) => {
     setSelectedRole(e.target.value);
     setRoleChanged(true);
   };
 
-  // Atualiza senha do usuário
   const handleChangePassword = () => {
     if (newPassword.trim()) {
       const updatedUser = { ...userInfo, password: newPassword };
@@ -42,7 +45,17 @@ export default function Usuario() {
     }
   };
 
-  // Atualiza dados do usuário (função)
+  const handleChangeUsername = () => {
+    if (newUsername.trim()) {
+      const updatedUser = { ...userInfo, username: newUsername };
+      setUserInfo(updatedUser);
+      localStorage.setItem('userInfo', JSON.stringify(updatedUser));
+      setNewUsername('');
+      setNameChanged(true);
+      setTimeout(() => setNameChanged(false), 3000);
+    }
+  };
+
   const handleUpdate = () => {
     if (userInfo) {
       const updatedUser = { ...userInfo, role: selectedRole };
@@ -57,66 +70,72 @@ export default function Usuario() {
   return (
     <div>
       <Header />
-      <div className="data_body" style={{ maxWidth: 600, margin: '0 auto' }}>
+      <div className="data_body">
         {userInfo ? (
           <>
             <h2>Bem-vindo, {userInfo.username}!</h2>
 
-            <p><strong>Nome:</strong> {userInfo.username}</p>
-            <p><strong>Senha:</strong> {userInfo.password}</p>
+            <div className="linha-horizontal">
+              <strong>Nome:</strong>
+              <input
+                type="text"
+                placeholder={userInfo.username}
+                value={newUsername}
+                onChange={e => setNewUsername(e.target.value)}
+              />
+              <button onClick={handleChangeUsername}>Alterar nome</button>
+            </div>
+            {nameChanged && <p className="mensagem-sucesso">Nome alterado com sucesso!</p>}
 
-            <label htmlFor="role-select"><strong>Tipo de usuário:</strong></label>{' '}
-            <select
-              id="role-select"
-              value={selectedRole}
-              onChange={handleRoleChange}
-            >
+            <div className="linha-horizontal">
+              <strong>Senha:</strong>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder={userInfo.password}
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="botao-olho"
+                onClick={() => setShowPassword(prev => !prev)}
+                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {showPassword ? (
+                  // Ícone olho fechado (SVG)
+                  <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-5.05 0-9.3-3.16-11-7 1.07-2.23 2.87-4.16 5.22-5.36"/>
+                    <path d="M1 1l22 22"/>
+                  </svg>
+                ) : (
+                  // Ícone olho aberto (SVG)
+                  <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+
+              <button onClick={handleChangePassword}>Alterar senha</button>
+            </div>
+            {passwordChanged && <p className="mensagem-sucesso">Senha alterada com sucesso!</p>}
+
+            <label htmlFor="role-select"><strong>Tipo de usuário:</strong></label>
+            <select id="role-select" value={selectedRole} onChange={handleRoleChange}>
               <option value="Administrador">Administrador</option>
               <option value="Visitante">Visitante</option>
             </select>
 
-            {roleChanged && (
-              <button onClick={handleUpdate} style={{ marginLeft: '10px' }}>
-                Atualizar
-              </button>
-            )}
-
-            {updateMessage && (
-              <p style={{ color: 'green', marginTop: '10px' }}>{updateMessage}</p>
-            )}
-
-            <hr />
-
-            <h3>Alterar senha</h3>
-            <input
-              type="password"
-              placeholder="Nova senha"
-              value={newPassword}
-              onChange={e => setNewPassword(e.target.value)}
-              style={{ padding: '6px', marginRight: '8px' }}
-            />
-            <button onClick={handleChangePassword}>Alterar senha</button>
-            {passwordChanged && (
-              <p style={{ color: 'green', marginTop: '10px' }}>
-                Senha alterada com sucesso!
-              </p>
-            )}
-
-            
-       
+            {roleChanged && <button onClick={handleUpdate}>Atualizar</button>}
+            {updateMessage && <p className="mensagem-sucesso">{updateMessage}</p>}
 
             <hr />
 
             <h3>Ações rápidas</h3>
-            <button
-              style={{ marginRight: '10px' }}
-              onClick={() => window.location.href = '/novo-amigurumi'}
-            >
-              Novo Amigurumi
-            </button>
-            <button onClick={() => window.location.href = '/meus-amigurumis'}>
-              Meus Amigurumis
-            </button>
+            {userInfo.role === 'Administrador' && <BotaoNovoAmigurumi />}
+
+            <hr />
+            <AmigurumisDoUsuario username={userInfo.username} trigger={selectedRole} />
           </>
         ) : (
           <>
@@ -124,8 +143,8 @@ export default function Usuario() {
             <p>Por favor, faça login para acessar esta página.</p>
           </>
         )}
+        <br />
       </div>
-      <br></br>
       <Footer />
     </div>
   );

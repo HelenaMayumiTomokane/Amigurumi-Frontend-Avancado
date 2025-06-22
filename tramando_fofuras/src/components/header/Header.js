@@ -16,7 +16,7 @@ export default function Header() {
 
   const handleLogin = () => {
     if (username && password) {
-      const isAdmin = username.toLowerCase() === 'admin'; // Exemplo simples
+      const isAdmin = username.toLowerCase() === 'admin';
       const role = isAdmin ? 'Administrador' : 'Visitante';
 
       const newUserInfo = { username, password, role };
@@ -36,57 +36,43 @@ export default function Header() {
   };
 
   return (
-    <div id="master_head">
-      <link
-        href="https://fonts.googleapis.com/css2?family=Princess+Sofia&display=swap"
-        rel="stylesheet"
-      />
+    <header className="header-container">
+      <div className="header-left">
+        <a href="/">
+          <img
+            src="/assets/image/image_id_logo.png"
+            alt="Logo"
+            className="logo"
+          />
+        </a>
+      </div>
 
-      <a href="/">
-        <img
-          src="/assets/image/image_id_logo.png"
-          id="logo_company_headear"
-          alt="Logo"
-        />
-      </a>
-
-      <h1 id="header_botton">
-        <button
-          className="button_title"
-          onClick={() => (window.location.href = '/')}
-        >
+      <div className="header-center">
+        <button className="button_title" onClick={() => (window.location.href = '/')}>
           🏠 Home
         </button>
 
-        {!userInfo && (
+        {userInfo && (
           <button
             className="button_title"
-            onClick={() => setShowLogin(true)}
+            onClick={() => (window.location.href = '/usuario')}
           >
-            🔐 Login
+            👤 Página do Usuário
           </button>
         )}
+      </div>
 
-        {userInfo && (
-          <>
-            <button
-              className="button_title"
-              onClick={() => (window.location.href = '/usuario')}
-              style={{ marginLeft: '10px' }}
-            >
-              👤 Página do Usuário
-            </button>
-
-            <button
-              className="button_title"
-              onClick={handleLogout}
-              style={{ marginLeft: '10px' }}
-            >
-              🔓 Logout
-            </button>
-          </>
+      <div className="header-right">
+        {!userInfo ? (
+          <button className="button_title" onClick={() => setShowLogin(true)}>
+            🔐 Login
+          </button>
+        ) : (
+          <button className="button_title" onClick={handleLogout}>
+            🔓 Logout
+          </button>
         )}
-      </h1>
+      </div>
 
       {showLogin && (
         <div className="login_modal">
@@ -111,6 +97,6 @@ export default function Header() {
           </div>
         </div>
       )}
-    </div>
+    </header>
   );
 }

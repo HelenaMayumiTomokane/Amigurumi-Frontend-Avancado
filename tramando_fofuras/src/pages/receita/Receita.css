@@ -1,9 +1,12 @@
 #full_amigurumi_data {
   display: flex;
-  align-items: flex-start;
+  flex-direction: row; 
+  align-items: top;
   justify-content: center;
-  gap: 10px;
+  gap: 20px;
+  padding: 20px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 
@@ -20,10 +23,12 @@
 
 /*----------------------------------------------Lista de Materiais------------------------------------------------------*/
 #group_table_list_material_backgroud {
-  background-color: #b6b4b4;
+  background-color: #D8CAB8;
   width: calc(100% + 200px);
   margin-left: -100px; 
   padding: 20px 0;
+  border-top: 2px solid #69402F;
+  border-bottom: 2px solid #69402F;
 }
 
 #group_table_list_material{
@@ -32,35 +37,28 @@
 }
 
 #table_amigurumi_material{
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    color: white;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 #lista_suspensa_material{
-    width: 25%;
+  width: 25%;
 }
-
-#group_lista_suspensa_material{
-    color: #8c522d;
-}
-
 
 #table_amigurumi_material th{
-  border: 1px solid #8c522d;
   background-color: #8c522d;
-  padding: 8px;
+  color: white;
+  position: sticky;
+  top: 0; 
+  z-index: 1;
+  height: 40px;
+  border: 1px solid #D8CAB8;
   text-align: left;
   word-wrap: break-word;
-  border: 1px solid #b6b4b4;
 }
 
 #table_amigurumi_material td {
-  padding: 8px;
-  text-align: left;
-  word-wrap: break-word; /* Quebra texto longo */
-  border: 1px solid #b6b4b4;
+  border: 1px solid #D8CAB8;
 }
 
 /* Define larguras específicas para cada coluna */
@@ -89,27 +87,30 @@
 /*----------------------------------------------Tabela de Pontos------------------------------------------------------*/
 #div_stitchbookList{
   width: 100%;
+  
 }
 
 #stitchbook_table{
-    width: 100%; 
-    border-collapse: collapse;
-    font-size: 16px;
+  width: 100%; 
+  border-collapse: collapse;
+  
 }
 
 
 #stitchbook_table th{
-    background-color: #8c522d;
-    color: white;
-    position: sticky;
-    top: 0; 
-    z-index: 1;
-    height: 40px;
-    border: 1px solid #b6b4b4;
+  background-color: #8c522d;
+  color: white;
+  position: sticky;
+  top: 0; 
+  z-index: 1;
+  height: 40px;
+  border: 1px solid #D8CAB8;
+  text-align: left;
+  
 }
 
 #stitchbook_table td {
-    border: 1px solid #b6b4b4;
+  border: 1px solid #D8CAB8;
 }
 
 
@@ -142,8 +143,6 @@
 
 #stitchbook_sequence_data{
   width: 100%; 
-  border-collapse: collapse;
-  font-size: 16px;
 }
 
 #stitchbook_sequence_data th:nth-child(1),
@@ -166,18 +165,18 @@
 /*----------------------------------------------Informações Básicas------------------------------------------------------*/
 #card_amigurumi_recipe{
   width: 30%;
-  margin: 0 auto; 
-  display: block;
 }
 
 
 #amigurumi_information{
-  width: 70%;
+  flex: 1 1 300px;
 }
 
 .input_name {
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
+  border-top: 2px solid #69402F;
+  border-bottom: 2px solid #69402F;
+  color: #69402F;
+  background: white;
   border-left: none;
   border-right: none;
 
@@ -192,6 +191,10 @@
   margin: 24px 0;
 }
 
+input.input_name {
+  background: white;
+}
+
 .input-row {
   display: flex;
   align-items: center;
@@ -199,53 +202,30 @@
   margin-bottom: 12px;
 }
 
-.input-row strong {
-  min-width: 120px; /* ajusta largura fixa do label */
-}
-
-.input-row input {
-  flex: 1; /* o input ocupa o restante da linha */
-  padding: 6px;
-  font-size: 1em;
-}
-
-
 .input-grid {
   display: flex;
-  flex-wrap: wrap;         /* permite que os itens quebrem para a linha de baixo */
-  gap: 16px;               /* espaçamento entre os pares */
+  flex-wrap: wrap;
+  gap: 16px; 
   margin-bottom: 20px;
 }
 
 .input-item {
   display: flex;
   flex-direction: column;
-  width: 250px;            /* largura fixa para cada campo */
+  width: 170px;
 }
-
-.input-item strong {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.input-item input {
-  padding: 6px 10px;
-  font-size: 1em;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
 
 
 
 
 /*----------------------------------------------Cards Relacionados------------------------------------------------------*/
 #card_relationship_backgroud {
-  background-color: #b6b4b4;
+  background-color: #D8CAB8;
   width: calc(100% + 200px);
   margin-left: -100px; 
   padding: 20px 0;
+  border-top: 2px solid #69402F;
+  border-bottom: 2px solid #69402F;
 }
 
 #card_relationship{
@@ -256,19 +236,27 @@
 
 
 /*-------------------------Botão de Rota----------------------------*/
+#button_top {
+  display: flex;
+  justify-content: space-between; /* um grupo à esquerda, outro à direita */
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap; /* permite quebrar em telas menores */
+  margin-bottom: 20px;
+}
+
+
 .breadcrumbs_container {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: Arial, sans-serif;
 }
 
 .button_title_transparent {
   background: transparent;
   border: none;
-  color: #333;
+  color: #69402F;
   cursor: pointer;
-  font-size: 16px;
   padding: 6px 10px;
   display: flex;
   align-items: center;
@@ -286,6 +274,6 @@
 
 .separator {
   user-select: none;
-  color: #666;
+  color: #69402F;
   font-weight: bold;
 }
