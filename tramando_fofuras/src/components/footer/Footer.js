@@ -15,16 +15,20 @@ export default function Footer() {
 
         <div id="contact_section">
           <h1>Contact us</h1>
-          <p>📧 tramando_fofuras@gmail.com</p>
           <p>📞 +1-2345-6789</p>
-          <p>📍 Rua dos Amigurumis, 123 – Bairro Crochê Feliz, São Paulo – SP</p>
+          <p>📧 <a href="mailto:tramando_fofuras@gmail.com">tramando_fofuras@gmail.com</a></p>
+          <p>
+            📍 <a href="https://www.google.com/maps/search/?api=1&query=Rua+dos+Amigurumis,+123,+Bairro+Crochê+Feliz,+São+Paulo,+SP" target="_blank" rel="noopener noreferrer">
+              Rua dos Amigurumis, 123 – Bairro Crochê Feliz, São Paulo – SP </a>
+          </p>
+
         </div>
 
         <div id="site_map">
           <h1>Mapa do Site</h1>
           <a href="/">🏠 Home</a>
           <br></br>
-          <a href="/Usuario">👤 Página do Usuário</a>
+          <a href="/Usuario">👤 Perfil</a>
         </div>
 
         <div id="external_links">
@@ -32,6 +36,7 @@ export default function Footer() {
           <a href="https://github.com/HelenaMayumiTomokane/Amigurumi-Frontend-Avancado" target="_blank" rel="noopener noreferrer">🌐 GitHub Front-end</a>
           <a href="https://github.com/HelenaMayumiTomokane/Amigurumi-Backend-Avancado" target="_blank" rel="noopener noreferrer">🛠️ GitHub Back-end</a>
           <a href="https://www.figma.com/design/WMk810g4ul8yxoopjP9fch/Tramando-Fofuras?node-id=1-2&t=C2YJbHrdA99cRn61-0" target="_blank" rel="noopener noreferrer">🎨 Figma</a>
+          <a href="https://www.postman.com/research-astronomer-36303923/amigurumi-api/overview" target="_blank" rel="noopener noreferrer">🚀 Postman</a>
         </div>
       </div>
 

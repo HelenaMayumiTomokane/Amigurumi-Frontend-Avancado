@@ -63,6 +63,7 @@ export default function Receita() {
 
     if (materialOriginal && materialCurrent) {
       await saveMaterialChanges(materialOriginal, materialCurrent);
+      materialRef.current.updateOriginalList();
       setTriggerLoad(prev => prev + 1);
     }
 

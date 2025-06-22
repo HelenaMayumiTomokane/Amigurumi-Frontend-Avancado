@@ -57,7 +57,7 @@ export default function Header() {
             className="button_title"
             onClick={() => (window.location.href = '/usuario')}
           >
-            👤 Página do Usuário
+            👤 Perfil
           </button>
         )}
       </div>

@@ -13,10 +13,9 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
   useEffect(() => {
     API.APIGet_Image().then(data => {
       const filtered = data.filter(img => img.amigurumi_id === amigurumiId);
-      // Adiciona cópia da imagem original para comparação futura
       const enriched = filtered.map(img => ({
         ...img,
-        original: { ...img }, // guardamos os dados originais
+        original: { ...img },
         wasEdited: false
       }));
       setImageList(enriched);
@@ -62,20 +61,33 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
       alert('Preencha a lista e selecione uma imagem');
       return;
     }
+
+    // se a nova imagem é principal, desmarcar todas as outras
+    const updatedList = newImage.main_image
+      ? imageList.map(img => ({ ...img, main_image: false }))
+      : [...imageList];
+
     const tempId = -(imageList.length + 1);
-    setImageList(prev => [
-      ...prev,
-      {
-        ...newImage,
-        image_id: tempId,
-        amigurumi_id: amigurumiId
-      }
-    ]);
+    updatedList.push({
+      ...newImage,
+      image_id: tempId,
+      amigurumi_id: amigurumiId
+    });
+
+    setImageList(updatedList);
     setNewImage({ main_image: false, list_id: '', image_base64: '' });
   };
 
   const handleChange = (index, field, value) => {
     const updated = [...imageList];
+
+    if (field === 'main_image' && value === true) {
+      // Desmarca todas as outras imagens
+      updated.forEach((img, i) => {
+        updated[i].main_image = false;
+      });
+    }
+
     updated[index][field] = value;
     updated[index].wasEdited = true;
     setImageList(updated);
@@ -105,13 +117,23 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
         <h2>Gerenciar Imagens</h2>
 
         <h4>Nova Imagem</h4>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        {newImage.image_base64 && (
+          <img
+            src={`data:image/png;base64,${newImage.image_base64}`}
+            alt="Preview nova imagem"
+            className="image-preview"
+          />
+        )}
         <label>
           <input
-            type="checkbox"
+            type="radio"
+            name="main_image"
             checked={newImage.main_image}
-            onChange={e =>
-              setNewImage(prev => ({ ...prev, main_image: e.target.checked }))
-            }
+            onChange={() => {
+              setNewImage(prev => ({ ...prev, main_image: true }));
+              setImageList(prev => prev.map(img => ({ ...img, main_image: false })));
+            }}
           />{' '}
           Principal
         </label>
@@ -123,14 +145,6 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
             setNewImage(prev => ({ ...prev, list_id: e.target.value }))
           }
         />
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        {newImage.image_base64 && (
-          <img
-            src={`data:image/png;base64,${newImage.image_base64}`}
-            alt="Preview nova imagem"
-            className="image-preview"
-          />
-        )}
         <button onClick={handleAddNewImage}>Adicionar</button>
 
         <h4>Imagens Existentes</h4>
@@ -143,9 +157,10 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
             />
             <label>
               <input
-                type="checkbox"
+                type="radio"
+                name="main_image"
                 checked={img.main_image}
-                onChange={e => handleChange(index, 'main_image', e.target.checked)}
+                onChange={() => handleChange(index, 'main_image', true)}
               />{' '}
               Principal
             </label>

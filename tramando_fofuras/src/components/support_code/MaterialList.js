@@ -93,7 +93,6 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
     const updatedList = materialList.filter(mat => String(mat.list_id) !== String(selectedListId));
 
     setMaterialList(updatedList);
-    setOriginalList(updatedList);
 
     // Atualiza o selectedListId para a próxima lista disponível, ou vazio
     const availableListIdsAfterDelete = Array.from(new Set(updatedList.map(m => String(m.list_id)))).sort();
