@@ -19,14 +19,13 @@ export default function SearchBar({ searchQuery, setSearchQuery, amigurumis, set
   }
 
   return (
-    <section>
+    <section id= "searchbar_section">
       <input
         id="searchInput"
         type="text"
         placeholder="Pesquisar amigurumi..."
         value={searchQuery}
         onChange={e => setSearchQuery(e.target.value)}
-        style={{ padding: '0.5rem', width: '250px', marginRight: '0.5rem' }}
       />
       <button onClick={handleSearch} id="botton_search">Pesquisar</button>
     </section>

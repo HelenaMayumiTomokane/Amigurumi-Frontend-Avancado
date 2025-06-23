@@ -301,3 +301,64 @@ export function APIDelete_FoundationList(amigurumi_id){
     .then(response => response.json())
     .then(data => data)
 }
+
+
+
+
+/*------------------- API com a tabela Account User ---------------------------*/
+export function APIGet_AccountUser(){
+    return fetch(`${baseURL}/account_user`)
+        .then(response => response.json())
+        .then(data => data)
+}
+
+
+
+export function APIPost_AccountUser(nameAmigurumi,password){
+    return fetch(`${baseURL}/account_user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            "name": String(nameAmigurumi),
+            "password": String(password),
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Resposta da API:', data);  // <-- aqui
+        return data;
+    });
+
+    
+}
+
+
+
+export function APIPut_AccountUser(user_id,name,password){
+    return fetch(`${baseURL}/account_user`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            "user_id": parseInt(user_id),
+            "name": String(name),
+            "password": String(password),
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+
+
+
+export function APIDelete_AccountUser(user_id){
+    return fetch(`${baseURL}/account_user`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            "user_id": parseInt(user_id),
+        })
+    })
+    .then(response => response.json())
+    .then(data => data)
+}
+

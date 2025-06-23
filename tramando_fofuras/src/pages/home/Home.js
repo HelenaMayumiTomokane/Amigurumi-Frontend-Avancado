@@ -63,13 +63,6 @@ export default function AmigurumiPrincipal() {
       data = data.filter((item) => item.category === activeFilter);
     }
 
-    if (searchQuery.trim()) {
-      const lowerSearch = searchQuery.toLowerCase();
-      data = data.filter((item) =>
-        item.name.toLowerCase().includes(lowerSearch)
-      );
-    }
-
     setFilteredAmigurumis(data);
   }, [amigurumis, activeFilter, searchQuery, favoriteIds]);
 
@@ -105,15 +98,15 @@ export default function AmigurumiPrincipal() {
         <br />
         <br />
 
-        <section id="searchbar_section">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            amigurumis={amigurumis}
-            setFilteredAmigurumis={setFilteredAmigurumis}
-          />
 
-        </section>
+        <SearchBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          amigurumis={amigurumis}
+          setFilteredAmigurumis={setFilteredAmigurumis}
+        />
+
+
 
         <br />
         <br />

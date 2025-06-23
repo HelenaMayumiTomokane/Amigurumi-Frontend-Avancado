@@ -26,3 +26,11 @@
   margin-bottom: 8px;
 }
 
+.valido {
+  color: green;
+  font-weight: bold;
+}
+
+.invalido {
+  color: red;
+}
