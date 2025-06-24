@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import MaterialList from '../../components/support_code/MaterialList';
@@ -15,6 +16,9 @@ import SaveImageChanges from '../../components/support_code/SaveImageChanges';
 import './Receita.css';
 
 export default function Receita() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [triggerLoad, setTriggerLoad] = useState(0);
   const [amigurumiId, setAmigurumiId] = useState(null);
   const [editable, setEditable] = useState(false);
@@ -26,9 +30,9 @@ export default function Receita() {
   const stitchbookRef = useRef();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const idFromURL = params.get('id');
-    const nameFromURL = params.get('name');
+
     if (idFromURL) {
       setAmigurumiId(parseInt(idFromURL));
       setTriggerLoad(prev => prev + 1);
@@ -42,7 +46,7 @@ export default function Receita() {
   }, []);
 
   const handleDeleted = () => {
-    window.location.href = '/';
+    navigate('/')
   };
 
   const filteredData = amigurumiId ? [{ amigurumi_id: amigurumiId }] : [];
@@ -91,7 +95,7 @@ export default function Receita() {
           <div className="breadcrumbs_container">
             <button
               className="button_title_transparent"
-              onClick={() => (window.location.href = '/')}
+              onClick={() => navigate('/')}
               title="Home"
             >
               <span className="button_icon">🏠</span> Home
@@ -101,7 +105,7 @@ export default function Receita() {
 
             <button
               className="button_title_transparent"
-              onClick={() => (window.location.href = `/receita?id=${amigurumiId}`)}
+              onClick={() => navigate(`/receita?id=${amigurumiId}`)}
               title="Receita"
             >
               <span className="button_icon">🧸</span> Receita

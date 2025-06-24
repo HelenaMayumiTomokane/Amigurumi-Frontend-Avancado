@@ -22,7 +22,7 @@ export default function CategoryButtons({ onFilterChange }) {
     if (filter === "Todos") {
       onFilterChange({ type: "all", value: null });
     } else if (filter === "Favoritos") {
-      onFilterChange({ type: "favorites", value: favoriteIds });
+      onFilterChange({ type: "favorites", value: favoriteIds.length ? favoriteIds : [] });
     } else if (filter === "Mais Recentes") {
       onFilterChange({ type: "recent", value: null });
     } else {
@@ -37,18 +37,17 @@ export default function CategoryButtons({ onFilterChange }) {
       .join(" ");
 
   const iconMap = {
-    "Todos": "🧸",
-    "Favoritos": "❤️",
+    Todos: "🧸",
+    Favoritos: "❤️",
     "Mais Recentes": "🕒",
-    "terrestre": "🐾",
-    "aquático": "🐠",
-    "boneca": "👸",
-    "roupa": "👗",
-    "cabelo": "💇‍♀️",
-    "acessório": "🎀",
-    "outros": "🧩"
+    terrestre: "🐾",
+    aquático: "🐠",
+    boneca: "👸",
+    roupa: "👗",
+    cabelo: "💇‍♀️",
+    acessório: "🎀",
+    outros: "🧩",
   };
-
 
   const renderButton = (label) => (
     <button
@@ -56,9 +55,7 @@ export default function CategoryButtons({ onFilterChange }) {
       onClick={() => handleClick(label)}
       className={`category-button ${activeFilter === label ? "active" : ""}`}
     >
-      <div className="circle">
-        {iconMap[label] || "🔘"}
-      </div>
+      <div className="circle">{iconMap[label] || "🔘"}</div>
       <span className="label">{capitalizeAll(label)}</span>
     </button>
   );

@@ -1,5 +1,6 @@
 // saveFoundationChanges.js
 import * as API from './API';
+import { useNavigate } from 'react-router-dom';
 
 export async function saveFoundationChanges(originalList, currentList) {
   const updated = [];
@@ -54,6 +55,7 @@ export async function saveFoundationChanges(originalList, currentList) {
 
 
 export default function BotaoNovoAmigurumi() {
+  const navigate = useNavigate();
   const handleNovoAmigurumi = async () => {
     try {
       const novo = await API.APIPost_FoundationList(
@@ -66,7 +68,7 @@ export default function BotaoNovoAmigurumi() {
 
       // Redireciona para a página com o novo ID
       if (novo?.amigurumi_id) {
-        window.location.href = `/receita?id=${novo.amigurumi_id}`;
+        navigate(`/receita?id=${novo.amigurumi_id}`); 
       } else {
         alert('Erro ao criar o novo amigurumi.');
       }

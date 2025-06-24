@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import * as API from './API';
-
+import { useNavigate } from 'react-router-dom';
 
 export default function AmigurumiCards({ filteredData, trigger, setTrigger, editable, redirection }) {
+  const navigate = useNavigate();
   const [imagesMap, setImagesMap] = useState({});
   const [currentIndexMap, setCurrentIndexMap] = useState({});
-  
 
-  // Favoritos
+  // Favoritos armazenados no localStorage
   const [favorites, setFavorites] = useState(() => {
     const stored = localStorage.getItem('favoriteAmigurumis');
     return stored ? JSON.parse(stored) : [];
@@ -62,6 +62,7 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
           <div key={amig.amigurumi_id} className="cardAmigurumi">
             {/* Ícone de favorito */}
             <button
+              aria-label={favorites.includes(amig.amigurumi_id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
               className={`favorite-button ${favorites.includes(amig.amigurumi_id) ? 'favorited' : ''}`}
               onClick={() => toggleFavorite(amig.amigurumi_id)}
             >
@@ -81,24 +82,39 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
 
             {imgs.length > 1 && (
               <div className="container_next_previous">
-                <button className="next_previous" onClick={() =>
-                  setCurrentIndexMap(prev => ({
-                    ...prev,
-                    [amig.amigurumi_id]: (idx - 1 + imgs.length) % imgs.length
-                  }))
-                }>{'<'}</button>
+                <button
+                  aria-label="Imagem anterior"
+                  className="next_previous"
+                  onClick={() =>
+                    setCurrentIndexMap(prev => ({
+                      ...prev,
+                      [amig.amigurumi_id]: (idx - 1 + imgs.length) % imgs.length
+                    }))
+                  }
+                >
+                  {'<'}
+                </button>
                 <span>{idx + 1} / {imgs.length}</span>
-                <button className="next_previous" onClick={() =>
-                  setCurrentIndexMap(prev => ({
-                    ...prev,
-                    [amig.amigurumi_id]: (idx + 1) % imgs.length
-                  }))
-                }>{'>'}</button>
+                <button
+                  aria-label="Próxima imagem"
+                  className="next_previous"
+                  onClick={() =>
+                    setCurrentIndexMap(prev => ({
+                      ...prev,
+                      [amig.amigurumi_id]: (idx + 1) % imgs.length
+                    }))
+                  }
+                >
+                  {'>'}
+                </button>
               </div>
             )}
 
             {redirection && (
-              <button className="see_more" onClick={() => window.location.href = `/receita?id=${amig.amigurumi_id}`}>
+              <button
+                className="see_more"
+                onClick={() => navigate(`/receita?id=${amig.amigurumi_id}`)} 
+              >
                 Ver Mais
               </button>
             )}

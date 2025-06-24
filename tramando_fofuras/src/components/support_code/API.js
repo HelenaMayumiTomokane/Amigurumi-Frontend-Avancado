@@ -314,34 +314,35 @@ export function APIGet_AccountUser(){
 
 
 
-export function APIPost_AccountUser(nameAmigurumi,password){
+export function APIPost_AccountUser(nameAmigurumi,password,login,role){
     return fetch(`${baseURL}/account_user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             "name": String(nameAmigurumi),
+            "login": String(login),
             "password": String(password),
+            "role": String(role),
         })
     })
     .then(response => response.json())
-    .then(data => {
-        console.log('Resposta da API:', data);  // <-- aqui
-        return data;
-    });
+    .then(data => data)
 
     
 }
 
 
 
-export function APIPut_AccountUser(user_id,name,password){
+export function APIPut_AccountUser(user_id,name,password,login,role){
     return fetch(`${baseURL}/account_user`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             "user_id": parseInt(user_id),
             "name": String(name),
+            "login": String(login),
             "password": String(password),
+            "role": String(role),
         })
     })
     .then(response => response.json())

@@ -1,0 +1,124 @@
+import React, { useState } from 'react';
+import { APIPost_AccountUser } from '../../components/support_code/API';
+import './Cadastro.css';
+import Header from "../../components/header/Header";
+import Footer from "../../components/footer/Footer";
+import { useNavigate } from 'react-router-dom';
+
+export default function CadastroPage() {
+  const [name, setName] = useState('');
+  const [login, setLogin] = useState('');
+  const [senha, setSenha] = useState('');
+  const [role, setRole] = useState('Visitante'); // valor padrão e válido
+  const [erro, setErro] = useState('');
+  const [senhaValida, setSenhaValida] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  function validarSenha(senha) {
+    const temLetra = /[a-zA-Z]/.test(senha);
+    const temNumero = /\d/.test(senha);
+    const temSimbolo = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+    return temLetra && temNumero && temSimbolo;
+  }
+
+  const navigate = useNavigate();
+
+  const handleCadastro = async () => {
+    setErro('');
+    if (!name || !login || !senha) {
+      setErro("Preencha todos os campos.");
+      return;
+    }
+
+    if (!validarSenha(senha)) {
+      setErro("Senha inválida: use letra, número e símbolo.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await APIPost_AccountUser(login, senha, name, role);
+
+      if (response.error) {
+        setErro(response.error);
+      } else if (response.user_id) {
+        navigate(`/usuario?id=${response.user_id}`);
+      } else {
+        setErro("Erro inesperado: usuário não retornado pela API.");
+      }
+    } catch (err) {
+      console.error("Erro ao cadastrar:", err);
+      setErro("Erro ao cadastrar usuário.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <Header />
+      <br />
+
+      <div className="data_body">
+        <h2>Cadastro de Novo Usuário</h2>
+
+        <div className="linha-horizontal">
+          <strong>Nome completo:</strong>
+          <input value={name} onChange={e => setName(e.target.value)} />
+        </div>
+
+        <div className="linha-horizontal">
+          <strong>Login:</strong>
+          <input value={login} onChange={e => setLogin(e.target.value)} />
+        </div>
+
+        <div className="linha-horizontal">
+          <strong>Senha:</strong>
+          <input
+            type={mostrarSenha ? 'text' : 'password'}
+            value={senha}
+            onChange={e => {
+              const val = e.target.value;
+              setSenha(val);
+              setSenhaValida(validarSenha(val));
+            }}
+          />
+          <button
+            type="button"
+            className="botao-olho"
+            onClick={() => setMostrarSenha(prev => !prev)}
+          >
+            {mostrarSenha ? "Ocultar" : "Mostrar"}
+          </button>
+        </div>
+
+        {senha && (
+          <p className={senhaValida ? "valido" : "invalido"}>
+            {senhaValida
+              ? "Senha válida: contém letra, número e símbolo."
+              : "A senha deve conter letra, número e símbolo."}
+          </p>
+        )}
+
+        <div className="linha-horizontal">
+          <strong>Tipo de usuário:</strong>
+          <select value={role} onChange={e => setRole(e.target.value)}>
+            <option value="Visitante">Visitante</option>
+            <option value="Administrador">Administrador</option>
+          </select>
+        </div>
+
+        {erro && <p className="invalido">{erro}</p>}
+
+        <button onClick={handleCadastro} disabled={!senhaValida || loading}>
+          {loading ? 'Cadastrando...' : 'Cadastrar e Entrar'}
+        </button>
+      </div>
+
+      <br />
+      <Footer />
+    </>
+  );
+}

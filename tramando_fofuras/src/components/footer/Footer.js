@@ -1,17 +1,18 @@
 import React from 'react';
 import './Footer.css';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
     <footer id="footer">
       <div id="footer_data">
-        <a href="/">
+        <Link to="/">
           <img
             src="/assets/image/image_id_logo.png"
             id="logo_company_footer"
             alt="Logo"
           />
-        </a>
+        </Link>
 
         <div id="contact_section">
           <h1>Contact us</h1>
@@ -19,16 +20,16 @@ export default function Footer() {
           <p>📧 <a href="mailto:tramando_fofuras@gmail.com">tramando_fofuras@gmail.com</a></p>
           <p>
             📍 <a href="https://www.google.com/maps/search/?api=1&query=Rua+dos+Amigurumis,+123,+Bairro+Crochê+Feliz,+São+Paulo,+SP" target="_blank" rel="noopener noreferrer">
-              Rua dos Amigurumis, 123 – Bairro Crochê Feliz, São Paulo – SP </a>
+              Rua dos Amigurumis, 123 – Bairro Crochê Feliz, São Paulo – SP
+            </a>
           </p>
-
         </div>
 
         <div id="site_map">
           <h1>Mapa do Site</h1>
-          <a href="/">🏠 Home</a>
-          <br></br>
-          <a href="/Usuario">👤 Perfil</a>
+          <Link to="/">🏠 Home</Link>
+          <br />
+          <Link to="/usuario">👤 Perfil</Link>
         </div>
 
         <div id="external_links">

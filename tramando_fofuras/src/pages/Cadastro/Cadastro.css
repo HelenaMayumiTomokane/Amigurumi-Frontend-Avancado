@@ -1,0 +1,23 @@
+.linha-horizontal input {
+  flex: 1;
+  margin-left: 10px;
+  padding: 8px;
+}
+
+.botao-olho {
+  margin-left: 8px;
+  padding: 4px 8px;
+}
+
+.valido {
+  color: green;
+}
+
+.invalido {
+  color: red;
+}
+
+button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
