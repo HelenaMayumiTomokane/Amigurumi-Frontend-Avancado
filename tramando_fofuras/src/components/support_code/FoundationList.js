@@ -88,7 +88,7 @@ const FoundationList = forwardRef(({ amigurumiId, editable = false, trigger = nu
           </div>
 
           <div className="input-item">
-            <strong>Data:</strong>
+            <strong>Data de Criação:</strong>
             <input
               type="date"
               value={item.date ? item.date.slice(0, 10) : ''}

@@ -216,16 +216,18 @@ export default function Usuario() {
             {updateMessage && <p className="mensagem-sucesso">{updateMessage}</p>}
 
             <hr />
-            <h3>Ações rápidas</h3>
+            <h3>Ações Rápidas</h3>
             {userInfo.role === 'Administrador' && <BotaoNovoAmigurumi />}
 
             <hr />
+            <h1>Meus Amigurumis</h1>
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               amigurumis={amigurumis}
               setFilteredAmigurumis={setFilteredAmigurumis}
             />
+            
             <AmigurumisDoUsuario
               username={userInfo.login}
               trigger={selectedRole}

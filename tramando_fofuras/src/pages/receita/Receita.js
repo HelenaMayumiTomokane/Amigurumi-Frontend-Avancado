@@ -12,6 +12,7 @@ import saveStitchbookChanges from '../../components/support_code/SaveStitchbookC
 import { BotaoDeleteAmigurumi } from '../../components/support_code/SaveFoundationList';
 import Relationship from '../../components/support_code/Relationship';
 import SaveImageChanges from '../../components/support_code/SaveImageChanges';
+import ComentarioForm from '../../components/support_code/ComentarioForm';
 
 import './Receita.css';
 
@@ -164,6 +165,17 @@ export default function Receita() {
           <h2>Montagem</h2>
           <Stitchbook ref={stitchbookRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
         </div>
+
+        
+
+        {userInfo && (
+          <div className="comentario-container">
+            <ComentarioForm amigurumiId={amigurumiId} />
+          </div>
+        )}
+
+
+        <br></br>
 
         <div id="card_relationship_backgroud">
           <div id="card_relationship">

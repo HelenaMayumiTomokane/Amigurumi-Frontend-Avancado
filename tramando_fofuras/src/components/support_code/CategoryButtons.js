@@ -4,16 +4,12 @@ import { APIGet_FoundationList } from "./API";
 export default function CategoryButtons({ onFilterChange }) {
   const [categories, setCategories] = useState([]);
   const [activeFilter, setActiveFilter] = useState("Todos");
-  const [favoriteIds, setFavoriteIds] = useState([]);
 
   useEffect(() => {
     APIGet_FoundationList().then((data) => {
       const uniqueCategories = [...new Set(data.map((item) => item.category))];
       setCategories(uniqueCategories);
     });
-
-    const stored = localStorage.getItem("favoriteAmigurumis");
-    setFavoriteIds(stored ? JSON.parse(stored) : []);
   }, []);
 
   function handleClick(filter) {
@@ -22,7 +18,9 @@ export default function CategoryButtons({ onFilterChange }) {
     if (filter === "Todos") {
       onFilterChange({ type: "all", value: null });
     } else if (filter === "Favoritos") {
-      onFilterChange({ type: "favorites", value: favoriteIds.length ? favoriteIds : [] });
+      const stored = localStorage.getItem("favoriteAmigurumis");
+      const currentFavorites = stored ? JSON.parse(stored) : [];
+      onFilterChange({ type: "favorites", value: currentFavorites });
     } else if (filter === "Mais Recentes") {
       onFilterChange({ type: "recent", value: null });
     } else {

@@ -277,3 +277,37 @@ input.input_name {
   color: #69402F;
   font-weight: bold;
 }
+
+
+/*-------------------------Comentário e Avaliações----------------------------*/
+.avaliacao_container {
+  margin: 40px auto;
+  padding: 20px;
+  width: 100%;
+}
+
+.avaliacao_formulario textarea,
+.avaliacao_formulario select {
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.avaliacao_formulario button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mensagem-sucesso {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
