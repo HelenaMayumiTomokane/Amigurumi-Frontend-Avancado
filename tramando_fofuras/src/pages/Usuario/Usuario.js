@@ -227,6 +227,7 @@ export default function Usuario() {
               amigurumis={amigurumis}
               setFilteredAmigurumis={setFilteredAmigurumis}
             />
+            <br></br>
             
             <AmigurumisDoUsuario
               username={userInfo.login}

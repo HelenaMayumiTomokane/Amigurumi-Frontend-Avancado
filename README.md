@@ -1,17 +1,24 @@
 # 🧵 Frontend: Amigurumi
 
-🚀 Código para construção do frontend de um local host, para interação com as APIs desenvolvias no backend, e alimentação e ajuste dos dados no banco de dados
+🚀 Código para construção do frontend em React, com interação com APIs desenvolvidas no backend, para visualização e ajuste de dados no banco de dados.
 
 ## 📌 Funcionalidades
 
+- 🧶 Cadastro e login de usuários com controle de permissões (Administrador e Visitante).
+- 👤 Página do usuário, com edição de perfil, senha e visualização dos próprios amigurumis.
 - 📖 Criar, listar e buscar dados de amigurumis.
 - 📦 Upload e exibição de imagens e dados dos amigurumis.
-- 📊 Organização das receitas, imagens, materiais etc por ID.
+- 📊 Organização das receitas, imagens, materiais etc. por ID.
+- 💬 Comentários e avaliações por amigurumi (visível apenas para usuários logados).
+- ❤️ Adição de favoritos e filtragem personalizada.
+- 🧵 Montagem interativa dos elementos de receita.
+- 🔍 Busca por nome, categorias e favoritos.
 
 ## 🛠️ Tecnologias Utilizadas
 
-- ⚡ **JavaScript** para consumo da API.
-- 🖼️ **HTML/CSS** para interface web.
+- ⚛️ React (JavaScript) para a interface e consumo da API.
+- 🖼️ HTML/CSS para layout e estilo.
+- 📦 Node.js / npm para gerenciamento de pacotes do frontend.
 
 ---
 
@@ -19,15 +26,16 @@
 
 1. Clone o repositório com o git => ``` clone https://github.com/HelenaMayumiTomokane/Amigurumi-Frontend-Avancado ```
 
-2. Se desejar, faça o dowload e Ative o Ambiente Virtual
+2. Instale as dependências do frontend => ``` npm install ```
+
+3. Se desejar, faça o dowload e Ative o Ambiente Virtual
 
     2.1 Criar um Ambiente Virtual => ``` py -m venv venv ```
 
     2.2 Ativar o Ambiente Virtual => no Windows ``` venv\Scripts\Activate ``` ou Mac/Linux ``` source venv/bin/activate ```
 
-3. Faça o dowload dos arquivos necessários => ``` pip install -r requirements.txt ```
 
-4. Entre na pasta => ``` cd tramando_fofuras ```
+4. Entre na pasta do Projeto => ``` cd tramando_fofuras ```
 
 5. Execulte o código para rodar o Frontend => ``` npm start ```
 

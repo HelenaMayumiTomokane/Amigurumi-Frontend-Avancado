@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 export default function ComentarioForm({ amigurumiId }) {
   const [comentario, setComentario] = useState('');
-  const [avaliacao, setAvaliacao] = useState(5);
+  const [avaliacao, setAvaliacao] = useState(0);
   const [userInfo, setUserInfo] = useState(null);
   const [comentarios, setComentarios] = useState([]);
   const [mensagemSucesso, setMensagemSucesso] = useState('');
@@ -27,7 +27,7 @@ export default function ComentarioForm({ amigurumiId }) {
       nome: userInfo.name || userInfo.login,
       comentario,
       avaliacao,
-      data: new Date().toLocaleString()
+      data: new Date().toISOString()
     };
 
     const updatedComentarios = [...comentarios, novoComentario];
@@ -38,10 +38,55 @@ export default function ComentarioForm({ amigurumiId }) {
     localStorage.setItem('comentarios', JSON.stringify(allComentarios));
 
     setComentario('');
-    setAvaliacao(5);
+    setAvaliacao(0);
     setMensagemSucesso('Comentário enviado com sucesso!');
-
     setTimeout(() => setMensagemSucesso(''), 3000);
+  };
+
+  const handleExcluirComentario = (index) => {
+    if (!window.confirm("Deseja excluir este comentário?")) return;
+
+    const novaLista = [...comentarios];
+    novaLista.splice(index, 1);
+    setComentarios(novaLista);
+
+    const allComentarios = JSON.parse(localStorage.getItem('comentarios')) || {};
+    allComentarios[amigurumiId] = novaLista;
+    localStorage.setItem('comentarios', JSON.stringify(allComentarios));
+  };
+
+  const renderEstrelas = () => {
+    const estrelas = [];
+    for (let i = 1; i <= 5; i++) {
+      estrelas.push(
+        <span
+          key={i}
+          onClick={() => setAvaliacao(i)}
+          style={{ cursor: 'pointer', fontSize: '20px', color: i <= avaliacao ? '#FFD700' : '#ccc' }}
+        >
+          ★
+        </span>
+      );
+    }
+
+    estrelas.unshift(
+      <span
+        key="zero"
+        onClick={() => setAvaliacao(0)}
+        style={{
+          cursor: 'pointer',
+          fontSize: '14px',
+          color: '#888',
+          marginRight: '8px',
+          verticalAlign: 'top'
+        }}
+        title="Sem avaliação"
+      >
+        ✖
+      </span>
+    );
+
+    return estrelas;
   };
 
   if (!userInfo) return null;
@@ -58,27 +103,30 @@ export default function ComentarioForm({ amigurumiId }) {
         />
         <label>
           Avaliação:
-          <select value={avaliacao} onChange={e => setAvaliacao(parseInt(e.target.value))}>
-            {[5, 4, 3, 2, 1].map(n => (
-              <option key={n} value={n}>{n} estrela{n > 1 && 's'}</option>
-            ))}
-          </select>
+          <div>{renderEstrelas()}</div>
         </label>
         <button type="submit">Enviar</button>
         {mensagemSucesso && <p className="mensagem-sucesso">{mensagemSucesso}</p>}
       </form>
-      <br></br>
-      
 
       {comentarios.length > 0 && (
         <div className="comentarios-lista">
-          <hr></hr>
+          <hr />
           <h2>Comentários anteriores</h2>
           {comentarios.map((c, i) => (
             <div key={i} className="comentario-item">
-              <strong>{c.nome}</strong> - {c.avaliacao}⭐
-              <div><em>{c.data}</em></div>
+              <strong>{c.nome}</strong> – {c.avaliacao > 0 ? `${c.avaliacao}⭐` : "Sem avaliação"}
+              <div><em>{new Date(c.data).toLocaleString()}</em></div>
               <p>{c.comentario}</p>
+
+              {userInfo?.user_id === c.user_id && (
+                <button
+                  onClick={() => handleExcluirComentario(i)}
+                  className="botao-excluir-comentario"
+                >
+                  🗑️ Excluir
+                </button>
+              )}
             </div>
           ))}
         </div>

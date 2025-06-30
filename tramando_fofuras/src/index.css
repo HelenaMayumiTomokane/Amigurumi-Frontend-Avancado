@@ -223,3 +223,18 @@ button_next_previous {
 .favorite-button {
   opacity: 1;
 }
+
+
+
+/* ------------ Mensagem de Erro ou Sucesso -------------- */
+.mensagem-erro {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.mensagem-sucesso {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
