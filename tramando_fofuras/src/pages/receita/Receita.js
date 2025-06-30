@@ -34,9 +34,24 @@ export default function Receita() {
   const [editable, setEditable] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
 
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState(''); // 'success' ou 'error'
+  const [showMessageBox, setShowMessageBox] = useState(false);
+
   const foundationRef = useRef();
   const materialRef = useRef();
   const stitchbookRef = useRef();
+
+  // Mostrar caixa de mensagem simples
+  function showMessage(text, type = 'success') {
+    setMessage(text);
+    setMessageType(type);
+    setShowMessageBox(true);
+  }
+
+  const handleCloseMessage = () => {
+    setShowMessageBox(false);
+  };
 
   const handleDeleted = () => {
     navigate('/');
@@ -45,41 +60,61 @@ export default function Receita() {
   const filteredData = amigurumiId ? [{ amigurumi_id: amigurumiId }] : [];
 
   const handleSave = async () => {
-    console.log('🔒 Salvando alterações...');
+    try {
+      const foundationOriginal = foundationRef.current?.getOriginalList();
+      const foundationCurrent = foundationRef.current?.getCurrentList();
 
-    const foundationOriginal = foundationRef.current?.getOriginalList();
-    const foundationCurrent = foundationRef.current?.getCurrentList();
+      if (foundationOriginal && foundationCurrent) {
+        await saveFoundationChanges(foundationOriginal, foundationCurrent);
+        foundationRef.current.updateOriginalList();
+      }
 
-    if (foundationOriginal && foundationCurrent) {
-      await saveFoundationChanges(foundationOriginal, foundationCurrent);
-      foundationRef.current.updateOriginalList();
-    }
+      const materialOriginal = materialRef.current?.getOriginalList();
+      const materialCurrent = materialRef.current?.getCurrentList();
 
-    const materialOriginal = materialRef.current?.getOriginalList();
-    const materialCurrent = materialRef.current?.getCurrentList();
+      if (materialOriginal && materialCurrent) {
+        await saveMaterialChanges(materialOriginal, materialCurrent);
+        materialRef.current.updateOriginalList();
+      }
 
-    if (materialOriginal && materialCurrent) {
-      await saveMaterialChanges(materialOriginal, materialCurrent);
-      materialRef.current.updateOriginalList();
+      const stitchbookOriginal = stitchbookRef.current?.getOriginalList();
+      const stitchbookCurrent = stitchbookRef.current?.getCurrentList();
+
+      if (stitchbookOriginal && stitchbookCurrent) {
+        await saveStitchbookChanges(stitchbookOriginal, stitchbookCurrent);
+      }
+
+      setEditable(false);
       setTriggerLoad();
+
+      showMessage('Alterações salvas com sucesso!', 'success');
+    } catch (error) {
+      console.error('Erro ao salvar:', error);
+      showMessage('Erro ao salvar alterações. Tente novamente.', 'error');
     }
-
-    const stitchbookOriginal = stitchbookRef.current?.getOriginalList();
-    const stitchbookCurrent = stitchbookRef.current?.getCurrentList();
-
-    if (stitchbookOriginal && stitchbookCurrent) {
-      await saveStitchbookChanges(stitchbookOriginal, stitchbookCurrent);
-      setTriggerLoad();
-    }
-
-    setEditable(false);
   };
 
   const canEdit = userInfo?.role === 'Administrador';
 
+  // Componente caixa simples de mensagem
+  function MessageBox() {
+    if (!showMessageBox) return null;
+
+    return (
+      <div className="simple-message-box-container">
+        <div className={`simple-message-box ${messageType === 'success' ? 'success' : 'error'}`}>
+          <p>{message}</p>
+          <button onClick={handleCloseMessage}>OK</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Header />
+
+      <MessageBox />
 
       <div className="data_body">
         <br />
@@ -120,8 +155,7 @@ export default function Receita() {
           )}
 
           {!canEdit && (
-            <div style={{color: 'red', marginLeft: 10}}>
-              {/* Só para debug */}
+            <div>
               Você não tem permissão para editar.
             </div>
           )}
@@ -133,11 +167,21 @@ export default function Receita() {
 
         <div id="full_amigurumi_data">
           <div id="amigurumi_information">
-            <FoundationList ref={foundationRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+            <FoundationList
+              ref={foundationRef}
+              amigurumiId={amigurumiId}
+              editable={editable}
+              trigger={triggerLoad}
+            />
           </div>
 
           <div id="card_amigurumi_recipe">
-            <AmigurumiCards filteredData={filteredData} trigger={triggerLoad} editable={editable} redirection={false} />
+            <AmigurumiCards
+              filteredData={filteredData}
+              trigger={triggerLoad}
+              editable={editable}
+              redirection={false}
+            />
             <br />
             {editable && (
               <button onClick={() => setShowImageModal(true)}>
@@ -147,12 +191,22 @@ export default function Receita() {
           </div>
         </div>
 
-        <MaterialList ref={materialRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+        <MaterialList
+          ref={materialRef}
+          amigurumiId={amigurumiId}
+          editable={editable}
+          trigger={triggerLoad}
+        />
 
         <br /><br />
         <div id="div_stitchbookList">
           <h2>Montagem</h2>
-          <Stitchbook ref={stitchbookRef} amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+          <Stitchbook
+            ref={stitchbookRef}
+            amigurumiId={amigurumiId}
+            editable={editable}
+            trigger={triggerLoad}
+          />
         </div>
 
         {userInfo && (
@@ -164,7 +218,11 @@ export default function Receita() {
         <br />
         <div id="card_relationship_backgroud">
           <div id="card_relationship">
-            <Relationship amigurumiId={amigurumiId} editable={editable} trigger={triggerLoad} />
+            <Relationship
+              amigurumiId={amigurumiId}
+              editable={editable}
+              trigger={triggerLoad}
+            />
           </div>
         </div>
       </div>

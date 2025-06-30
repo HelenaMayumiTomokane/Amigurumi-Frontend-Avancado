@@ -4,7 +4,6 @@ import Receita from './pages/receita/Receita.js';
 import Usuario from './pages/Usuario/Usuario';
 import Cadastro from './pages/Cadastro/Cadastro';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
-// ... importe outras páginas
 
 function App() {
   return (
@@ -13,7 +12,6 @@ function App() {
       <Route path="/receita" element={<Receita/>} />
       <Route path="/usuario" element={<Usuario />} />
       <Route path="/cadastro" element={<Cadastro />} />
-      {/* Adicione outras rotas conforme necessário */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

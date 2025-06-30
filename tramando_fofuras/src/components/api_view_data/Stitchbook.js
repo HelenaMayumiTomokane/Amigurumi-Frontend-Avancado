@@ -1,5 +1,6 @@
 import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import * as API from '../api/Stitchbook_API';
+import ConfirmBox from "../support_code/ConfirmBox";
 
 let nextElementId = -1;
 let nextLineId = -1;
@@ -8,6 +9,8 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
   const [originalData, setOriginalData] = useState([]);
   const [editData, setEditData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [confirmacao, setConfirmacao] = useState(null); // { tipo: 'linha' | 'tabela', element_id, line_id? }
 
   useEffect(() => {
     if (!amigurumiId) return;
@@ -62,10 +65,6 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
     ]);
   };
 
-  const removeElement = (element_id) => {
-    setEditData(old => old.filter(el => el.element_id !== element_id));
-  };
-
   const addLine = (element_id) => {
     setEditData(old =>
       old.map(el =>
@@ -88,6 +87,11 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
     );
   };
 
+  const removeElement = (element_id) => {
+    setEditData(old => old.filter(el => el.element_id !== element_id));
+    setConfirmacao(null);
+  };
+
   const removeLine = (element_id, line_id) => {
     setEditData(old =>
       old.map(el =>
@@ -99,15 +103,14 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
           : el
       )
     );
+    setConfirmacao(null);
   };
 
   if (loading) return <div>Carregando...</div>;
 
   return (
     <div id="div_stitchbookList">
-      {editable && (
-        <button onClick={addElement}>+ Adicionar Tabela (Elemento)</button>
-      )}
+      {editable && <button onClick={addElement}>+ Adicionar Tabela (Elemento)</button>}
       <br /><br />
 
       {editData.map(el => (
@@ -158,7 +161,6 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
                 <th>Cor</th>
                 <th>Pontos</th>
                 <th>Observação</th>
-                
                 {editable && <th>Ações</th>}
               </tr>
             </thead>
@@ -197,46 +199,61 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
                       disabled={!editable}
                     />
                   </td>
-                  
+
                   {editable && (
                     <td>
                       <button
-                        onClick={() => {
-                          const confirmed = window.confirm("Tem certeza que deseja excluir esta linha?");
-                          if (confirmed) {
-                            removeLine(el.element_id, line.line_id);
-                          }
-                        }}
+                        onClick={() =>
+                          setConfirmacao({
+                            tipo: 'linha',
+                            element_id: el.element_id,
+                            line_id: line.line_id
+                          })
+                        }
                       >
                         Excluir Linha
                       </button>
-
                     </td>
                   )}
                 </tr>
               ))}
             </tbody>
           </table>
-          {editable && (
-            <button onClick={() => addLine(el.element_id)}> Adicionar Linha</button>
-          )}
 
           {editable && (
-            <button
-              onClick={() => {
-                const confirmed = window.confirm("Tem certeza que deseja excluir esta tabela?");
-                if (confirmed) {
-                  removeElement(el.element_id);
+            <>
+              <button onClick={() => addLine(el.element_id)}>Adicionar Linha</button>
+              <button
+                onClick={() =>
+                  setConfirmacao({
+                    tipo: 'tabela',
+                    element_id: el.element_id
+                  })
                 }
-              }}
-            >Excluir Tabela</button>
-
+              >
+                Excluir Tabela
+              </button>
+            </>
           )}
-          <br></br>
-          <br></br>
-          <br></br>
+          <br /><br /><br />
         </div>
       ))}
+
+      {confirmacao && (
+        <ConfirmBox
+          mensagem={
+            confirmacao.tipo === 'linha'
+              ? 'Deseja realmente excluir esta linha?'
+              : 'Deseja realmente excluir esta tabela?'
+          }
+          onConfirmar={() =>
+            confirmacao.tipo === 'linha'
+              ? removeLine(confirmacao.element_id, confirmacao.line_id)
+              : removeElement(confirmacao.element_id)
+          }
+          onCancelar={() => setConfirmacao(null)}
+        />
+      )}
     </div>
   );
 });

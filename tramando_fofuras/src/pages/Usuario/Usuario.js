@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
 import {
   APIGet_AccountUser,
   APIPut_AccountUser,
   APIDelete_AccountUser
 } from '../../components/api/AccountUser_API';
 import { APIGet_FoundationList } from '../../components/api/Foundation_API';
+
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import BotaoNovoAmigurumi from "../../components/api_save_edit/SaveFoundationList";
 import AmigurumisDoUsuario from '../../components/amigurumi_cards/AmigurumisDoUsuario';
 import SearchBar from '../../components/support_code/Searchbar';
+import ConfirmBox from '../../components/support_code/ConfirmBox';
+
 import './Usuario.css';
 
 export default function Usuario() {
@@ -20,17 +24,25 @@ export default function Usuario() {
   const [newPassword, setNewPassword] = useState('');
   const [passwordValid, setPasswordValid] = useState(false);
   const [selectedRole, setSelectedRole] = useState('Visitante');
-  const [updateMessage, setUpdateMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [amigurumis, setAmigurumis] = useState([]);
   const [filteredAmigurumis, setFilteredAmigurumis] = useState([]);
 
+  // Estado para mensagens de sucesso/erro
+  const [showMessageBox, setShowMessageBox] = useState(false);
+  const [messageBoxText, setMessageBoxText] = useState('');
+  const [messageBoxType, setMessageBoxType] = useState('success'); // 'success' ou 'error'
+
+  // Estado para mostrar a caixa de confirmação da exclusão
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const userId = parseInt(queryParams.get('user_id'));
 
+  // Carregar dados do usuário
   useEffect(() => {
     if (!userId) return;
 
@@ -41,12 +53,13 @@ export default function Usuario() {
           setUserInfo(user);
           setSelectedRole(user.role || 'Visitante');
         } else {
-          console.error('Usuário não encontrado');
+          showMessage("Usuário não encontrado", "error");
         }
       })
-      .catch(console.error);
+      .catch(() => showMessage("Erro ao carregar usuário", "error"));
   }, [userId]);
 
+  // Carregar amigurumis do usuário
   useEffect(() => {
     if (userInfo) {
       APIGet_FoundationList()
@@ -55,10 +68,11 @@ export default function Usuario() {
           setAmigurumis(doUsuario);
           setFilteredAmigurumis(doUsuario);
         })
-        .catch(console.error);
+        .catch(() => showMessage("Erro ao carregar amigurumis", "error"));
     }
   }, [userInfo]);
 
+  // Validação básica da senha
   function validatePassword(password) {
     const hasLetter = /[a-zA-Z]/.test(password);
     const hasNumber = /\d/.test(password);
@@ -68,21 +82,28 @@ export default function Usuario() {
 
   const handleChangePassword = () => {
     if (newPassword.trim() && passwordValid && userInfo) {
-      // Só ativa botão salvar, não precisa mostrar BotaoNovoAmigurumi aqui
+      // Apenas ativa o botão salvar, não faz nada aqui
     }
   };
 
   const handleChangeName = () => {
     if (newName.trim() && userInfo) {
-      // Só ativa botão salvar, não precisa mostrar BotaoNovoAmigurumi aqui
+      // Apenas ativa o botão salvar, não faz nada aqui
     }
   };
 
   const handleRoleChange = (e) => {
-    const newRole = e.target.value;
-    setSelectedRole(newRole);
+    setSelectedRole(e.target.value);
   };
 
+  // Função para mostrar mensagem na caixa simples
+  function showMessage(text, type = 'success') {
+    setMessageBoxText(text);
+    setMessageBoxType(type);
+    setShowMessageBox(true);
+  }
+
+  // Salvar alterações do usuário
   const handleSaveChanges = () => {
     if (!userInfo) return;
 
@@ -105,27 +126,24 @@ export default function Usuario() {
             role: selectedRole
           };
           setUserInfo(updatedUser);
-          setUpdateMessage('Perfil atualizado com sucesso!');
           setNewName('');
           setNewPassword('');
           setPasswordValid(false);
-          setTimeout(() => setUpdateMessage(''), 3000);
-          // Aqui o userInfo.role estará atualizado para exibir o botão
+          showMessage("Perfil atualizado com sucesso!", "success");
         } else {
-          setUpdateMessage('Erro ao atualizar: ' + res.error);
+          showMessage("Erro ao atualizar: " + res.error, "error");
         }
       })
-      .catch(() => setUpdateMessage('Erro na comunicação com o servidor'));
+      .catch(() => showMessage("Erro na comunicação com o servidor", "error"));
   };
 
-  const handleDeleteAccount = () => {
-    if (!window.confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.')) return;
-
+  // Função que realmente executa a exclusão da conta após confirmação
+  const confirmarExclusao = () => {
     APIGet_AccountUser()
       .then(users => {
         const user = users.find(u => u.user_id === userId);
         if (!user) {
-          alert('Usuário não encontrado.');
+          showMessage("Usuário não encontrado", "error");
           return;
         }
 
@@ -135,18 +153,44 @@ export default function Usuario() {
             window.dispatchEvent(logoutEvent);
             navigate('/');
           })
-          .catch(() => {
-            alert('Erro ao excluir a conta.');
-          });
+          .catch(() => showMessage("Erro ao excluir a conta", "error"));
       })
-      .catch(() => {
-        alert('Erro ao buscar usuário.');
-      });
+      .catch(() => showMessage("Erro ao buscar usuário", "error"));
   };
+
+  // Mostra caixa de confirmação para excluir conta
+  const handleDeleteAccount = () => {
+    setShowConfirmBox(true);
+  };
+
+  // Componente caixa simples de mensagem
+  function MessageBox() {
+    if (!showMessageBox) return null;
+
+    return (
+      <div className="simple-message-box-container">
+        <div className={`simple-message-box ${messageBoxType}`}>
+          <p>{messageBoxText}</p>
+          <button onClick={() => setShowMessageBox(false)}>OK</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
       <Header />
+      <MessageBox />
+      {showConfirmBox && (
+        <ConfirmBox
+          mensagem="Tem certeza que deseja excluir sua conta? Esta ação é irreversível."
+          onConfirmar={() => {
+            setShowConfirmBox(false);
+            confirmarExclusao();
+          }}
+          onCancelar={() => setShowConfirmBox(false)}
+        />
+      )}
       <div className="data_body">
         {userInfo ? (
           <>
@@ -204,9 +248,7 @@ export default function Usuario() {
             </select>
 
             <br /><br />
-
             <button onClick={handleSaveChanges}>Salvar alterações</button>
-            {updateMessage && <p className="mensagem-sucesso">{updateMessage}</p>}
 
             <hr />
             <h3>Ações Rápidas</h3>
@@ -214,7 +256,6 @@ export default function Usuario() {
               ❌ Excluir minha conta
             </button>
 
-            {/* Mostrar botão só se for Administrador */}
             {userInfo.role === 'Administrador' && <BotaoNovoAmigurumi />}
 
             <hr />

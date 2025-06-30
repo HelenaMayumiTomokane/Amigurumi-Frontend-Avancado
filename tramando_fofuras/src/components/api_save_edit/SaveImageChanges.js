@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as API from '../api/ImageAmigurumi_API';
+import ConfirmBox from '../support_code/ConfirmBox';
 
 export default function SaveImageChanges({ amigurumiId, onClose }) {
   const [imageList, setImageList] = useState([]);
@@ -9,6 +10,9 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
     image_base64: ''
   });
   const [deletedIds, setDeletedIds] = useState([]);
+
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const [imageToDeleteId, setImageToDeleteId] = useState(null);
 
   useEffect(() => {
     API.APIGet_Image().then(data => {
@@ -49,11 +53,23 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
     reader.readAsDataURL(file);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Deseja realmente excluir esta imagem?')) {
-      setDeletedIds(prev => [...prev, id]);
-      setImageList(prev => prev.filter(img => img.image_id !== id));
+  const handleAskDelete = (id) => {
+    setImageToDeleteId(id);
+    setShowConfirmBox(true);
+  };
+
+  const confirmDelete = () => {
+    if (imageToDeleteId != null) {
+      setDeletedIds(prev => [...prev, imageToDeleteId]);
+      setImageList(prev => prev.filter(img => img.image_id !== imageToDeleteId));
+      setImageToDeleteId(null);
     }
+    setShowConfirmBox(false);
+  };
+
+  const cancelDelete = () => {
+    setImageToDeleteId(null);
+    setShowConfirmBox(false);
   };
 
   const handleAddNewImage = () => {
@@ -114,6 +130,14 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
       <div className="modal-box">
         <h2>Gerenciar Imagens</h2>
 
+        {showConfirmBox && (
+          <ConfirmBox
+            mensagem="Deseja realmente excluir esta imagem?"
+            onConfirmar={confirmDelete}
+            onCancelar={cancelDelete}
+          />
+        )}
+
         <h4>Nova Imagem</h4>
         <input type="file" accept="image/*" onChange={handleFileChange} />
         {newImage.image_base64 && (
@@ -172,7 +196,7 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
               accept="image/*"
               onChange={e => handleEditFileChange(e, index)}
             />
-            <button onClick={() => handleDelete(img.image_id)}>Excluir</button>
+            <button onClick={() => handleAskDelete(img.image_id)}>Excluir</button>
           </div>
         ))}
 

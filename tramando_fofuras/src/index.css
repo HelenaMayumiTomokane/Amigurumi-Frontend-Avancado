@@ -238,3 +238,102 @@ button_next_previous {
   font-weight: bold;
   margin-top: 10px;
 }
+
+
+
+.simple-message-box-container {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.3);
+  z-index: 9999;
+}
+
+.simple-message-box {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 5px;
+  min-width: 280px;
+  max-width: 320px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  text-align: center;
+  font-weight: 600;
+}
+
+.simple-message-box p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.simple-message-box button {
+  padding: 6px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #1976d2;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.simple-message-box button:hover {
+  background-color: #115293;
+}
+
+/* Cores para sucesso e erro */
+.simple-message-box.success {
+  border-left: 6px solid #28a745;
+}
+
+.simple-message-box.error {
+  border-left: 6px solid #dc3545;
+}
+
+
+
+.confirmacao-box-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.confirmacao-box {
+  background-color: #fff;
+  padding: 25px 30px;
+  border: 2px solid #555;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  max-width: 320px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.confirmacao-box h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.confirmacao-box button {
+  margin: 5px 10px 0;
+  padding: 6px 12px;
+  border: none;
+  background-color: #444;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.confirmacao-box button.cancelar {
+  background-color: #bbb;
+  color: black;
+}

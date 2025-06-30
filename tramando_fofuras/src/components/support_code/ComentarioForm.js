@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react';
+import ConfirmBox from './ConfirmBox';
 
 export default function ComentarioForm({ amigurumiId }) {
   const [comentario, setComentario] = useState('');
   const [avaliacao, setAvaliacao] = useState(0);
   const [userInfo, setUserInfo] = useState(null);
   const [comentarios, setComentarios] = useState([]);
-  const [mensagemSucesso, setMensagemSucesso] = useState('');
+
+  const [message, setMessage] = useState('');
+  const [showMessageBox, setShowMessageBox] = useState(false);
+
+  const [confirmIndex, setConfirmIndex] = useState(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('userInfo');
@@ -39,20 +44,34 @@ export default function ComentarioForm({ amigurumiId }) {
 
     setComentario('');
     setAvaliacao(0);
-    setMensagemSucesso('Comentário enviado com sucesso!');
-    setTimeout(() => setMensagemSucesso(''), 3000);
+    setMessage('Comentário enviado com sucesso!');
+    setShowMessageBox(true);
+  };
+
+  const handleCloseMessage = () => {
+    setShowMessageBox(false);
   };
 
   const handleExcluirComentario = (index) => {
-    if (!window.confirm("Deseja excluir este comentário?")) return;
+    setConfirmIndex(index);
+  };
+
+  const confirmarExclusao = () => {
+    if (confirmIndex === null) return;
 
     const novaLista = [...comentarios];
-    novaLista.splice(index, 1);
+    novaLista.splice(confirmIndex, 1);
     setComentarios(novaLista);
 
     const allComentarios = JSON.parse(localStorage.getItem('comentarios')) || {};
     allComentarios[amigurumiId] = novaLista;
     localStorage.setItem('comentarios', JSON.stringify(allComentarios));
+
+    setConfirmIndex(null);
+  };
+
+  const cancelarExclusao = () => {
+    setConfirmIndex(null);
   };
 
   const renderEstrelas = () => {
@@ -93,6 +112,25 @@ export default function ComentarioForm({ amigurumiId }) {
 
   return (
     <div className="avaliacao_container">
+      {/* Caixa de mensagem */}
+      {showMessageBox && (
+        <div className="simple-message-box-container">
+          <div className="simple-message-box success">
+            <p>{message}</p>
+            <button onClick={handleCloseMessage}>OK</button>
+          </div>
+        </div>
+      )}
+
+      {/* Caixa de confirmação */}
+      {confirmIndex !== null && (
+        <ConfirmBox
+          mensagem="Deseja realmente excluir este comentário?"
+          onConfirmar={confirmarExclusao}
+          onCancelar={cancelarExclusao}
+        />
+      )}
+
       <form onSubmit={handleSubmit} className="avaliacao_formulario">
         <h2>Deixe seu comentário</h2>
         <textarea
@@ -106,7 +144,6 @@ export default function ComentarioForm({ amigurumiId }) {
           <div>{renderEstrelas()}</div>
         </label>
         <button type="submit">Enviar</button>
-        {mensagemSucesso && <p className="mensagem-sucesso">{mensagemSucesso}</p>}
       </form>
 
       {comentarios.length > 0 && (

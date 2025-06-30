@@ -1,11 +1,13 @@
-import {useEffect,useState,forwardRef,useImperativeHandle} from 'react';
+import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import * as API from '../api/Material_API';
+import ConfirmBox from '../support_code/ConfirmBox';
 
 const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref) => {
   const [originalList, setOriginalList] = useState([]);
   const [materialList, setMaterialList] = useState([]);
   const [error, setError] = useState(null);
   const [selectedListId, setSelectedListId] = useState('1');
+  const [confirmAction, setConfirmAction] = useState(null);
 
   useEffect(() => {
     async function fetchMaterials() {
@@ -85,16 +87,10 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
     if (!selectedListId) return;
 
     const updatedList = materialList.filter(mat => String(mat.list_id) !== String(selectedListId));
-
     setMaterialList(updatedList);
 
     const availableListIdsAfterDelete = Array.from(new Set(updatedList.map(m => String(m.list_id)))).sort();
-
-    if (availableListIdsAfterDelete.length > 0) {
-      setSelectedListId(availableListIdsAfterDelete[0]);
-    } else {
-      setSelectedListId('');
-    }
+    setSelectedListId(availableListIdsAfterDelete[0] || '');
   }
 
   useImperativeHandle(ref, () => ({
@@ -112,8 +108,8 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
   );
 
   return (
-    <div id ="group_table_list_material_backgroud">
-      <div id ="group_table_list_material">
+    <div id="group_table_list_material_backgroud">
+      <div id="group_table_list_material">
         {error && <p>{error}</p>}
 
         <div id="group_lista_suspensa_material">
@@ -140,16 +136,9 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
           {editable && (
             <>
               <button onClick={createNewList}>Nova Lista</button>
-              <button 
-                onClick={() => {
-                  if (selectedListId) {
-                    const confirmed = window.confirm("Tem certeza que deseja excluir a lista selecionada?");
-                    if (confirmed) {
-                      deleteList();
-                    }
-                  }
-                }} 
-                disabled={!selectedListId} 
+              <button
+                onClick={() => setConfirmAction(() => deleteList)}
+                disabled={!selectedListId}
                 title="Excluir lista selecionada"
               >
                 Excluir Lista
@@ -210,14 +199,7 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
                     </td>
                     {editable && (
                       <td>
-                        <button 
-                          onClick={() => {
-                            const confirmed = window.confirm("Tem certeza que deseja excluir esta linha?");
-                            if (confirmed) {
-                              deleteRow(globalIndex);
-                            }
-                          }}
-                        >
+                        <button onClick={() => setConfirmAction(() => () => deleteRow(globalIndex))}>
                           Excluir
                         </button>
                       </td>
@@ -233,10 +215,20 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
           </tbody>
         </table>
 
-        {editable && (
-          <button onClick={addNewLine}>
-            Adicionar Linha
-          </button>
+        {/* ✅ Mostrar botão apenas se houver lista */}
+        {editable && selectedListId && (
+          <button onClick={addNewLine}>Adicionar Linha</button>
+        )}
+
+        {confirmAction && (
+          <ConfirmBox
+            mensagem="Tem certeza que deseja excluir?"
+            onConfirmar={() => {
+              confirmAction();
+              setConfirmAction(null);
+            }}
+            onCancelar={() => setConfirmAction(null)}
+          />
         )}
       </div>
     </div>

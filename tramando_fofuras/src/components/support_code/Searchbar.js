@@ -1,4 +1,9 @@
+import { useState } from 'react';
+
 export default function SearchBar({ searchQuery, setSearchQuery, amigurumis, setFilteredAmigurumis }) {
+  const [showMessageBox, setShowMessageBox] = useState(false);
+  const [message, setMessage] = useState('');
+
   function handleSearch() {
     if (!searchQuery.trim()) {
       setFilteredAmigurumis(amigurumis);
@@ -12,12 +17,26 @@ export default function SearchBar({ searchQuery, setSearchQuery, amigurumis, set
     setFilteredAmigurumis(result);
 
     if (result.length === 0) {
-      alert('Nenhum resultado encontrado. Tente outra busca ou limpe a barra de pesquisa.');
+      setMessage('Nenhum resultado encontrado. Tente outra busca ou limpe a barra de pesquisa.');
+      setShowMessageBox(true);
     }
   }
 
+  function MessageBox() {
+    if (!showMessageBox) return null;
+
+    return (
+      <div className="simple-message-box-container">
+        <div className="simple-message-box error">
+          <p>{message}</p>
+          <button onClick={() => setShowMessageBox(false)}>OK</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <section id= "searchbar_section">
+    <section id="searchbar_section">
       <input
         id="searchInput"
         type="text"
@@ -26,6 +45,8 @@ export default function SearchBar({ searchQuery, setSearchQuery, amigurumis, set
         onChange={e => setSearchQuery(e.target.value)}
       />
       <button onClick={handleSearch} id="botton_search">Pesquisar</button>
+
+      <MessageBox />
     </section>
   );
 }
