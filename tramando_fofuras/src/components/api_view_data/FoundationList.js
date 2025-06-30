@@ -1,5 +1,5 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import * as API from './API';
+import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import * as API from '../api/Foundation_API';
 
 const FoundationList = forwardRef(({ amigurumiId, editable = false, trigger = null }, ref) => {
   const [originalList, setOriginalList] = useState([]);

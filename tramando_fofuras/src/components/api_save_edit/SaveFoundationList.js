@@ -1,5 +1,4 @@
-// saveFoundationChanges.js
-import * as API from './API';
+import * as API from '../api/Foundation_API';
 import { useNavigate } from 'react-router-dom';
 
 export async function saveFoundationChanges(originalList, currentList) {
@@ -59,16 +58,15 @@ export default function BotaoNovoAmigurumi() {
   const handleNovoAmigurumi = async () => {
     try {
       const novo = await API.APIPost_FoundationList(
-        'Novo Amigurumi', // nome vazio
-        '-', // autor vazio
-        0, // tamanho vazio
-        '-', // link vazio
-        '', // relacionamento vazio
+        'Novo Amigurumi',
+        '-',
+        0,
+        '-',
+        '',
       );
 
-      // Redireciona para a página com o novo ID
       if (novo?.amigurumi_id) {
-        navigate(`/receita?id=${novo.amigurumi_id}`); 
+        navigate(`/receita?amigurumi_id=${novo.amigurumi_id}`); 
       } else {
         alert('Erro ao criar o novo amigurumi.');
       }
@@ -102,7 +100,6 @@ export function BotaoDeleteAmigurumi({ amigurumiId, onDeleted }) {
 
       alert('Amigurumi excluído com sucesso!');
 
-      // Callback para o componente pai atualizar a interface
       if (typeof onDeleted === 'function') {
         onDeleted();
       }

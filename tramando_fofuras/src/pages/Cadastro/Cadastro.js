@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import { APIPost_AccountUser } from '../../components/support_code/API';
-import './Cadastro.css';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import { useNavigate } from 'react-router-dom';
+
+import * as API from '../../components/api/AccountUser_API';
+
+import './Cadastro.css';
 
 export default function CadastroPage() {
   const [name, setName] = useState('');
   const [login, setLogin] = useState('');
   const [senha, setSenha] = useState('');
-  const [role, setRole] = useState('Visitante'); // valor padrão e válido
+  const [role, setRole] = useState('Visitante');
   const [erro, setErro] = useState('');
   const [senhaValida, setSenhaValida] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -39,12 +42,12 @@ export default function CadastroPage() {
     setLoading(true);
 
     try {
-      const response = await APIPost_AccountUser(login, senha, name, role);
+      const response = await API.APIPost_AccountUser(name,senha, login, role);
 
       if (response.error) {
         setErro(response.error);
       } else if (response.user_id) {
-        navigate(`/usuario?id=${response.user_id}`);
+        navigate(`/usuario?user_id=${response.user_id}`);
       } else {
         setErro("Erro inesperado: usuário não retornado pela API.");
       }

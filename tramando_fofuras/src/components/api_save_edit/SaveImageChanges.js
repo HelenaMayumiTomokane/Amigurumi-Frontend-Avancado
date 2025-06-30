@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import * as API from './API';
+import { useEffect, useState } from 'react';
+import * as API from '../api/ImageAmigurumi_API';
 
 export default function SaveImageChanges({ amigurumiId, onClose }) {
   const [imageList, setImageList] = useState([]);
@@ -62,7 +62,6 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
       return;
     }
 
-    // se a nova imagem é principal, desmarcar todas as outras
     const updatedList = newImage.main_image
       ? imageList.map(img => ({ ...img, main_image: false }))
       : [...imageList];
@@ -82,7 +81,6 @@ export default function SaveImageChanges({ amigurumiId, onClose }) {
     const updated = [...imageList];
 
     if (field === 'main_image' && value === true) {
-      // Desmarca todas as outras imagens
       updated.forEach((img, i) => {
         updated[i].main_image = false;
       });

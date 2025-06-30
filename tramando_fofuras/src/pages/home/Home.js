@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import * as API from "../../components/support_code/API";
-import SearchBar from "../../components/support_code/Searchbar";
-import AmigurumiCards from "../../components/support_code/AmigurumiCards";
+
+import * as API from "../../components/api/Foundation_API";
+
+import AmigurumiCards from "../../components/amigurumi_cards/AmigurumiCards";
+
 import CategoryButtons from "../../components/support_code/CategoryButtons";
+import SearchBar from "../../components/support_code/Searchbar";
+
 import "./Home.css";
 
 export default function AmigurumiPrincipal() {
@@ -16,13 +21,12 @@ export default function AmigurumiPrincipal() {
   const [trigger, setTrigger] = useState(false);
   const [userRole, setUserRole] = useState(null);
 
-  // Carrega dados e favoritos e papel do usuário
   useEffect(() => {
     async function fetchData() {
       try {
         const foundationData = await API.APIGet_FoundationList();
         setAmigurumis(foundationData);
-        setFilteredAmigurumis(foundationData); // inicialmente mostra tudo
+        setFilteredAmigurumis(foundationData);
       } catch (error) {
         console.error("Erro ao carregar amigurumis:", error);
       }
@@ -30,11 +34,9 @@ export default function AmigurumiPrincipal() {
 
     fetchData();
 
-    // Carrega favoritos do localStorage
     const storedFavorites = localStorage.getItem("favoriteAmigurumis");
     setFavoriteIds(storedFavorites ? JSON.parse(storedFavorites) : []);
 
-    // Carrega papel do usuário do localStorage (exemplo)
     const storedUser = localStorage.getItem("userInfo");
     if (storedUser) {
       const user = JSON.parse(storedUser);
@@ -42,7 +44,6 @@ export default function AmigurumiPrincipal() {
     }
   }, [trigger]);
 
-  // Aplica filtros (Todos, Favoritos, Mais Recentes, Categoria) + busca + filtro relationship apenas no Todos
   useEffect(() => {
     let data = amigurumis;
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import AmigurumiCards from './AmigurumiCards';
 
 export default function AmigurumisDoUsuario({ amigurumis, trigger }) {

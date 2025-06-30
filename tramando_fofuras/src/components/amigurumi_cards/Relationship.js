@@ -1,6 +1,5 @@
-// Relationship.js (componente que obtém os dados)
-import React, { useEffect, useState } from 'react';
-import * as API from './API';
+import { useEffect, useState } from 'react';
+import * as API from '../api/Foundation_API';
 import AmigurumiCards from './AmigurumiCards';
 
 export default function Relationship({ amigurumiId, editable, trigger }) {
@@ -21,7 +20,6 @@ export default function Relationship({ amigurumiId, editable, trigger }) {
       });
   }, [amigurumiId, trigger]);
 
-  // Passa os dados filtrados para o AmigurumiCards que vai renderizar os cards
   return (
     <div id="receita_relacionada">
         <h2>Receitas Relacionadas</h2>

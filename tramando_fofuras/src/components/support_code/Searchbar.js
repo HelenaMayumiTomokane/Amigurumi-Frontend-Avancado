@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function SearchBar({ searchQuery, setSearchQuery, amigurumis, setFilteredAmigurumis }) {
   function handleSearch() {
     if (!searchQuery.trim()) {

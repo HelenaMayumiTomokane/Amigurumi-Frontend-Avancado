@@ -1,36 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './Header.css';
-import { APIGet_AccountUser } from '../support_code/API';
+import { APIGet_AccountUser } from '../api/AccountUser_API';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../contexts/UserContext';
 
 export default function Header() {
   const [showLogin, setShowLogin] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [userInfo, setUserInfo] = useState(null);
+  const { userInfo, login, logout } = useUserContext();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const stored = localStorage.getItem('userInfo');
-    if (stored) {
-      setUserInfo(JSON.parse(stored));
-    }
-  }, []);
 
   const handleLogin = async () => {
     if (username && password) {
       try {
         const users = await APIGet_AccountUser();
         const user = users.find(u => u.login === username && u.password === password);
-
         if (user) {
-          const newUserInfo = { login: user.login, user_id: user.user_id, role: user.role || 'Visitante' };
-          setUserInfo(newUserInfo);
-          localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+          login({ login: user.login, user_id: user.user_id, role: user.role || 'Visitante' });
           setShowLogin(false);
           setUsername('');
           setPassword('');
-          navigate(`/usuario?id=${user.user_id}`); // redireciona com useNavigate
+          navigate(`/usuario?user_id=${user.user_id}`);
         } else {
           alert('Usuário não encontrado. Cadastre-se primeiro.');
         }
@@ -42,32 +33,19 @@ export default function Header() {
     }
   };
 
-  const handleLogout = () => {
-    setUserInfo(null);
-    localStorage.removeItem('userInfo');
-    navigate('/'); // redireciona para home
-  };
-
   return (
     <>
       <header className="header-container">
         <div className="header-left">
           <a href="/">
-            <img
-              src="/assets/image/image_id_logo.png"
-              alt="Logo"
-              className="logo"
-            />
+            <img src="/assets/image/image_id_logo.png" alt="Logo" className="logo" />
           </a>
         </div>
 
         <div className="header-center">
           <button className="button_title" onClick={() => navigate('/')}>🏠 Home</button>
           {userInfo && (
-            <button
-              className="button_title"
-              onClick={() => navigate(`/usuario?id=${userInfo.user_id}`)}
-            >
+            <button className="button_title" onClick={() => navigate(`/usuario?user_id=${userInfo.user_id}`)}>
               👤 Perfil
             </button>
           )}
@@ -80,7 +58,7 @@ export default function Header() {
               <button className="button_title" onClick={() => navigate('/cadastro')}>📝 Cadastro</button>
             </>
           ) : (
-            <button className="button_title" onClick={handleLogout}>🔓 Logout</button>
+            <button className="button_title" onClick={logout}>🔓 Logout</button>
           )}
         </div>
       </header>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import * as API from './API';
+import { useEffect, useState } from 'react';
+import * as API from '../api/ImageAmigurumi_API';
 import { useNavigate } from 'react-router-dom';
 
 export default function AmigurumiCards({ filteredData, trigger, setTrigger, editable, redirection }) {
@@ -7,7 +7,6 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
   const [imagesMap, setImagesMap] = useState({});
   const [currentIndexMap, setCurrentIndexMap] = useState({});
 
-  // Favoritos armazenados no localStorage
   const [favorites, setFavorites] = useState(() => {
     const stored = localStorage.getItem('favoriteAmigurumis');
     return stored ? JSON.parse(stored) : [];
@@ -113,7 +112,7 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
             {redirection && (
               <button
                 className="see_more"
-                onClick={() => navigate(`/receita?id=${amig.amigurumi_id}`)} 
+                onClick={() => navigate(`/receita?amigurumi_id=${amig.amigurumi_id}`)} 
               >
                 Ver Mais
               </button>

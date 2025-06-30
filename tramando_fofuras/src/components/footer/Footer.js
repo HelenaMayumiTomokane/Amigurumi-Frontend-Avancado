@@ -1,8 +1,11 @@
-import React from 'react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
+import useUserInfo from '../hooks/useUserInfo';
 
 export default function Footer() {
+  const { userInfo } = useUserInfo();
+  const userId = userInfo?.user_id;
+
   return (
     <footer id="footer">
       <div id="footer_data">
@@ -29,7 +32,11 @@ export default function Footer() {
           <h1>Mapa do Site</h1>
           <Link to="/">🏠 Home</Link>
           <br />
-          <Link to="/usuario">👤 Perfil</Link>
+          {userId ? (
+            <Link to={`/usuario?user_id=${userId}`}>👤 Perfil</Link>
+          ) : (
+            <Link to="/cadastro">👤 Cadastre-se</Link>
+          )}
         </div>
 
         <div id="external_links">

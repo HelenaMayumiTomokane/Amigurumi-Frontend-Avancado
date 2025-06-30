@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useImperativeHandle, forwardRef } from "react";
-import * as API from './API';
+import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
+import * as API from '../api/Stitchbook_API';
 
 let nextElementId = -1;
 let nextLineId = -1;

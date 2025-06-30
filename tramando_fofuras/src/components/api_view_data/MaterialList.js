@@ -1,10 +1,5 @@
-import React, {
-  useEffect,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from 'react';
-import * as API from './API';
+import {useEffect,useState,forwardRef,useImperativeHandle} from 'react';
+import * as API from '../api/Material_API';
 
 const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref) => {
   const [originalList, setOriginalList] = useState([]);
@@ -89,12 +84,10 @@ const MaterialList = forwardRef(({ amigurumiId, editable = false, trigger }, ref
   function deleteList() {
     if (!selectedListId) return;
 
-    // Remove todos os materiais da lista selecionada
     const updatedList = materialList.filter(mat => String(mat.list_id) !== String(selectedListId));
 
     setMaterialList(updatedList);
 
-    // Atualiza o selectedListId para a próxima lista disponível, ou vazio
     const availableListIdsAfterDelete = Array.from(new Set(updatedList.map(m => String(m.list_id)))).sort();
 
     if (availableListIdsAfterDelete.length > 0) {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { APIGet_FoundationList } from "./API";
+import { useEffect, useState } from "react";
+import { APIGet_FoundationList } from '../api/Foundation_API';
 
 export default function CategoryButtons({ onFilterChange }) {
   const [categories, setCategories] = useState([]);
@@ -21,7 +21,7 @@ export default function CategoryButtons({ onFilterChange }) {
       const stored = localStorage.getItem("favoriteAmigurumis");
       const currentFavorites = stored ? JSON.parse(stored) : [];
       onFilterChange({ type: "favorites", value: currentFavorites });
-    } else if (filter === "Mais Recentes") {
+    } else if (filter === "Recentes") {
       onFilterChange({ type: "recent", value: null });
     } else {
       onFilterChange({ type: "category", value: filter });
@@ -37,7 +37,7 @@ export default function CategoryButtons({ onFilterChange }) {
   const iconMap = {
     Todos: "🧸",
     Favoritos: "❤️",
-    "Mais Recentes": "🕒",
+    Recentes: "🕒",
     terrestre: "🐾",
     aquático: "🐠",
     boneca: "👸",
@@ -62,7 +62,7 @@ export default function CategoryButtons({ onFilterChange }) {
     <div className="category-buttons-container">
       {renderButton("Todos")}
       {renderButton("Favoritos")}
-      {renderButton("Mais Recentes")}
+      {renderButton("Recentes")}
       {categories.map((cat) => renderButton(cat))}
     </div>
   );
