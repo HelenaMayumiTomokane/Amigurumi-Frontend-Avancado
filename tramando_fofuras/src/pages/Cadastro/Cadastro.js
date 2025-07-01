@@ -6,8 +6,6 @@ import Footer from "../../components/footer/Footer";
 
 import * as API from '../../components/api/AccountUser_API';
 
-import './Cadastro.css';
-
 export default function CadastroPage() {
   const [name, setName] = useState('');
   const [login, setLogin] = useState('');

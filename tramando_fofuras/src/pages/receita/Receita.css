@@ -1,6 +1,6 @@
 #full_amigurumi_data {
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   align-items: top;
   justify-content: center;
   gap: 20px;
@@ -9,203 +9,165 @@
   flex-wrap: wrap;
 }
 
-
 /*----------------------------------------------Imagens------------------------------------------------------*/
-#amigurumi_imagem{
-    width: 25%;
-    color: #8c522d;
+#amigurumi_imagem {
+  width: 25%;
+  color: var(--cor-base-1);
 }
 
-#receita_relacionada{
-  color: #8c522d;
+
+#receita_relacionada {
+  color: var(--cor-base-1);
   width: 100%;
-}
-
-/*----------------------------------------------Lista de Materiais------------------------------------------------------*/
-#group_table_list_material_backgroud {
-  background-color: #D8CAB8;
-  width: calc(100% + 200px);
-  margin-left: -100px; 
-  padding: 20px 0;
-  border-top: 2px solid #69402F;
-  border-bottom: 2px solid #69402F;
-}
-
-#group_table_list_material{
   margin: 0 auto;
   padding: 0 100px;
 }
 
-#table_amigurumi_material{
+/*----------------------------------------------Lista de Materiais------------------------------------------------------*/
+#group_table_list_material_backgroud, #card_relationship_backgroud {
+  background-color: var(--cor-base-8);
+  width: calc(100% + 200px);
+  margin-left: -100px;
+  padding: 20px 0;
+  border-top: var(--borda-escura);
+  border-bottom: var(--borda-escura);
+}
+
+#group_table_list_material {
+  margin: 0 auto;
+  padding: 0 100px;
+}
+
+#table_amigurumi_material {
   width: 100%;
   border-collapse: collapse;
 }
 
-#lista_suspensa_material{
+#lista_suspensa_material {
   width: 25%;
 }
 
-#table_amigurumi_material th{
-  background-color: #8c522d;
-  color: white;
+#table_amigurumi_material th {
   position: sticky;
-  top: 0; 
+  top: 0;
   z-index: 1;
   height: 40px;
-  border: 1px solid #D8CAB8;
   text-align: left;
   word-wrap: break-word;
 }
 
-#table_amigurumi_material td {
-  border: 1px solid #D8CAB8;
-}
 
 /* Define larguras específicas para cada coluna */
 #table_amigurumi_material th:nth-child(1),
 #table_amigurumi_material td:nth-child(1) {
-  width: 50%; /* Material */
+  width: 50%;
 }
 
 #table_amigurumi_material th:nth-child(2),
 #table_amigurumi_material td:nth-child(2) {
-  width: 15%; /* Qtde */
+  width: 15%;
 }
 
 #table_amigurumi_material th:nth-child(3),
 #table_amigurumi_material td:nth-child(3) {
-  width: 20%; /* ID Cor */
+  width: 20%;
 }
 
 #table_amigurumi_material th:nth-child(4),
 #table_amigurumi_material td:nth-child(4) {
-  width: 15%; /* Excluir (opcional) */
+  width: 15%;
 }
-
-
 
 /*----------------------------------------------Tabela de Pontos------------------------------------------------------*/
-#div_stitchbookList{
+#div_stitchbookList {
   width: 100%;
-  
 }
 
-#stitchbook_table{
-  width: 100%; 
+#stitchbook_table {
+  width: 100%;
   border-collapse: collapse;
-  
 }
 
-
-#stitchbook_table th{
-  background-color: #8c522d;
-  color: white;
+#stitchbook_table th {
   position: sticky;
-  top: 0; 
+  top: 0;
   z-index: 1;
   height: 40px;
-  border: 1px solid #D8CAB8;
   text-align: left;
-  
 }
-
-#stitchbook_table td {
-  border: 1px solid #D8CAB8;
-}
-
 
 #stitchbook_table th:nth-child(1),
 #stitchbook_table td:nth-child(1) {
-  width: 5%; /* Material */
+  width: 5%;
 }
 
 #stitchbook_table th:nth-child(2),
 #stitchbook_table td:nth-child(2) {
-  width: 10%; /* Qtde */
+  width: 10%;
 }
 
 #stitchbook_table th:nth-child(3),
 #stitchbook_table td:nth-child(3) {
-  width: 35%; /* ID Cor */
+  width: 35%;
 }
 
 #stitchbook_table th:nth-child(4),
 #stitchbook_table td:nth-child(4) {
-  width: 35%; /* Excluir (opcional) */
+  width: 35%;
 }
 
 #stitchbook_table th:nth-child(5),
 #stitchbook_table td:nth-child(5) {
-  width: 15%; /* Excluir (opcional) */
+  width: 15%;
 }
 
-
-
-#stitchbook_sequence_data{
-  width: 100%; 
+#stitchbook_sequence_data {
+  width: 100%;
 }
 
 #stitchbook_sequence_data th:nth-child(1),
 #stitchbook_sequence_data td:nth-child(1) {
-  width: 25%; /* Material */
+  width: 25%;
 }
 
 #stitchbook_sequence_data th:nth-child(2),
 #stitchbook_sequence_data td:nth-child(2) {
-  width: 10%; /* Qtde */
+  width: 10%;
 }
 
 #stitchbook_sequence_data th:nth-child(3),
 #stitchbook_sequence_data td:nth-child(3) {
-  width: 10%; /* ID Cor */
+  width: 10%;
 }
 
-
-
 /*----------------------------------------------Informações Básicas------------------------------------------------------*/
-#card_amigurumi_recipe{
+#card_amigurumi_recipe {
   width: 30%;
 }
 
-
-#amigurumi_information{
+#amigurumi_information {
   flex: 1 1 300px;
 }
 
 .input_name {
-  border-top: 2px solid #69402F;
-  border-bottom: 2px solid #69402F;
-  color: #69402F;
-  background: white;
+  border-top: var(--borda-escura);
+  border-bottom: var(--borda-escura);
   border-left: none;
   border-right: none;
-
   padding: 12px 8px;
   font-size: 2em;
   font-weight: bold;
   width: 100%;
   outline: none;
   box-sizing: border-box;
-  background: transparent;
   text-align: center;
   margin: 24px 0;
-}
-
-input.input_name {
-  background: white;
-}
-
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* espaço entre o título e o input */
-  margin-bottom: 12px;
 }
 
 .input-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px; 
+  gap: 16px;
   margin-bottom: 20px;
 }
 
@@ -216,35 +178,15 @@ input.input_name {
 }
 
 
-
-
-/*----------------------------------------------Cards Relacionados------------------------------------------------------*/
-#card_relationship_backgroud {
-  background-color: #D8CAB8;
-  width: calc(100% + 200px);
-  margin-left: -100px; 
-  padding: 20px 0;
-  border-top: 2px solid #69402F;
-  border-bottom: 2px solid #69402F;
-}
-
-#card_relationship{
-  margin: 0 auto;
-  padding: 0 100px;
-}
-
-
-
 /*-------------------------Botão de Rota----------------------------*/
 #button_top {
   display: flex;
-  justify-content: space-between; /* um grupo à esquerda, outro à direita */
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  flex-wrap: wrap; /* permite quebrar em telas menores */
+  flex-wrap: wrap;
   margin-bottom: 20px;
 }
-
 
 .breadcrumbs_container {
   display: flex;
@@ -255,16 +197,11 @@ input.input_name {
 .button_title_transparent {
   background: transparent;
   border: none;
-  color: #69402F;
   cursor: pointer;
   padding: 6px 10px;
   display: flex;
   align-items: center;
   transition: color 0.2s ease;
-}
-
-.button_title_transparent:hover {
-  color: #007bff;
 }
 
 .button_icon {
@@ -274,10 +211,9 @@ input.input_name {
 
 .separator {
   user-select: none;
-  color: #69402F;
+  color: var(--cor-base-1);
   font-weight: bold;
 }
-
 
 /*-------------------------Comentário e Avaliações----------------------------*/
 .avaliacao_container {
@@ -294,20 +230,6 @@ input.input_name {
   padding: 8px;
   font-size: 14px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: var(--borda-escura);
 }
 
-.avaliacao_formulario button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.mensagem-sucesso {
-  color: green;
-  font-weight: bold;
-  margin-top: 10px;
-}

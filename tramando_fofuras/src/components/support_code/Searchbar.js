@@ -44,7 +44,7 @@ export default function SearchBar({ searchQuery, setSearchQuery, amigurumis, set
         value={searchQuery}
         onChange={e => setSearchQuery(e.target.value)}
       />
-      <button onClick={handleSearch} id="botton_search">Pesquisar</button>
+      <button onClick={handleSearch} className="dark_button">Pesquisar</button>
 
       <MessageBox />
     </section>

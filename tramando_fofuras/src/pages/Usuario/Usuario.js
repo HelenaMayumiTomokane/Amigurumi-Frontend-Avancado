@@ -11,8 +11,6 @@ import AmigurumisDoUsuario from '../../components/amigurumi_cards/AmigurumisDoUs
 import SearchBar from '../../components/support_code/Searchbar';
 import ConfirmBox from '../../components/support_code/ConfirmBox';
 
-import './Usuario.css';
-
 export default function Usuario() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
@@ -178,7 +176,7 @@ export default function Usuario() {
           <>
             <h2>Bem-vindo, {userInfo.login}!</h2>
 
-            <div className="linha-horizontal">
+            <div className="personal_information">
               <strong>Nome completo:</strong>
               <input
                 type="text"
@@ -187,12 +185,12 @@ export default function Usuario() {
               />
             </div>
 
-            <div className="linha-horizontal">
+            <div className="personal_information">
               <strong>Login:</strong>
               <input type="text" value={userInfo.login} readOnly disabled />
             </div>
 
-            <div className="linha-horizontal">
+            <div className="personal_information">
               <strong>Senha:</strong>
               <input
                 type={showPassword ? "text" : "password"}

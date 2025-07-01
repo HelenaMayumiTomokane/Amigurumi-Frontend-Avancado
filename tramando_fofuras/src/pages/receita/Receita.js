@@ -221,11 +221,7 @@ export default function Receita() {
           />
         </div>
 
-        {userInfo && (
-          <div className="comentario-container">
-            <ComentarioForm amigurumiId={amigurumiId} />
-          </div>
-        )}
+        
 
         <br />
         <div id="card_relationship_backgroud">
@@ -237,6 +233,12 @@ export default function Receita() {
             />
           </div>
         </div>
+
+        {userInfo && (
+          <div className="comentario-container">
+            <ComentarioForm amigurumiId={amigurumiId} />
+          </div>
+        )}
       </div>
 
       <Footer />

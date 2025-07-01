@@ -3,7 +3,7 @@ export default function ConfirmBox({ mensagem, onConfirmar, onCancelar }) {
     <div className="confirmacao-box-container">
       <div className="confirmacao-box">
         <h3>{mensagem}</h3>
-        <button onClick={onConfirmar}>Sim</button>
+        <button onClick={onConfirmar}className="aceitar">Sim</button>
         <button onClick={onCancelar} className="cancelar">Cancelar</button>
       </div>
     </div>

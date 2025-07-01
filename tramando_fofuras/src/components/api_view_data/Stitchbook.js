@@ -10,7 +10,7 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
   const [editData, setEditData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [confirmacao, setConfirmacao] = useState(null); // { tipo: 'linha' | 'tabela', element_id, line_id? }
+  const [confirmacao, setConfirmacao] = useState(null);
 
   useEffect(() => {
     if (!amigurumiId) return;

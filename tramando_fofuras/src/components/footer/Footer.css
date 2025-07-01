@@ -1,14 +1,12 @@
-/* ------------ Rodapé -------------- */
-
 #footer {
   width: 100%;
-  background-color: #C1A282;
-  border-top: 2px solid #69402F;
-  border-bottom: 2px solid #69402F;
-  color: #69402F;
+  background-color: var(--cor-base-7);
+  border-top: var(--borda-escura);
+  border-bottom: var(--borda-escura);
+  color: var(--cor-base-11);
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* conteúdo à esquerda */
+  align-items: flex-start;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -17,20 +15,20 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  justify-content: flex-start; /* alinha à esquerda */
+  justify-content: flex-start;
   gap: 40px;
   width: 100%;
 }
 
 #footer_data > * {
-  flex: 1 1 250px; /* largura mínima antes de quebrar */
-  color: #69402F;
+  flex: 1 1 250px;
+  color: var(--cor-base-1);
 }
 
 #logo_company_footer {
   width: 150px;
   height: 150px;
-  border: 2px solid #69402F;
+  border: var(--borda-escura);
   border-radius: 50%;
   object-fit: cover;
   margin-top: 10px;
@@ -40,10 +38,11 @@
 #site_map h1 {
   font-size: 1.3em;
   margin-bottom: 6px;
+  color: var(--cor-base-1);
 }
 
 #site_map a {
-  color: #69402F;
+  color: var(--cor-base-1);
   text-decoration: none;
 }
 
@@ -53,29 +52,30 @@
 
 #legal_section {
   width: 100%;
-  border-top: 1px solid #69402F;
+  border-top: var(--borda-escura);
   margin-top: 20px;
   padding-top: 10px;
   text-align: center;
   font-size: 0.9em;
-  color: #69402F;
+  color: var(--cor-base-1);
 }
 
 #external_links {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  color: #69402F;
+  color: var(--cor-base-1);
 }
 
 #external_links h1 {
   font-size: 1.2em;
   margin-bottom: 8px;
+  color: var(--cor-base-1);
 }
 
 #external_links a {
   text-decoration: none;
-  color: #69402F;
+  color: var(--cor-base-1);
 }
 
 #external_links a:hover {

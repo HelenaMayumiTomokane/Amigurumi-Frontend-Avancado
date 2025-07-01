@@ -111,7 +111,7 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
 
             {redirection && (
               <button
-                className="see_more"
+                className="dark_button"
                 onClick={() => navigate(`/receita?amigurumi_id=${amig.amigurumi_id}`)} 
               >
                 Ver Mais

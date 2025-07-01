@@ -43,9 +43,9 @@ export default function Header() {
         </div>
 
         <div className="header-center">
-          <button className="button_title" onClick={() => navigate('/')}>🏠 Home</button>
+          <button className="dark_button" onClick={() => navigate('/')}>🏠 Home</button>
           {userInfo && (
-            <button className="button_title" onClick={() => navigate(`/usuario?user_id=${userInfo.user_id}`)}>
+            <button className="dark_button" onClick={() => navigate(`/usuario?user_id=${userInfo.user_id}`)}>
               👤 Perfil
             </button>
           )}
@@ -54,11 +54,11 @@ export default function Header() {
         <div className="header-right">
           {!userInfo ? (
             <>
-              <button className="button_title" onClick={() => setShowLogin(true)}>🔐 Login</button>
-              <button className="button_title" onClick={() => navigate('/cadastro')}>📝 Cadastro</button>
+              <button className="dark_button" onClick={() => setShowLogin(true)}>🔐 Login</button>
+              <button className="dark_button" onClick={() => navigate('/cadastro')}>📝 Cadastro</button>
             </>
           ) : (
-            <button className="button_title" onClick={logout}>🔓 Logout</button>
+            <button className="dark_button" onClick={logout}>🔓 Logout</button>
           )}
         </div>
       </header>
