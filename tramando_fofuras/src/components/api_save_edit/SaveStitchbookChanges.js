@@ -1,9 +1,5 @@
 import {APIDelete_Stitchbook,APIPost_Stitchbook, APIPut_Stitchbook} from '../api/Stitchbook_API';
-import {
-  APIPost_Stitchbook_Sequence,
-  APIPut_Stitchbook_Sequence,
-  APIDelete_Stitchbook_Sequence
-} from '../api/StitchbookSequence_API';
+import {APIPost_Stitchbook_Sequence, APIPut_Stitchbook_Sequence, APIDelete_Stitchbook_Sequence} from '../api/StitchbookSequence_API';
 
 export default async function saveStitchbookChanges(originalList, currentList) {
   const originalMap = new Map(originalList.map(el => [el.element_id, el]));

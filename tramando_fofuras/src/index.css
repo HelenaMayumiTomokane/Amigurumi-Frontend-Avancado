@@ -227,20 +227,6 @@ button_next_previous {
 
 
 /* ------------ Mensagem de Erro ou Sucesso -------------- */
-.mensagem-erro {
-  color: red;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.mensagem-sucesso {
-  color: green;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-
-
 .simple-message-box-container {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -283,7 +269,6 @@ button_next_previous {
   background-color: #115293;
 }
 
-/* Cores para sucesso e erro */
 .simple-message-box.success {
   border-left: 6px solid #28a745;
 }

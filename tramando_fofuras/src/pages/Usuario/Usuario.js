@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import {
-  APIGet_AccountUser,
-  APIPut_AccountUser,
-  APIDelete_AccountUser
-} from '../../components/api/AccountUser_API';
+import { APIGet_AccountUser, APIPut_AccountUser, APIDelete_AccountUser } from '../../components/api/AccountUser_API';
 import { APIGet_FoundationList } from '../../components/api/Foundation_API';
 
 import Header from '../../components/header/Header';
@@ -30,12 +26,10 @@ export default function Usuario() {
   const [amigurumis, setAmigurumis] = useState([]);
   const [filteredAmigurumis, setFilteredAmigurumis] = useState([]);
 
-  // Estado para mensagens de sucesso/erro
   const [showMessageBox, setShowMessageBox] = useState(false);
   const [messageBoxText, setMessageBoxText] = useState('');
-  const [messageBoxType, setMessageBoxType] = useState('success'); // 'success' ou 'error'
+  const [messageBoxType, setMessageBoxType] = useState('success');
 
-  // Estado para mostrar a caixa de confirmação da exclusão
   const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   const location = useLocation();
@@ -79,18 +73,6 @@ export default function Usuario() {
     const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
     return hasLetter && hasNumber && hasSymbol;
   }
-
-  const handleChangePassword = () => {
-    if (newPassword.trim() && passwordValid && userInfo) {
-      // Apenas ativa o botão salvar, não faz nada aqui
-    }
-  };
-
-  const handleChangeName = () => {
-    if (newName.trim() && userInfo) {
-      // Apenas ativa o botão salvar, não faz nada aqui
-    }
-  };
 
   const handleRoleChange = (e) => {
     setSelectedRole(e.target.value);
@@ -203,7 +185,6 @@ export default function Usuario() {
                 value={newName || userInfo.name || ''}
                 onChange={e => setNewName(e.target.value)}
               />
-              <button onClick={handleChangeName}>Alterar nome</button>
             </div>
 
             <div className="linha-horizontal">
@@ -215,7 +196,7 @@ export default function Usuario() {
               <strong>Senha:</strong>
               <input
                 type={showPassword ? "text" : "password"}
-                value={newPassword || ''}
+                value={newPassword || userInfo.password}
                 onChange={e => {
                   setNewPassword(e.target.value);
                   setPasswordValid(validatePassword(e.target.value));
@@ -227,9 +208,6 @@ export default function Usuario() {
                 onClick={() => setShowPassword(prev => !prev)}
               >
                 {showPassword ? "🙈" : "👁️"}
-              </button>
-              <button onClick={handleChangePassword} disabled={!passwordValid}>
-                Alterar senha
               </button>
             </div>
 

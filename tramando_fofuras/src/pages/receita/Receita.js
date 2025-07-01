@@ -35,14 +35,13 @@ export default function Receita() {
   const [showImageModal, setShowImageModal] = useState(false);
 
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success' ou 'error'
+  const [messageType, setMessageType] = useState('');
   const [showMessageBox, setShowMessageBox] = useState(false);
 
   const foundationRef = useRef();
   const materialRef = useRef();
   const stitchbookRef = useRef();
 
-  // Mostrar caixa de mensagem simples
   function showMessage(text, type = 'success') {
     setMessage(text);
     setMessageType(type);
@@ -96,7 +95,6 @@ export default function Receita() {
 
   const canEdit = userInfo?.role === 'Administrador';
 
-  // Componente caixa simples de mensagem
   function MessageBox() {
     if (!showMessageBox) return null;
 
@@ -123,7 +121,7 @@ export default function Receita() {
             <button
               className="button_title_transparent"
               onClick={() => navigate('/')}
-              title="Home"
+              title="Voltar para a página inicial"
             >
               <span className="button_icon">🏠</span> Home
             </button>
@@ -133,7 +131,7 @@ export default function Receita() {
             <button
               className="button_title_transparent"
               onClick={() => navigate(`/receita?amigurumi_id=${amigurumiId}`)}
-              title="Receita"
+              title="Visualizar receita do amigurumi atual"
             >
               <span className="button_icon">🧸</span> Receita
             </button>
@@ -141,21 +139,32 @@ export default function Receita() {
 
           {canEdit && (
             <div>
-              <button onClick={() => setEditable(prev => !prev)}>
+              <button
+                onClick={() => setEditable(prev => !prev)}
+                title={editable ? "Clique para desligar o modo de edição" : "Clique para ativar o modo de edição"}
+              >
                 {editable ? 'Desligar Edição' : 'Ligar Edição'}
               </button>
 
               {editable && (
                 <>
-                  <button onClick={handleSave}>Salvar</button>
-                  <BotaoDeleteAmigurumi amigurumiId={amigurumiId} onDeleted={handleDeleted} />
+                  <button
+                    onClick={handleSave}
+                    title="Salvar todas as alterações feitas nesta receita"
+                  >
+                    Salvar
+                  </button>
+
+                  <span title="Excluir este amigurumi permanentemente">
+                    <BotaoDeleteAmigurumi amigurumiId={amigurumiId} onDeleted={handleDeleted} />
+                  </span>
                 </>
               )}
             </div>
           )}
 
           {!canEdit && (
-            <div>
+            <div title="Você não tem permissão para editar esta receita.">
               Você não tem permissão para editar.
             </div>
           )}
@@ -184,7 +193,10 @@ export default function Receita() {
             />
             <br />
             {editable && (
-              <button onClick={() => setShowImageModal(true)}>
+              <button
+                onClick={() => setShowImageModal(true)}
+                title="Clique para adicionar, editar ou remover imagens do amigurumi"
+              >
                 Gerenciar Imagens
               </button>
             )}
