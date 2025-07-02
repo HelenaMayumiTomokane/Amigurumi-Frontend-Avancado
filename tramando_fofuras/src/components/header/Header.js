@@ -8,6 +8,8 @@ export default function Header() {
   const [showLogin, setShowLogin] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const { userInfo, login, logout } = useUserContext();
   const navigate = useNavigate();
 
@@ -21,6 +23,7 @@ export default function Header() {
           setShowLogin(false);
           setUsername('');
           setPassword('');
+          setShowPassword(false);
           navigate(`/usuario?user_id=${user.user_id}`);
         } else {
           alert('Usuário não encontrado. Cadastre-se primeiro.');
@@ -73,12 +76,23 @@ export default function Header() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword(prev => !prev)}
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
+
             <div className="login_buttons">
               <button onClick={handleLogin}>Entrar</button>
               <button onClick={() => setShowLogin(false)}>Cancelar</button>

@@ -107,6 +107,7 @@ table th {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 }
 
 .cardAmigurumi:hover {
