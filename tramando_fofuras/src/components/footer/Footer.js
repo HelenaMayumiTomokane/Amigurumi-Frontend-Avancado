@@ -1,21 +1,21 @@
 import './Footer.css';
-import { Link } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 import useUserInfo from '../hooks/useUserInfo';
 
 export default function Footer() {
   const { userInfo } = useUserInfo();
   const userId = userInfo?.user_id;
+  const navigate = useNavigate();
 
   return (
     <footer id="footer">
       <div id="footer_data">
-        <Link to="/">
           <img
             src="/assets/image/image_id_logo.png"
             id="logo_company_footer"
             alt="Logo"
+            onClick={() => navigate('/')}
           />
-        </Link>
 
         <div id="contact_section">
           <h1>Contact us</h1>
@@ -30,12 +30,11 @@ export default function Footer() {
 
         <div id="site_map">
           <h1>Mapa do Site</h1>
-          <Link to="/">🏠 Home</Link>
-          <br />
+          <p className="footer_link" onClick={() => navigate('/')}>🏠 Home</p>
           {userId ? (
-            <Link to={`/usuario?user_id=${userId}`}>👤 Perfil</Link>
+            <p className="footer_link" onClick={() => navigate(`/usuario?user_id=${userId}`)}>👤 Perfil</p>
           ) : (
-            <Link to="/cadastro">👤 Cadastre-se</Link>
+            <p className="footer_link" onClick={() => navigate('/cadastro')}>👤 Cadastre-se</p>
           )}
         </div>
 

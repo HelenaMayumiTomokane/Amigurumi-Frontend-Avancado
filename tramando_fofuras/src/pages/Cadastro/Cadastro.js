@@ -5,16 +5,20 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
 import * as API from '../../components/api/AccountUser_API';
+import { useUserContext } from '../../contexts/UserContext';
 
 export default function CadastroPage() {
   const [name, setName] = useState('');
-  const [login, setLogin] = useState('');
+  const [loginInput, setLoginInput] = useState('');
   const [senha, setSenha] = useState('');
   const [role, setRole] = useState('Visitante');
   const [erro, setErro] = useState('');
   const [senhaValida, setSenhaValida] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+  const { login } = useUserContext(); // <<< Importante!
 
   function validarSenha(senha) {
     const temLetra = /[a-zA-Z]/.test(senha);
@@ -23,11 +27,10 @@ export default function CadastroPage() {
     return temLetra && temNumero && temSimbolo;
   }
 
-  const navigate = useNavigate();
-
   const handleCadastro = async () => {
     setErro('');
-    if (!name || !login || !senha) {
+
+    if (!name || !loginInput || !senha) {
       setErro("Preencha todos os campos.");
       return;
     }
@@ -40,11 +43,18 @@ export default function CadastroPage() {
     setLoading(true);
 
     try {
-      const response = await API.APIPost_AccountUser(name,senha, login, role);
+      const response = await API.APIPost_AccountUser(name, senha, loginInput, role);
 
       if (response.error) {
         setErro(response.error);
       } else if (response.user_id) {
+        // Salvar login no contexto e localStorage
+        login({
+          login: loginInput,
+          user_id: response.user_id,
+          role: role || 'Visitante'
+        });
+
         navigate(`/usuario?user_id=${response.user_id}`);
       } else {
         setErro("Erro inesperado: usuário não retornado pela API.");
@@ -72,7 +82,7 @@ export default function CadastroPage() {
 
         <div className="linha-horizontal">
           <strong>Login:</strong>
-          <input value={login} onChange={e => setLogin(e.target.value)} />
+          <input value={loginInput} onChange={e => setLoginInput(e.target.value)} />
         </div>
 
         <div className="linha-horizontal">

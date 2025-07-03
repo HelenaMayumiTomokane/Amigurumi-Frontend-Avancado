@@ -110,7 +110,7 @@ const Stitchbook = forwardRef(({ amigurumiId, editable = false, trigger }, ref) 
 
   return (
     <div id="div_stitchbookList">
-      {editable && <button onClick={addElement}>+ Adicionar Tabela (Elemento)</button>}
+      {editable && <button onClick={addElement}>Adicionar Tabela</button>}
       <br /><br />
 
       {editData.map(el => (

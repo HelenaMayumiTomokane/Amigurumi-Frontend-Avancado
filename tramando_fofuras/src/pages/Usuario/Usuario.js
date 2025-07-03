@@ -10,8 +10,10 @@ import BotaoNovoAmigurumi from "../../components/api_save_edit/SaveFoundationLis
 import AmigurumisDoUsuario from '../../components/amigurumi_cards/AmigurumisDoUsuario';
 import SearchBar from '../../components/support_code/Searchbar';
 import ConfirmBox from '../../components/support_code/ConfirmBox';
+import { useUserContext } from '../../contexts/UserContext';
 
 export default function Usuario() {
+  const { logout } = useUserContext();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const [newName, setNewName] = useState('');
@@ -34,7 +36,6 @@ export default function Usuario() {
   const queryParams = new URLSearchParams(location.search);
   const userId = parseInt(queryParams.get('user_id'));
 
-  // Carregar dados do usuário
   useEffect(() => {
     if (!userId) return;
 
@@ -44,6 +45,11 @@ export default function Usuario() {
         if (user) {
           setUserInfo(user);
           setSelectedRole(user.role || 'Visitante');
+          localStorage.setItem('userInfo', JSON.stringify({
+            user_id: user.user_id,
+            login: user.login,
+            role: user.role || 'Visitante'
+          }));
         } else {
           showMessage("Usuário não encontrado", "error");
         }
@@ -51,7 +57,6 @@ export default function Usuario() {
       .catch(() => showMessage("Erro ao carregar usuário", "error"));
   }, [userId]);
 
-  // Carregar amigurumis do usuário
   useEffect(() => {
     if (userInfo) {
       APIGet_FoundationList()
@@ -64,7 +69,6 @@ export default function Usuario() {
     }
   }, [userInfo]);
 
-  // Validação básica da senha
   function validatePassword(password) {
     const hasLetter = /[a-zA-Z]/.test(password);
     const hasNumber = /\d/.test(password);
@@ -76,14 +80,12 @@ export default function Usuario() {
     setSelectedRole(e.target.value);
   };
 
-  // Função para mostrar mensagem na caixa simples
   function showMessage(text, type = 'success') {
     setMessageBoxText(text);
     setMessageBoxType(type);
     setShowMessageBox(true);
   }
 
-  // Salvar alterações do usuário
   const handleSaveChanges = () => {
     if (!userInfo) return;
 
@@ -110,6 +112,11 @@ export default function Usuario() {
           setNewPassword('');
           setPasswordValid(false);
           showMessage("Perfil atualizado com sucesso!", "success");
+          localStorage.setItem('userInfo', JSON.stringify({
+            user_id: updatedUser.user_id,
+            login: updatedUser.login,
+            role: updatedUser.role
+          }));
         } else {
           showMessage("Erro ao atualizar: " + res.error, "error");
         }
@@ -117,7 +124,6 @@ export default function Usuario() {
       .catch(() => showMessage("Erro na comunicação com o servidor", "error"));
   };
 
-  // Função que realmente executa a exclusão da conta após confirmação
   const confirmarExclusao = () => {
     APIGet_AccountUser()
       .then(users => {
@@ -129,8 +135,7 @@ export default function Usuario() {
 
         APIDelete_AccountUser(user.user_id)
           .then(() => {
-            const logoutEvent = new Event("logout");
-            window.dispatchEvent(logoutEvent);
+            logout();
             navigate('/');
           })
           .catch(() => showMessage("Erro ao excluir a conta", "error"));
@@ -138,12 +143,10 @@ export default function Usuario() {
       .catch(() => showMessage("Erro ao buscar usuário", "error"));
   };
 
-  // Mostra caixa de confirmação para excluir conta
   const handleDeleteAccount = () => {
     setShowConfirmBox(true);
   };
 
-  // Componente caixa simples de mensagem
   function MessageBox() {
     if (!showMessageBox) return null;
 
@@ -156,6 +159,8 @@ export default function Usuario() {
       </div>
     );
   }
+
+  const canEdit = userInfo?.role === 'Administrador';
 
   return (
     <div>
@@ -232,7 +237,7 @@ export default function Usuario() {
               ❌ Excluir minha conta
             </button>
 
-            {userInfo.role === 'Administrador' && <BotaoNovoAmigurumi />}
+            {canEdit && <BotaoNovoAmigurumi />}
 
             <hr />
             <h1>Meus Amigurumis</h1>

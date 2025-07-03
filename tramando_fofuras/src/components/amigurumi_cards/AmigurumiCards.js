@@ -59,7 +59,6 @@ export default function AmigurumiCards({ filteredData, trigger, setTrigger, edit
 
         return (
           <div key={amig.amigurumi_id} className="cardAmigurumi">
-            {/* Ícone de favorito */}
             <button
               aria-label={favorites.includes(amig.amigurumi_id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
               className={`favorite-button ${favorites.includes(amig.amigurumi_id) ? 'favorited' : ''}`}

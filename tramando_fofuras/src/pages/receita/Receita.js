@@ -162,12 +162,6 @@ export default function Receita() {
               )}
             </div>
           )}
-
-          {!canEdit && (
-            <div title="Você não tem permissão para editar esta receita.">
-              Você não tem permissão para editar.
-            </div>
-          )}
         </div>
 
         {showImageModal && (

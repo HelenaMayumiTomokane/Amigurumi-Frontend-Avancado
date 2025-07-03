@@ -26,12 +26,13 @@
 }
 
 #logo_company_footer {
-  width: 150px;
-  height: 150px;
+  max-width: 150px;
+  height: auto;
   border: var(--borda-escura);
   border-radius: 50%;
   object-fit: cover;
   margin-top: 10px;
+  cursor: pointer;
 }
 
 #contact_section h1,
@@ -79,5 +80,16 @@
 }
 
 #external_links a:hover {
+  text-decoration: underline;
+}
+
+.footer_link {
+  cursor: pointer;
+  color: var(--cor-base-1);
+  margin-bottom: 0.3rem;
+}
+
+.footer_link:hover {
+  color: var(--cor-base-2);
   text-decoration: underline;
 }

@@ -61,7 +61,7 @@ export default function Header() {
               <button className="dark_button" onClick={() => navigate('/cadastro')}>📝 Cadastro</button>
             </>
           ) : (
-            <button className="dark_button" onClick={logout}>🔓 Logout</button>
+            <button className="dark_button" onClick={() => {logout(); navigate('/')}} > 🔓 Logout </button>
           )}
         </div>
       </header>
