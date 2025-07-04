@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-
 import * as API from "../../components/api/Foundation_API";
-
 import AmigurumiCards from "../../components/amigurumi_cards/AmigurumiCards";
+import SearchBar from "../../components/support_code/Searchbar";
 
 import CategoryButtons from "../../components/support_code/CategoryButtons";
-import SearchBar from "../../components/support_code/Searchbar";
+
 
 import "./Home.css";
 

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-
 import * as API from '../../components/api/AccountUser_API';
+
 import { useUserContext } from '../../contexts/UserContext';
 
 export default function CadastroPage() {

@@ -6,15 +6,20 @@ import { APIGet_FoundationList } from '../../components/api/Foundation_API';
 
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
+import ConfirmBox from '../../components/support_code/ConfirmBox';
+import SearchBar from '../../components/support_code/Searchbar';
+
 import BotaoNovoAmigurumi from "../../components/api_save_edit/SaveFoundationList";
 import AmigurumisDoUsuario from '../../components/amigurumi_cards/AmigurumisDoUsuario';
-import SearchBar from '../../components/support_code/Searchbar';
-import ConfirmBox from '../../components/support_code/ConfirmBox';
+
+
 import { useUserContext } from '../../contexts/UserContext';
 
 export default function Usuario() {
   const { logout } = useUserContext();
   const navigate = useNavigate();
+  const location = useLocation();
+  
   const [userInfo, setUserInfo] = useState(null);
   const [newName, setNewName] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -32,7 +37,7 @@ export default function Usuario() {
 
   const [showConfirmBox, setShowConfirmBox] = useState(false);
 
-  const location = useLocation();
+  
   const queryParams = new URLSearchParams(location.search);
   const userId = parseInt(queryParams.get('user_id'));
 

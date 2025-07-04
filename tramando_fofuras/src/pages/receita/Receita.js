@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
+import AmigurumiCards from '../../components/amigurumi_cards/AmigurumiCards';
 
 import MaterialList from '../../components/api_view_data/MaterialList';
 import FoundationList from '../../components/api_view_data/FoundationList';
@@ -14,8 +15,6 @@ import saveStitchbookChanges from '../../components/api_save_edit/SaveStitchbook
 import SaveImageChanges from '../../components/api_save_edit/SaveImageChanges';
 
 import ComentarioForm from '../../components/support_code/ComentarioForm';
-
-import AmigurumiCards from '../../components/amigurumi_cards/AmigurumiCards';
 import Relationship from '../../components/amigurumi_cards/Relationship';
 
 import useUserInfo from '../../components/hooks/useUserInfo';
