@@ -11,6 +11,7 @@ export default function ComentarioForm({ amigurumiId }) {
   const [showMessageBox, setShowMessageBox] = useState(false);
 
   const [confirmIndex, setConfirmIndex] = useState(null);
+  const [comentarioErro, setComentarioErro] = useState('');
 
   useEffect(() => {
     const storedUser = localStorage.getItem('userInfo');
@@ -23,9 +24,26 @@ export default function ComentarioForm({ amigurumiId }) {
     }
   }, [amigurumiId]);
 
+  const handleComentarioChange = (e) => {
+    const texto = e.target.value;
+    setComentario(texto);
+
+    if (texto.length > 0 && texto.length < 2) {
+      setComentarioErro('O comentário deve ter pelo menos 2 letras.');
+    } else {
+      setComentarioErro('');
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInfo) return;
+
+    if (comentario.length < 2) {
+      setMessage('O comentário deve ter pelo menos 2 letras.');
+      setShowMessageBox(true);
+      return;
+    }
 
     const novoComentario = {
       user_id: userInfo.user_id,
@@ -44,6 +62,7 @@ export default function ComentarioForm({ amigurumiId }) {
 
     setComentario('');
     setAvaliacao(0);
+    setComentarioErro('');
     setMessage('Comentário enviado com sucesso!');
     setShowMessageBox(true);
   };
@@ -135,15 +154,21 @@ export default function ComentarioForm({ amigurumiId }) {
         <h2>Deixe seu comentário</h2>
         <textarea
           value={comentario}
-          onChange={e => setComentario(e.target.value)}
+          onChange={handleComentarioChange}
           placeholder="Escreva seu comentário"
           required
         />
+        {comentarioErro && (
+          <p style={{ color: 'red', fontSize: '0.9rem', marginTop: '5px' }}>
+            {comentarioErro}
+          </p>
+        )}
+
         <label>
           Avaliação:
           <div>{renderEstrelas()}</div>
         </label>
-        <button type="submit">Enviar</button>
+        <button type="submit" disabled={comentario.length < 2}>Enviar</button>
       </form>
 
       {comentarios.length > 0 && (
